@@ -56,6 +56,38 @@ def mergeconcat(defaults, *overrides):
     return functools.reduce(mergeconcat2, overrides, defaults)
 
 
+def mergeall(defaults, *overrides):
+    """Deep-merge two or more dictionaries together.
+
+    List items are also merged, maintaining existing indexes.
+    """
+
+    def mergeall2(defaults, overrides):
+        if isinstance(defaults, dict) and isinstance(overrides, dict):
+            merged = dict(defaults)
+            for key, value in overrides.items():
+                if key in defaults:
+                    merged[key] = mergeall2(defaults[key], value)
+                else:
+                    merged[key] = value
+            return merged
+        elif isinstance(defaults, (list, tuple)) and isinstance(
+            overrides, (list, tuple)
+        ):
+            merged = list(defaults)
+            for i, value in enumerate(overrides):
+                if i > len(merged) - 1:
+                    merged.append(value)
+                else:
+                    # Merge the list items in place
+                    merged[i] = mergeall2(defaults[i], value)
+            return merged
+        else:
+            return overrides if overrides is not None else defaults
+
+    return functools.reduce(mergeall2, overrides, defaults)
+
+
 class Client:
     """Client for interacting with Helm CLI."""
 

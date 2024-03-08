@@ -1183,6 +1183,18 @@ class ClusterAPIDriverTest(base.DbTestCase):
                 "machineCount": 3,
                 "healthCheck": {"enabled": True},
             },
+            "kubeNetwork": {
+                "pods": {
+                    "cidrBlocks": [
+                        "172.16.0.0/13",
+                    ],
+                },
+                "services": {
+                    "cidrBlocks": [
+                        "172.24.0.0/13",
+                    ],
+                },
+            },
             "addons": {
                 "monitoring": {"enabled": False},
                 "kubernetesDashboard": {"enabled": True},

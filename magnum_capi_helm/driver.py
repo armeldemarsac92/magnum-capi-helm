@@ -838,6 +838,12 @@ class Driver(driver.Driver):
 
         network_id = self._get_fixed_network_id(context, cluster)
         subnet_id = neutron.get_fixed_subnet_id(context, cluster.fixed_subnet)
+        # NOTE(dalees): These are defaults from the Helm charts, but moved
+        # here to ensure consistency with allowed address pairs.
+        # They should move to a configurable location before merging upstream
+        # as part of https://github.com/stackhpc/magnum-capi-helm/pull/30
+        kubenetwork_pod_cidr = "172.16.0.0/13"
+        kubenetwork_services_cidr = "172.24.0.0/13"
 
         values = {
             "kubernetesVersion": kube_version,
@@ -866,6 +872,18 @@ class Driver(driver.Driver):
                 },
             },
             "osDistro": os_distro,
+            "kubeNetwork": {
+                "pods": {
+                    "cidrBlocks": [
+                        kubenetwork_pod_cidr,
+                    ],
+                },
+                "services": {
+                    "cidrBlocks": [
+                        kubenetwork_services_cidr,
+                    ],
+                },
+            },
             "controlPlane": {
                 "machineFlavor": cluster.master_flavor_id,
                 "machineCount": cluster.master_count,
@@ -994,6 +1012,54 @@ class Driver(driver.Driver):
                 "apiServer": {"allowedCidrs": api_lb_allowed_cidrs}
             }
             values = helm.mergeconcat(values, allowed_cidrs_config)
+
+        if self._label(cluster, "calico_mode", "VXLAN") == "bgp_fullmesh":
+            # The helm charts default to VXLAN encapculation mode.
+            # Some OpenStack deployments will prefer BGP with Bird and no
+            # encapsulation.
+            # https://docs.tigera.io/calico/latest/networking/configuring/bgp#full-mesh
+
+            calico_bgp = {
+                "addons": {
+                    "cni": {
+                        "calico": {
+                            "bgp": "Enabled",
+                            "encapsulation": "None",
+                        }
+                    }
+                }
+            }
+            values = helm.mergeconcat(values, calico_bgp)
+
+            # NOTE(dalees): With BGP in full mesh mode, all cluster nodes need
+            #               allowed address pairs that match the Pod CIDR.
+            #               Add this to their first network interface only.
+            node_address_pairs = {
+                "controlPlane": {
+                    "machineNetworking": {
+                        "ports": [
+                            {
+                                "allowedAddressPairs": [
+                                    {"ipAddress": kubenetwork_pod_cidr},
+                                ],
+                            }
+                        ],
+                    },
+                },
+                "nodeGroupDefaults": {
+                    "machineNetworking": {
+                        "ports": [
+                            {
+                                "allowedAddressPairs": [
+                                    {"ipAddress": kubenetwork_pod_cidr},
+                                ],
+                            }
+                        ],
+                    },
+                },
+            }
+            # Use mergeall so port details are merged, not concatenated.
+            values = helm.mergeall(values, node_address_pairs)
 
         self._helm_client.install_or_upgrade(
             driver_utils.chart_release_name(cluster),

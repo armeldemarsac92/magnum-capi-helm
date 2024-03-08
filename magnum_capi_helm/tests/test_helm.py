@@ -38,6 +38,33 @@ class TestHelmClient(base.TestCase):
         expected = ["foo", "bar", "bar", "baz"]
         self.assertEqual(expected, result)
 
+    def test_mergeall_dicts(self):
+        defaults = dict(foo="bar", asdf=dict(a="b", c="d"))
+        overrides = dict(asdf=dict(a="c"))
+
+        result = helm.mergeall(defaults, overrides)
+
+        expected = dict(foo="bar", asdf=dict(a="c", c="d"))
+        self.assertEqual(expected, result)
+
+    def test_mergeall_list(self):
+        defaults = ["foo", "bar"]
+        overrides = ["bar", "baz"]
+
+        result = helm.mergeall(defaults, overrides)
+
+        expected = ["bar", "baz"]
+        self.assertEqual(expected, result)
+
+    def test_mergeall_list_with_nested(self):
+        defaults = [{}, {"foo": "bar", "baz": "foo"}]
+        overrides = [123, {"baz": "bar"}, "list_item_3"]
+
+        result = helm.mergeall(defaults, overrides)
+
+        expected = [123, {"foo": "bar", "baz": "bar"}, "list_item_3"]
+        self.assertEqual(expected, result)
+
     @mock.patch.object(utils, "execute")
     def test_install_or_upgrade(self, mock_execute):
         mock_execute.return_value = '[{"foo": "bar"}]', ""
