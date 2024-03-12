@@ -1,0 +1,9 @@
+---
+- project:
+    queue: magnum
+    templates:
+      - openstack-cover-jobs:
+          required-projects:
+            - openstack/magnum
+      - openstack-python3-jobs
+      - check-requirements
