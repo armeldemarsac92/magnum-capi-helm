@@ -52,3 +52,4 @@
     queue: magnum
     templates:
       - openstack-python3-jobs-magnum
+      - publish-openstack-docs-pti
