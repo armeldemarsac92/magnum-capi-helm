@@ -51,4 +51,5 @@
 - project:
     queue: magnum
     templates:
+      - openstack-cover-jobs
       - openstack-python3-jobs-magnum
