@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30e19842_ca886f61",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2024-03-20T13:55:54Z",
+      "side": 1,
+      "message": "What does it do and why it should be added? Please update the commit message.",
+      "revId": "6fe37fe18b0825aa5c0d42ea89dc776d59415a17",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
