@@ -485,6 +485,13 @@ class Driver(driver.Driver):
         except ValueError:
             return default
 
+    def _get_availability_zone(self, cluster):
+        return self._get_label_bool(
+            cluster,
+            "availability_zone",
+            CONF.capi_helm.csi_cinder_availability_zone,
+        )
+
     def _get_chart_version(self, cluster):
         version = cluster.cluster_template.labels.get(
             "capi_helm_chart_version",
@@ -660,7 +667,7 @@ class Driver(driver.Driver):
         """
         LOG.debug("Retrieve volume types from cinder for StorageClasses.")
         client = clients.OpenStackClients(context)
-        region_name = client.cinder_region_name()
+        availability_zone = self._get_availability_zone(cluster)
         c_client = client.cinder()
         volume_types = [i.name for i in c_client.volume_types.list()]
         # Use the default volume type if defined. Otherwise use the first
@@ -694,7 +701,7 @@ class Driver(driver.Driver):
                 "name": driver_utils.sanitized_name(volume_type),
                 "reclaimPolicy": reclaim_policy,
                 "allowVolumeExpansion": allow_expansion,
-                "availabilityZone": region_name,
+                "availabilityZone": availability_zone,
                 "volumeType": volume_type,
                 "allowedTopologies": allowed_topologies,
                 "fstype": fstype,
