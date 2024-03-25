@@ -1961,7 +1961,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch("magnum.common.clients.OpenStackClients.cinder")
     def test_get_storage_classes(self, mock_cinder, mock_osc_rn):
         CONF.capi_helm.csi_cinder_default_volume_type = "type3"
-        mock_osc_rn.return_value = "middle_earth_east"
+        CONF.capi_helm.csi_cinder_availability_zone = "middle_earth_east"
         mock_vol_type_1 = mock.MagicMock()
         mock_vol_type_1.name = "type1"
         mock_vol_type_2 = mock.MagicMock()
