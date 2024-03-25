@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "91a91ae6_d716516f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 35260
+      },
+      "writtenOn": "2024-03-25T12:04:36Z",
+      "side": 1,
+      "message": "maybe just add a description as to why this is needed?",
+      "revId": "1939b7665cb1f18fb5a2bfff67c4430c1ea07a39",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9410b019_e96828fa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 35260
+      },
+      "writtenOn": "2024-03-25T12:04:36Z",
+      "side": 1,
+      "message": "LGTM apart from commit message",
+      "revId": "1939b7665cb1f18fb5a2bfff67c4430c1ea07a39",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
