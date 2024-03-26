@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5bb7e5c0_58600dfa",
+        "filename": "magnum_capi_helm/tests/test_driver.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1962,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2024-03-26T14:27:07Z",
+      "side": 1,
+      "message": "Nit: You should be able to remove the `mock_osc_rn` arg and the corresponding @mock.patch since they\u0027re no longer used.",
+      "revId": "bce477ce4c7a9457b657769299360ff883591e0e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
