@@ -16,6 +16,24 @@
       "message": "This is annoying, but I think we should get this covered with a unit test please?",
       "revId": "56dde2e613abf2360b88ae703a743eab8c8115b1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "67075527_98bae3a3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2024-03-27T13:41:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4d9661f1_351a1678",
+      "revId": "56dde2e613abf2360b88ae703a743eab8c8115b1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
