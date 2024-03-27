@@ -16,6 +16,24 @@
       "message": "What does it do and why it should be added? Please update the commit message.",
       "revId": "6fe37fe18b0825aa5c0d42ea89dc776d59415a17",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "80d2189e_f815793e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2024-03-27T18:33:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "30e19842_ca886f61",
+      "revId": "6fe37fe18b0825aa5c0d42ea89dc776d59415a17",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
