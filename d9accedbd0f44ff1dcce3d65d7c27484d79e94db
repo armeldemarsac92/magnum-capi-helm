@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ba5880de_99b19a7e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 35260
+      },
+      "writtenOn": "2024-03-28T12:44:47Z",
+      "side": 1,
+      "message": "Good point, I\u0027ve added the option to pass a label per cluster / in cluster templates, and allowed configuration of the default value via config",
+      "parentUuid": "cf5c801d_0e42b9ca",
+      "revId": "d9accedbd0f44ff1dcce3d65d7c27484d79e94db",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5a44da1d_c3e196e9",
@@ -31,6 +49,24 @@
       "writtenOn": "2024-03-27T15:55:46Z",
       "side": 1,
       "message": "Missed one, should fix the failing test.",
+      "revId": "d9accedbd0f44ff1dcce3d65d7c27484d79e94db",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ce8747aa_62784fa1",
+        "filename": "magnum_capi_helm/tests/test_driver.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 2026,
+      "author": {
+        "id": 35260
+      },
+      "writtenOn": "2024-03-28T12:44:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a44da1d_c3e196e9",
       "revId": "d9accedbd0f44ff1dcce3d65d7c27484d79e94db",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
