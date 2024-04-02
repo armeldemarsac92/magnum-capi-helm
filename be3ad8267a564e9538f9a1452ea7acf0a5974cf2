@@ -16,6 +16,24 @@
       "message": "Shouldn\u0027t this be self._label instead of self._get_label_bool?",
       "revId": "be3ad8267a564e9538f9a1452ea7acf0a5974cf2",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "51c31cc1_7fbbd30d",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 35260
+      },
+      "writtenOn": "2024-04-02T15:57:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c80985ae_9b081573",
+      "revId": "be3ad8267a564e9538f9a1452ea7acf0a5974cf2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
