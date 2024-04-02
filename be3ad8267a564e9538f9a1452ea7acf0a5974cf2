@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c80985ae_9b081573",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2024-04-02T08:14:50Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this be self._label instead of self._get_label_bool?",
+      "revId": "be3ad8267a564e9538f9a1452ea7acf0a5974cf2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
