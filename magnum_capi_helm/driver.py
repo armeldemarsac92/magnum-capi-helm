@@ -583,6 +583,25 @@ class Driver(driver.Driver):
     def _get_autoheal_enabled(self, cluster):
         return self._get_label_bool(cluster, "auto_healing_enabled", True)
 
+    def _get_autoscale(self, cluster):
+        auto_scale = self._get_label_bool(
+            cluster, "auto_scaling_enabled", False
+        )
+        if auto_scale:
+            min_nodes = self._get_label_int(cluster, "min_node_count", 0)
+            max_nodes = self._get_label_int(cluster, "max_node_count", 0)
+            if min_nodes == 0 or max_nodes <= min_nodes:
+                raise exception.MagnumException(
+                    message="min_node_count and max_node_count "
+                    "must be defined and "
+                    "max_node_count > min_node_count "
+                    "if auto_scaling_enabled set to true."
+                )
+            return dict(
+                min_nodes=min_nodes, max_nodes=max_nodes, enabled="true"
+            )
+        return auto_scale
+
     def _get_k8s_keystone_auth_enabled(self, cluster):
         return self._get_label_bool(cluster, "keystone_auth_enabled", True)
 
@@ -806,6 +825,17 @@ class Driver(driver.Driver):
                 },
             }
             values = helm.mergeconcat(values, disk_details)
+
+        auto_scale = self._get_autoscale(cluster)
+        if auto_scale:
+            auto_scaling = {
+                "nodeGroupDefaults": {
+                    "autoscale": auto_scale["enabled"],
+                    "machineCountMin": auto_scale["min_nodes"],
+                    "machineCountMax": auto_scale["max_nodes"],
+                },
+            }
+            values = helm.mergeconcat(values, auto_scaling)
 
         # Sometimes you need to add an extra network
         # for things like Cinder CSI CephFS Native
