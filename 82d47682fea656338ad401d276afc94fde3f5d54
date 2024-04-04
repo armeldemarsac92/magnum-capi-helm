@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b40ce90_c04704ff",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 33467
+      },
+      "writtenOn": "2024-04-04T09:58:53Z",
+      "side": 1,
+      "message": "I think we should make this volume AZ specific",
+      "revId": "82d47682fea656338ad401d276afc94fde3f5d54",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b86b2e70_73f3fade",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 493,
+      "author": {
+        "id": 33467
+      },
+      "writtenOn": "2024-04-04T09:58:53Z",
+      "side": 1,
+      "message": "Should this method, and the corresponding label, be specifically for the volume AZ? Maybe the name of the label should match the name of the config option, i.e. `csi_cinder_availability_zone`?\n\nWe may want to add additional support around compute AZs in the future and this could be confusing.",
+      "revId": "82d47682fea656338ad401d276afc94fde3f5d54",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
