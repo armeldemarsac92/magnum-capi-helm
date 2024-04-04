@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e6f575d3_947b55cb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 33467
+      },
+      "writtenOn": "2024-04-04T09:50:11Z",
+      "side": 1,
+      "message": "Just a couple of extra verification in the tests",
+      "revId": "ce333fa637b44f2753d74b81c7208d8e00f587d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6615d7e2_9bc8b85c",
+        "filename": "magnum_capi_helm/tests/test_driver.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 2442,
+      "author": {
+        "id": 33467
+      },
+      "writtenOn": "2024-04-04T09:50:11Z",
+      "side": 1,
+      "message": "Should we also check that the `authWebhook` is set correctly?",
+      "revId": "ce333fa637b44f2753d74b81c7208d8e00f587d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6712d16a_3f5d00fc",
+        "filename": "magnum_capi_helm/tests/test_driver.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 2491,
+      "author": {
+        "id": 33467
+      },
+      "writtenOn": "2024-04-04T09:50:11Z",
+      "side": 1,
+      "message": "In this case, I think the result comes out as `None` with the code as written right? Does this assert do the right thing in that case?\n\nAlso, should we verify that `authWebhook` is not set?",
+      "revId": "ce333fa637b44f2753d74b81c7208d8e00f587d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
