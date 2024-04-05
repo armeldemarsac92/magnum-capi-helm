@@ -35,6 +35,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "72edd80d_364084e7",
+        "filename": "magnum_capi_helm/tests/test_driver.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 2442,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2024-04-05T08:42:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6615d7e2_9bc8b85c",
+      "revId": "ce333fa637b44f2753d74b81c7208d8e00f587d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6712d16a_3f5d00fc",
@@ -48,6 +66,24 @@
       "writtenOn": "2024-04-04T09:50:11Z",
       "side": 1,
       "message": "In this case, I think the result comes out as `None` with the code as written right? Does this assert do the right thing in that case?\n\nAlso, should we verify that `authWebhook` is not set?",
+      "revId": "ce333fa637b44f2753d74b81c7208d8e00f587d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1f0c02b4_72202397",
+        "filename": "magnum_capi_helm/tests/test_driver.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 2491,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2024-04-05T08:42:47Z",
+      "side": 1,
+      "message": "Yes I think it does because the Helm values for the Keystone webhook are omitted if the label is False so we cannot use assertEqual(..., False) here unless we change the driver code to explicitly set addons.openstack.k8sKeystoneAuth.enabled \u003d False.\n\nGood point on the authWebhook check though, I\u0027ve added that.",
+      "parentUuid": "6712d16a_3f5d00fc",
       "revId": "ce333fa637b44f2753d74b81c7208d8e00f587d8",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
