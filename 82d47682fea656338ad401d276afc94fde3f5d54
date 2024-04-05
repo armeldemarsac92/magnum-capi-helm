@@ -33,6 +33,42 @@
       "message": "Should this method, and the corresponding label, be specifically for the volume AZ? Maybe the name of the label should match the name of the config option, i.e. `csi_cinder_availability_zone`?\n\nWe may want to add additional support around compute AZs in the future and this could be confusing.",
       "revId": "82d47682fea656338ad401d276afc94fde3f5d54",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f58e99f8_8cf5e362",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 493,
+      "author": {
+        "id": 33467
+      },
+      "writtenOn": "2024-04-05T15:13:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b86b2e70_73f3fade",
+      "revId": "82d47682fea656338ad401d276afc94fde3f5d54",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "17b3e5cf_692dc49a",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 493,
+      "author": {
+        "id": 33467
+      },
+      "writtenOn": "2024-04-05T15:13:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b86b2e70_73f3fade",
+      "revId": "82d47682fea656338ad401d276afc94fde3f5d54",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
