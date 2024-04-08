@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0bea1e03_8f48a018",
+        "filename": "tox.ini",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 8064
+      },
+      "writtenOn": "2024-04-08T14:35:55Z",
+      "side": 1,
+      "message": "NIT: probably not needed?",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 45
+      },
+      "revId": "82e82008b04ab61f36a6ae5a28206609a8168c40",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
