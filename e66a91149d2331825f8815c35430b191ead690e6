@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ebfeb252_36099535",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 782
+      },
+      "writtenOn": "2024-04-09T11:04:07Z",
+      "side": 1,
+      "message": "@MattP are you sure this is correct BTW? Don\u0027t we want to default to having no AZ set on the cinder volumes?",
+      "revId": "e66a91149d2331825f8815c35430b191ead690e6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
