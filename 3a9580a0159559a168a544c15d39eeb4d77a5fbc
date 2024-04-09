@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b799d5d4_17ba462f",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 782
+      },
+      "writtenOn": "2024-04-09T11:00:56Z",
+      "side": 1,
+      "message": "Hmm, so we have a problem here...\n\nThe first version of this code was using jinja to template out some yaml files, and in that version of the world, this escaping was to ensure we produced valid yaml, so it stuck here.\n\nNow in the current version of the code, will build up a python dictionary and convert it to YAML, which should be safe enough, or if its not, its a python bug. Although, this clearly is user input, so we should be careful here.\n\nSome of these things go into Kubernetes label names, via the helm chart values, and in those cases, we don\u0027t want underscores.\n\nThe problem you are hitting is that valid values for cinder az names are a larger set than are valid in the above case.\n\nI think the correct thing to do here is have an optional parameter for allowed characters, that defaults to the current value, which we can call something like SAFE_FOR_K8S_LABLE_NAMES or something like that.\n\nIn your case you should override that to something like SAFE_FOR_CINDER_AZS I guess?",
+      "parentUuid": "4d34490b_ce27e0fa",
+      "revId": "3a9580a0159559a168a544c15d39eeb4d77a5fbc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7abcf79e_32562635",
         "filename": "tox.ini",
         "patchSetId": 13
