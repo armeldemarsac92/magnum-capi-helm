@@ -34,6 +34,24 @@
       "parentUuid": "97133ed5_a97cac41",
       "revId": "b536601f9b488914bb09710e6201784c78bfc280",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "72329e3a_faf70504",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2024-04-09T10:23:35Z",
+      "side": 1,
+      "message": "Agreed, I\u0027m happy to make a follow up patch to use oslo_utils here and in other places (such as parsing integer labels).",
+      "parentUuid": "faa7ff1e_7e6a536d",
+      "revId": "b536601f9b488914bb09710e6201784c78bfc280",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
