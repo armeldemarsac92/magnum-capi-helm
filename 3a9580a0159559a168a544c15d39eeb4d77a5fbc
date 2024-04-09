@@ -54,6 +54,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f5f6111_1f7bda0f",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 13
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2024-04-09T17:08:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "52281ede_8d7f250f",
+      "revId": "3a9580a0159559a168a544c15d39eeb4d77a5fbc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7abcf79e_32562635",
@@ -67,6 +85,24 @@
       "writtenOn": "2024-04-09T10:04:59Z",
       "side": 1,
       "message": "that should be a separate change",
+      "revId": "3a9580a0159559a168a544c15d39eeb4d77a5fbc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2c5c1e2b_1b5daaa0",
+        "filename": "tox.ini",
+        "patchSetId": 13
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2024-04-09T17:08:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7abcf79e_32562635",
       "revId": "3a9580a0159559a168a544c15d39eeb4d77a5fbc",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
