@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec475f97_9e0ba41f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 35921
+      },
+      "writtenOn": "2024-04-10T19:27:54Z",
+      "side": 1,
+      "message": "I agree it should probably be off by default.\n\nNote that I have pushed up a patch [1] to capi-helm-charts repo with an updated version of the k8s-keystone-auth helm chart using an image that exists.\n\n1. https://github.com/stackhpc/capi-helm-charts/pull/303",
+      "revId": "8f802d03b4660388d8f5aa9b5474f0bb02d08d5b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
