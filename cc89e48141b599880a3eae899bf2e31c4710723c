@@ -1,0 +1,12 @@
+Code-Review+2: Michal Nasiadka <mnasiadka@gmail.com>
+Code-Review+1: Scott Davidson <scott@stackhpc.com>
+Code-Review+1: John Garbutt <john.garbutt@stackhpc.com>
+Workflow+1: Michal Nasiadka <mnasiadka@gmail.com>
+Code-Review+2: Matt Pryor <matt@stackhpc.com>
+Verified+2: Zuul
+Submitted-by: Zuul
+Submitted-at: Wed, 10 Apr 2024 15:54:50 +0000
+Reviewed-on: https://review.opendev.org/c/openstack/magnum-capi-helm/+/914110
+Comments-Total: 24
+Project: openstack/magnum-capi-helm
+Branch: refs/heads/master
