@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "269618c2_a00c5af2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2024-04-10T15:56:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a44321c_074ac622",
+      "range": {
+        "startLine": 7,
+        "startChar": 18,
+        "endLine": 7,
+        "endChar": 28
+      },
+      "revId": "82e82008b04ab61f36a6ae5a28206609a8168c40",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "8231d9c3_9864677d",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 3
@@ -54,6 +78,30 @@
       "writtenOn": "2024-04-08T14:35:55Z",
       "side": 1,
       "message": "NIT: probably not needed?",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 45
+      },
+      "revId": "82e82008b04ab61f36a6ae5a28206609a8168c40",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "74a4006b_182a99b7",
+        "filename": "tox.ini",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2024-04-10T15:56:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0bea1e03_8f48a018",
       "range": {
         "startLine": 14,
         "startChar": 0,
