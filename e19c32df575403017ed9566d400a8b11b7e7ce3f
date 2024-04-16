@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dbab39de_972a4658",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 657,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2024-04-16T15:28:43Z",
+      "side": 1,
+      "message": "we usually use # NOTE(somebody): something or at least # NOTE: something",
+      "range": {
+        "startLine": 657,
+        "startChar": 12,
+        "endLine": 657,
+        "endChar": 14
+      },
+      "revId": "e19c32df575403017ed9566d400a8b11b7e7ce3f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
