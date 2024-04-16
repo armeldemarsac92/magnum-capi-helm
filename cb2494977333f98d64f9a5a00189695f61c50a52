@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dbfc61ba_c382a97d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2024-04-16T15:23:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "deb1ab26_7e9592f3",
+      "revId": "cb2494977333f98d64f9a5a00189695f61c50a52",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "276d26bc_5f30448d",
@@ -31,6 +49,24 @@
       "writtenOn": "2024-04-16T08:48:56Z",
       "side": 1,
       "message": "This needs to be source ip port I think?",
+      "revId": "cb2494977333f98d64f9a5a00189695f61c50a52",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "61041be2_fee5f8c1",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 657,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2024-04-16T15:23:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "276d26bc_5f30448d",
       "revId": "cb2494977333f98d64f9a5a00189695f61c50a52",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
