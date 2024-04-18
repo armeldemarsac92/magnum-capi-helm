@@ -22,6 +22,30 @@
       },
       "revId": "e19c32df575403017ed9566d400a8b11b7e7ce3f",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac02a668_5269bab6",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 657,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2024-04-18T12:52:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dbab39de_972a4658",
+      "range": {
+        "startLine": 657,
+        "startChar": 12,
+        "endLine": 657,
+        "endChar": 14
+      },
+      "revId": "e19c32df575403017ed9566d400a8b11b7e7ce3f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
