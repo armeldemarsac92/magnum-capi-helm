@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c69e6028_2dea170f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 8064
+      },
+      "writtenOn": "2024-04-29T14:01:05Z",
+      "side": 1,
+      "message": "Thanks for the change! Just some minor comments to avoid maintenance for future us.",
+      "revId": "63d281e6749a07fe636603ae53e0e4f0e5fbfc9c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "23909890_49d59bc2",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 652,
+      "author": {
+        "id": 8064
+      },
+      "writtenOn": "2024-04-29T14:01:05Z",
+      "side": 1,
+      "message": "is there a reason to do this? e.g. some deployment tool using `OVN` instead of `ovn` and cannot be changed?",
+      "range": {
+        "startLine": 652,
+        "startChar": 67,
+        "endLine": 652,
+        "endChar": 72
+      },
+      "revId": "63d281e6749a07fe636603ae53e0e4f0e5fbfc9c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8f4936a0_e7073990",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 8064
+      },
+      "writtenOn": "2024-04-29T14:01:05Z",
+      "side": 1,
+      "message": "I think we should just let the user provide both the provider and algorithm if they want to use OVN. That is the current case with the Heat driver, and also the current case with Octavia.\n\nI am aiming to get the driver as thin as possible, so we do not have to maintain this code when upstream changes (e.g. ovn-octavia supporting other algo, or Octavia setting this for us automagically)",
+      "revId": "63d281e6749a07fe636603ae53e0e4f0e5fbfc9c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
