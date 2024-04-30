@@ -16,6 +16,24 @@
       "message": "This is what needs to change I believe ^",
       "revId": "f40d7621f75a3a48f3bd251aa563367a297baf67",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b8483add_39ec351c",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 789,
+      "author": {
+        "id": 782
+      },
+      "writtenOn": "2024-04-30T09:07:42Z",
+      "side": 1,
+      "message": "If ng.max_node_count is None, we should keep it the same.\n\nOtherwise, I believe we should use the min max values from the node group here:\nhttps://github.com/openstack/magnum/blob/3759742e104516f696878d999079e44e73519be9/magnum/objects/nodegroup.py#L48",
+      "parentUuid": "36b69da1_9c7d3a29",
+      "revId": "f40d7621f75a3a48f3bd251aa563367a297baf67",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
