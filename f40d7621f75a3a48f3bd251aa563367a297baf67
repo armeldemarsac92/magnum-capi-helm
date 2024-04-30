@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2d31a679_2f797e59",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 584,
+      "author": {
+        "id": 782
+      },
+      "writtenOn": "2024-04-30T09:14:46Z",
+      "side": 1,
+      "message": "I see, we should respect this label I guess.",
+      "range": {
+        "startLine": 582,
+        "startChar": 0,
+        "endLine": 584,
+        "endChar": 9
+      },
+      "revId": "f40d7621f75a3a48f3bd251aa563367a297baf67",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "36b69da1_9c7d3a29",
         "filename": "magnum_capi_helm/driver.py",
         "patchSetId": 5
