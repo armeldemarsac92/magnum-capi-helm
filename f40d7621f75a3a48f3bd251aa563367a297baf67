@@ -26,6 +26,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "954a2e63_6eaeb2f1",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 588,
+      "author": {
+        "id": 35572
+      },
+      "writtenOn": "2024-04-30T09:59:20Z",
+      "side": 1,
+      "message": "We should also check if \u0027min_node_count\u0027 is not higher than \u0027node_count\u0027 defined by the user for default-worker nodegroup.",
+      "range": {
+        "startLine": 588,
+        "startChar": 12,
+        "endLine": 588,
+        "endChar": 56
+      },
+      "revId": "f40d7621f75a3a48f3bd251aa563367a297baf67",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "36b69da1_9c7d3a29",
         "filename": "magnum_capi_helm/driver.py",
         "patchSetId": 5
@@ -79,6 +102,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1a045e7e_5c577cd3",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 789,
+      "author": {
+        "id": 35572
+      },
+      "writtenOn": "2024-04-30T09:59:20Z",
+      "side": 1,
+      "message": "Why can\u0027t we create default-woreker nodegroup with 0 nodes?",
+      "parentUuid": "aafbb555_a4883c61",
+      "revId": "f40d7621f75a3a48f3bd251aa563367a297baf67",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cf499e26_3e55bb3a",
         "filename": "magnum_capi_helm/driver.py",
         "patchSetId": 5
@@ -90,6 +131,24 @@
       "writtenOn": "2024-04-30T09:41:52Z",
       "side": 1,
       "message": "looks like \"default-worker\" comes from the cluster labels:\nhttps://github.com/openstack/magnum/blob/3759742e104516f696878d999079e44e73519be9/magnum/drivers/common/templates/kubernetes/fragments/enable-auto-scaling.sh#L147",
+      "revId": "f40d7621f75a3a48f3bd251aa563367a297baf67",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0b430a28_0f8cec21",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 792,
+      "author": {
+        "id": 35572
+      },
+      "writtenOn": "2024-04-30T09:59:20Z",
+      "side": 1,
+      "message": "Yes, values from labels (min and max node count) should apply only to default-worker nodegroup.",
+      "parentUuid": "cf499e26_3e55bb3a",
       "revId": "f40d7621f75a3a48f3bd251aa563367a297baf67",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
