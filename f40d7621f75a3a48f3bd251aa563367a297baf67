@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "aafbb555_a4883c61",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 789,
+      "author": {
+        "id": 782
+      },
+      "writtenOn": "2024-04-30T09:11:30Z",
+      "side": 1,
+      "message": "Lets hard code the minimum to be max(1, ng.min_node_count) and ignore users specifying 0 for now, so we do not break things.\n\nIdeally we change the Mangum API to reject things, but that is for the future.",
+      "parentUuid": "b8483add_39ec351c",
+      "revId": "f40d7621f75a3a48f3bd251aa563367a297baf67",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6352c960_9e3279a6",
         "filename": "magnum_capi_helm/driver.py",
         "patchSetId": 5
