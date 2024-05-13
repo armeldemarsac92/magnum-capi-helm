@@ -58,6 +58,30 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ca37d29_904389a2",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 652,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2024-05-13T09:03:48Z",
+      "side": 1,
+      "message": "Thanks for the feedback. I agree that it probably makes sense to allow `OVN` here too.",
+      "parentUuid": "23909890_49d59bc2",
+      "range": {
+        "startLine": 652,
+        "startChar": 67,
+        "endLine": 652,
+        "endChar": 72
+      },
+      "revId": "63d281e6749a07fe636603ae53e0e4f0e5fbfc9c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8f4936a0_e7073990",
@@ -71,6 +95,24 @@
       "writtenOn": "2024-04-29T14:01:05Z",
       "side": 1,
       "message": "I think we should just let the user provide both the provider and algorithm if they want to use OVN. That is the current case with the Heat driver, and also the current case with Octavia.\n\nI am aiming to get the driver as thin as possible, so we do not have to maintain this code when upstream changes (e.g. ovn-octavia supporting other algo, or Octavia setting this for us automagically)",
+      "revId": "63d281e6749a07fe636603ae53e0e4f0e5fbfc9c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2d1d4a18_f01a4955",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2024-05-13T09:03:48Z",
+      "side": 1,
+      "message": "What you say regarding the thinness of the driver makes sense. I do still think that it\u0027s better to do the right think automatically if possible so have changed the code so that the default label is selected automatically based on the driver but the user can still override it by supplying the label. This way it should still satisfy the desire to reduce maintenance burden (unless OVN removed support for SOURCE_IP_PORT) but if you feel strongly about this then I am happy to revert the change and just default to ROUND_ROBIN always.",
+      "parentUuid": "8f4936a0_e7073990",
       "revId": "63d281e6749a07fe636603ae53e0e4f0e5fbfc9c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
