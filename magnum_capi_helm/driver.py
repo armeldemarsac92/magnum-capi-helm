@@ -401,7 +401,7 @@ class Driver(driver.Driver):
             LOG.debug("Checking on a delete for %s", cluster.uuid)
             # If the Cluster API cluster still exists,
             # the delete is still in progress
-            if capi_cluster:
+            if cluster.stack_id and capi_cluster:
                 LOG.debug(f"capi_cluster still found for {cluster.uuid}")
                 return
             self._update_status_deleting(context, cluster)
@@ -927,14 +927,19 @@ class Driver(driver.Driver):
             ng.status = fields.ClusterStatus.DELETE_IN_PROGRESS
             ng.save()
 
-        # Begin the deletion of the cluster resources by uninstalling the
-        # Helm release
-        # Note that this just marks the resources for deletion - it does not
-        # wait for the resources to be deleted
-        self._helm_client.uninstall_release(
-            driver_utils.chart_release_name(cluster),
-            namespace=driver_utils.cluster_namespace(cluster),
-        )
+        release_name = driver_utils.chart_release_name(cluster)
+        # Only attempt deletion of CAPI resources if they were created in
+        # the first place e.g. if trust creation fails during cluster create
+        # then no CAPI resources will have been created.
+        if release_name:
+            # Begin the deletion of the cluster resources by uninstalling the
+            # Helm release.
+            # Note that this just marks the resources for deletion,
+            # it does not wait for the resources to be deleted.
+            self._helm_client.uninstall_release(
+                release_name,
+                namespace=driver_utils.cluster_namespace(cluster),
+            )
 
     def resize_cluster(
         self,
