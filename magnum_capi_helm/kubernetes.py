@@ -161,6 +161,11 @@ class Client(requests.Session):
         Secret(self).delete_all_by_label(label, value, namespace)
 
     def get_capi_cluster(self, name, namespace):
+        # NOTE(sd109): Attempting a fetch with name == None
+        # will instead list all CAPI clusters so catch that
+        # explicitly here
+        if not name:
+            return
         return Cluster(self).fetch(name, namespace)
 
     def get_capi_openstackcluster(self, name, namespace):
