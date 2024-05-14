@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "79333dbc_e9f4db8e",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 33467
+      },
+      "writtenOn": "2024-05-14T10:23:29Z",
+      "side": 1,
+      "message": "Let\u0027s move this to `_get_capi_cluster`, so that it returns `None` if there is no `stack_id`.\n\nThat way, this function should \"just work\" as-is (before this patch), I think?",
+      "revId": "61ae54957a97d7f06101e99d8d1e46aa67ef9544",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
