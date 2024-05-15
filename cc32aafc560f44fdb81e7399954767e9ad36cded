@@ -1,0 +1,11 @@
+Verified+2: Zuul
+Code-Review+2: Michal Nasiadka <mnasiadka@gmail.com>
+Workflow+1: Matt Pryor <matt@stackhpc.com>
+Code-Review+2: Matt Pryor <matt@stackhpc.com>
+Submitted-by: Zuul
+Submitted-at: Wed, 15 May 2024 10:25:38 +0000
+Reviewed-on: https://review.opendev.org/c/openstack/magnum-capi-helm/+/915473
+Comments-Total: 13
+Comments-Unresolved: 1
+Project: openstack/magnum-capi-helm
+Branch: refs/heads/master
