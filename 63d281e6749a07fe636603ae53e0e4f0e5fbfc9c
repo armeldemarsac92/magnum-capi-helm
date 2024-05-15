@@ -115,6 +115,24 @@
       "parentUuid": "8f4936a0_e7073990",
       "revId": "63d281e6749a07fe636603ae53e0e4f0e5fbfc9c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "57f06fbd_b49b29c2",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 33467
+      },
+      "writtenOn": "2024-05-15T09:57:48Z",
+      "side": 1,
+      "message": "Personally, I prefer that the driver does something that works by default - principle of least surprise.\n\nIf a user specified the OVN driver but left the LB algorithm as ROUND_ROBIN, it just wouldn\u0027t work, and would additionally be quite difficult to debug from the user side I think (i.e. without access to the Magnum logs).",
+      "parentUuid": "2d1d4a18_f01a4955",
+      "revId": "63d281e6749a07fe636603ae53e0e4f0e5fbfc9c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
