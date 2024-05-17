@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2eb44e70_47858644",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2024-05-17T08:50:46Z",
+      "side": 1,
+      "message": "I\u0027ve been testing the latest version of this patch and it works for me (for autoscaling the default worker group). I\u0027m happy to make a follow up patch to support autoscaling of non-default node groups too.",
+      "revId": "001cfbf4cbefa337c4ccf7179aa4136028733785",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
