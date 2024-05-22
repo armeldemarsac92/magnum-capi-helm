@@ -34,6 +34,24 @@
       "parentUuid": "03e74ffe_e575d898",
       "revId": "d01033626941bf65e99d836dd3fa369dd5a17f55",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ca09d092_2b6704d2",
+        "filename": "test-requirements.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2024-05-22T12:27:29Z",
+      "side": 1,
+      "message": "Yeah, it\u0027s a standard - actually I have it installed in my venv, because tox takes time ;-)",
+      "parentUuid": "bbc78cbe_1fd59617",
+      "revId": "d01033626941bf65e99d836dd3fa369dd5a17f55",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
