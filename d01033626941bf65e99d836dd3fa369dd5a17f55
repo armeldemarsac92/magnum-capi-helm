@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "03e74ffe_e575d898",
+        "filename": "test-requirements.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2024-05-22T11:26:39Z",
+      "side": 1,
+      "message": "that\u0027s not needed, but we need release-notes-jobs-python3 template job in zuul config",
+      "revId": "d01033626941bf65e99d836dd3fa369dd5a17f55",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
