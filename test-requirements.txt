@@ -12,3 +12,4 @@ testtools>=1.4.0 # MIT
 black<25.0.0 # MIT
 
 magnum
+reno
