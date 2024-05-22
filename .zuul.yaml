@@ -65,4 +65,8 @@
     templates:
       - openstack-cover-jobs-magnum
       - openstack-python3-jobs-magnum
+<<<<<<< PATCH SET (2dd760 Add initial release note)
+      - release-notes-jobs-python3
+=======
       - publish-openstack-docs-pti
+>>>>>>> BASE      (bc3c71 Add initial docs)
