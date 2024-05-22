@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "91d240ea_b12f98c6",
+        "filename": "releasenotes/notes/initial-release-f507ed074fcf7763.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 35572
+      },
+      "writtenOn": "2024-05-22T13:17:19Z",
+      "side": 1,
+      "message": "Isn\u0027t it too early to release the first version?\nIn my opinion, this driver does not support many basic parameters/labels that are currently supported by the Heat driver, such as proxy configuration, setting pod or service CIDR and boot/docker/etcd volumes (type and size).\nI many cases this prevents from using this driver instead of Heat driver.",
+      "range": {
+        "startLine": 14,
+        "startChar": 3,
+        "endLine": 18,
+        "endChar": 0
+      },
+      "revId": "d01033626941bf65e99d836dd3fa369dd5a17f55",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "03e74ffe_e575d898",
         "filename": "test-requirements.txt",
         "patchSetId": 1
