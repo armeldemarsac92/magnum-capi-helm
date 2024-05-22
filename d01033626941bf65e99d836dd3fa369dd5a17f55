@@ -24,6 +24,30 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "85bc1564_92a841f0",
+        "filename": "releasenotes/notes/initial-release-f507ed074fcf7763.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2024-05-22T13:24:51Z",
+      "side": 1,
+      "message": "If we are going to wait for full feature parity - we\u0027re not going to release in next two years - and we need first OpenDev based release to stop maintaining two repositories (the original in GitHub and this one).\nI think we should document the feature gap (or for now document that we do not have feature parity) - but it shouldn\u0027t stop us in releasing.",
+      "parentUuid": "91d240ea_b12f98c6",
+      "range": {
+        "startLine": 14,
+        "startChar": 3,
+        "endLine": 18,
+        "endChar": 0
+      },
+      "revId": "d01033626941bf65e99d836dd3fa369dd5a17f55",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "03e74ffe_e575d898",
