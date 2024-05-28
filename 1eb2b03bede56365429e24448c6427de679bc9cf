@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5101fe24_763095d3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 782
+      },
+      "writtenOn": "2024-05-28T09:01:04Z",
+      "side": 1,
+      "message": "OK, this looks good, but lets add a reno note please.",
+      "revId": "1eb2b03bede56365429e24448c6427de679bc9cf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dc574fec_b874c472",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 782
+      },
+      "writtenOn": "2024-05-28T09:01:04Z",
+      "side": 1,
+      "message": "This is the fix I would like here, along with the",
+      "revId": "1eb2b03bede56365429e24448c6427de679bc9cf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
