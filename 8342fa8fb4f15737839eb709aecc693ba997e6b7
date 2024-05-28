@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e776815_d0aeedd0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 782
+      },
+      "writtenOn": "2024-05-28T08:55:00Z",
+      "side": 1,
+      "message": "I think we should merge this, then add that little fix in the follow on patch.",
+      "revId": "8342fa8fb4f15737839eb709aecc693ba997e6b7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3fc0fea5_fba97665",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 760,
+      "author": {
+        "id": 782
+      },
+      "writtenOn": "2024-05-28T08:55:00Z",
+      "side": 1,
+      "message": "The follow on patch makes this more robust, which is nice, but this seems OK for now.",
+      "revId": "8342fa8fb4f15737839eb709aecc693ba997e6b7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
