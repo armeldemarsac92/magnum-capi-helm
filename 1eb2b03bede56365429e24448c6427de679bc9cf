@@ -33,6 +33,24 @@
       "message": "This is the fix I would like here, along with the",
       "revId": "1eb2b03bede56365429e24448c6427de679bc9cf",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e6c526e5_abc9ca51",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 782
+      },
+      "writtenOn": "2024-05-28T10:06:24Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "dc574fec_b874c472",
+      "revId": "1eb2b03bede56365429e24448c6427de679bc9cf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }

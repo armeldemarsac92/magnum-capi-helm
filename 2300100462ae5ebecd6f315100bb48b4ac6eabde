@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9810db0a_a6822a90",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 782
+      },
+      "writtenOn": "2024-05-28T10:06:24Z",
+      "side": 1,
+      "message": "Thank you, that reno looks good to me.",
+      "revId": "2300100462ae5ebecd6f315100bb48b4ac6eabde",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
