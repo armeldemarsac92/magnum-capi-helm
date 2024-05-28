@@ -18,6 +18,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8969d5e8_04b5c6e1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 782
+      },
+      "writtenOn": "2024-05-28T09:00:38Z",
+      "side": 1,
+      "message": "Ah, we need a reno for this, and we should update the description to include this is only the default node group.",
+      "revId": "8342fa8fb4f15737839eb709aecc693ba997e6b7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3fc0fea5_fba97665",
