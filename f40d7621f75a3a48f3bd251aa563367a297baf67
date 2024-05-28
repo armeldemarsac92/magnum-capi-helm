@@ -47,6 +47,30 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "15db12d2_7cce4b3d",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 588,
+      "author": {
+        "id": 782
+      },
+      "writtenOn": "2024-05-28T10:04:24Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "954a2e63_6eaeb2f1",
+      "range": {
+        "startLine": 588,
+        "startChar": 12,
+        "endLine": 588,
+        "endChar": 56
+      },
+      "revId": "f40d7621f75a3a48f3bd251aa563367a297baf67",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "36b69da1_9c7d3a29",
@@ -118,6 +142,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5453700b_3b0eb253",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 789,
+      "author": {
+        "id": 782
+      },
+      "writtenOn": "2024-05-28T10:04:24Z",
+      "side": 1,
+      "message": "This is a limitation within the openstack provider for CAPI, because of how it works out how much RAM you really get on each node, etc.",
+      "parentUuid": "1a045e7e_5c577cd3",
+      "revId": "f40d7621f75a3a48f3bd251aa563367a297baf67",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cf499e26_3e55bb3a",
@@ -153,6 +195,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "03ab45b5_649aaf14",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 792,
+      "author": {
+        "id": 782
+      },
+      "writtenOn": "2024-05-28T10:04:24Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "0b430a28_0f8cec21",
+      "revId": "f40d7621f75a3a48f3bd251aa563367a297baf67",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6352c960_9e3279a6",
@@ -166,6 +226,24 @@
       "writtenOn": "2024-04-30T09:08:15Z",
       "side": 1,
       "message": "I don\u0027t believe we should do this here, there API is already present... I think, in the object layer.",
+      "revId": "f40d7621f75a3a48f3bd251aa563367a297baf67",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "96040bca_158dcfd9",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 832,
+      "author": {
+        "id": 782
+      },
+      "writtenOn": "2024-05-28T10:04:24Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "6352c960_9e3279a6",
       "revId": "f40d7621f75a3a48f3bd251aa563367a297baf67",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }

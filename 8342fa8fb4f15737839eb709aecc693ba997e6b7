@@ -50,6 +50,24 @@
       "message": "The follow on patch makes this more robust, which is nice, but this seems OK for now.",
       "revId": "8342fa8fb4f15737839eb709aecc693ba997e6b7",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c6bcb931_c548a756",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 760,
+      "author": {
+        "id": 782
+      },
+      "writtenOn": "2024-05-28T10:04:24Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "3fc0fea5_fba97665",
+      "revId": "8342fa8fb4f15737839eb709aecc693ba997e6b7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
