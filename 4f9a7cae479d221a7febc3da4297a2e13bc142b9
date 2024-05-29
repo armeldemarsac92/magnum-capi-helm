@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "77e759f3_4d3fcaec",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2024-05-29T02:25:11Z",
+      "side": 1,
+      "message": "Yes good points, I\u0027ll address these.",
+      "parentUuid": "44188527_36aab885",
+      "revId": "4f9a7cae479d221a7febc3da4297a2e13bc142b9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5b00f7ea_34eeef88",
@@ -31,6 +49,30 @@
       "writtenOn": "2024-05-28T11:25:50Z",
       "side": 1,
       "message": "Where do you use this new function?",
+      "range": {
+        "startLine": 79,
+        "startChar": 4,
+        "endLine": 79,
+        "endChar": 49
+      },
+      "revId": "4f9a7cae479d221a7febc3da4297a2e13bc142b9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "66780143_67b3283a",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2024-05-29T02:25:11Z",
+      "side": 1,
+      "message": "This is a (proposed) new function in the base driver class. It is not yet merged into Magnum master. The base class implementation does not support resizing, so here we override it to allow the action within the bounds.  https://review.opendev.org/c/openstack/magnum/+/906086/5/magnum/drivers/common/driver.py#233\n\nThe actual (proposed) usage of this function within Magnum is in `cluster_actions.py`\nhttps://review.opendev.org/c/openstack/magnum/+/906086/5/magnum/api/controllers/v1/cluster_actions.py#133\n\nThis patchset in magnum-capi-helm can not merge until https://review.opendev.org/c/openstack/magnum/+/906086 does. I will add the \u0027depends on\u0027 to the commit message.",
+      "parentUuid": "5b00f7ea_34eeef88",
       "range": {
         "startLine": 79,
         "startChar": 4,
