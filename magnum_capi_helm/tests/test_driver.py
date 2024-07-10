@@ -2922,7 +2922,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             id=456,
             name="autoscale-group",
             node_count=1,
-            min_node_count=0,
+            min_node_count=1,
             max_node_count=3,
         )
         self.cluster_obj.nodegroups.append(auto_scale_nodegroup)
