@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f0516d40_a3100909",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2024-07-15T07:22:21Z",
+      "side": 1,
+      "message": "can you wrap at 72 characters? and maybe and a newline somewhere, so it\u0027s readable? ;-)",
+      "revId": "57f888bb3b0f474ebd931b976fe38992042e9520",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
