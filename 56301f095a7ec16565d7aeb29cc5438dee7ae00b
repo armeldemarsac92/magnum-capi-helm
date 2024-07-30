@@ -16,6 +16,24 @@
       "message": "Works correctly.\nAvailability Zones for Control Plane could be set by separate label to make possible place Master Nodes in different Availability Zones.",
       "revId": "56301f095a7ec16565d7aeb29cc5438dee7ae00b",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f91b3a6b_b8f27d01",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 8064
+      },
+      "writtenOn": "2024-07-30T13:26:42Z",
+      "side": 1,
+      "message": "Thanks for the input! I will modify this.",
+      "parentUuid": "3c6858ed_7f587a94",
+      "revId": "56301f095a7ec16565d7aeb29cc5438dee7ae00b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
