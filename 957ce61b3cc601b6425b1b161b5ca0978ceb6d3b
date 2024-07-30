@@ -16,6 +16,23 @@
       "message": "Tested and works correctly.",
       "revId": "957ce61b3cc601b6425b1b161b5ca0978ceb6d3b",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c6f07bc3_41f51a57",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 782
+      },
+      "writtenOn": "2024-07-30T16:19:49Z",
+      "side": 1,
+      "message": "Good point... a great add.\n\nAlthough I do wonder if we should follow this up with a release note to highlight this new feature. But I don\u0027t want this to wait around any longer, so +W from me.",
+      "revId": "957ce61b3cc601b6425b1b161b5ca0978ceb6d3b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
