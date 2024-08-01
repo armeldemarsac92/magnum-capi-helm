@@ -25,8 +25,7 @@ LOG = logging.getLogger(__name__)
 CONF = conf.CONF
 
 # This code is loosely based on:
-#  https://github.com/stackhpc/pyhelm3
-#  Ideally we can share this code in the future.
+#  https://github.com/azimuth-cloud/pyhelm3
 
 
 def mergeconcat(defaults, *overrides):
