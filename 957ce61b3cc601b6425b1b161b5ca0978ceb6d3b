@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d8cde2de_9ed7db8e",
+        "filename": "magnum_capi_helm/helm.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 782
+      },
+      "writtenOn": "2024-08-01T16:23:54Z",
+      "side": 0,
+      "message": "I think ideally we would still share this code.",
+      "revId": "957ce61b3cc601b6425b1b161b5ca0978ceb6d3b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
