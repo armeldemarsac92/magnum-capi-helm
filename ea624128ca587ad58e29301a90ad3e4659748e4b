@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aab0402e_95e69edd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2024-08-02T01:03:46Z",
+      "side": 1,
+      "message": "Needs release notes added, and the CIDRs made configurable.",
+      "revId": "ea624128ca587ad58e29301a90ad3e4659748e4b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2d94d2f2_686ba756",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 841,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2024-08-02T01:03:46Z",
+      "side": 1,
+      "message": "As noted; this part needs to be re-worked to be configurable prior to merging.\n\nIt does need to be known in the Magnum driver however, due to the allowed address pairs CIDRs needing to be the same.",
+      "revId": "ea624128ca587ad58e29301a90ad3e4659748e4b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
