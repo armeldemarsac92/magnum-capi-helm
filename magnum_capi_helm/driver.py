@@ -487,7 +487,8 @@ class Driver(driver.Driver):
             return default
 
     def _get_chart_version(self, cluster):
-        version = cluster.cluster_template.labels.get(
+        version = self._label(
+            cluster,
             "capi_helm_chart_version",
             CONF.capi_helm.default_helm_chart_version,
         )
