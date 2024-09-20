@@ -1150,6 +1150,16 @@ class ClusterAPIDriverTest(base.DbTestCase):
 
         self.assertEqual("1.42.0", version)
 
+    def test_get_chart_version_from_cluster_overrides_template(self):
+        self.cluster_obj.cluster_template.labels["capi_helm_chart_version"] = (
+            "1.42.0"
+        )
+        self.cluster_obj.labels = {"capi_helm_chart_version": "1.42.1"}
+
+        version = self.driver._get_chart_version(self.cluster_obj)
+
+        self.assertEqual("1.42.1", version)
+
     def _get_cluster_helm_standard_values(self):
         """Return standard helm values which can be modified for tests.
 
