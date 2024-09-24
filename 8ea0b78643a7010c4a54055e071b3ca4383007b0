@@ -16,6 +16,24 @@
       "message": "I think this needs more discussion. Labels provided at cluster creation time could indeed override this with the proposed patchset, but then there is no supported way to change the helm chart version for the rest of the lifetime of the cluster?\n\nThis may leave you unable to upgrade to a new K8s version or CAPO version if the chart version is locked at something older (eg. v1alpha7 to v1beta1 resources).  Mutable labels would help here, but don\u0027t exist yet.\n\nFor our use case, we create curated Cluster Templates that combine a helm chart version and k8s version and these are what change when cluster upgrades are performed.",
       "revId": "8ea0b78643a7010c4a54055e071b3ca4383007b0",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c0395617_d8c53484",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 8064
+      },
+      "writtenOn": "2024-09-24T08:54:06Z",
+      "side": 1,
+      "message": "Good point, your use case makes sense. Let\u0027s discuss in meeting.",
+      "parentUuid": "1e1aa1ab_a2fa4384",
+      "revId": "8ea0b78643a7010c4a54055e071b3ca4383007b0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
