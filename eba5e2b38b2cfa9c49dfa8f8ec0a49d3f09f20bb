@@ -33,6 +33,24 @@
       "message": "This is quite old now, its probably worth bumping this default?\n\nI wonder if we should default to \"latest\" or similar, with a note that operators should set this to a version they have tested with their images? Unsure.",
       "revId": "eba5e2b38b2cfa9c49dfa8f8ec0a49d3f09f20bb",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f23b4cc3_ae1f005f",
+        "filename": "magnum_capi_helm/conf.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 35260
+      },
+      "writtenOn": "2024-09-30T20:26:42Z",
+      "side": 1,
+      "message": "updated to 0.10.1. I guess the question of \u0027latest\u0027 or not is kind of unrelated to this change, and may require some further thought",
+      "parentUuid": "79cde22a_9481480d",
+      "revId": "eba5e2b38b2cfa9c49dfa8f8ec0a49d3f09f20bb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
