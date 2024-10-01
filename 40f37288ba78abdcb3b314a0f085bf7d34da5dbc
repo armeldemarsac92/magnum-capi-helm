@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "439f379d_7db514ec",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2024-10-01T03:48:50Z",
+      "side": 1,
+      "message": "please raise a bug for users looking why everything stopped working and close it with this patch",
+      "revId": "40f37288ba78abdcb3b314a0f085bf7d34da5dbc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c65f5b55_fec7e889",
+        "filename": "releasenotes/notes/change-helm-repo-55869552914bb9ed.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2024-10-01T03:48:50Z",
+      "side": 1,
+      "message": "shouldn’t that be rather upgrade and fixes?",
+      "revId": "40f37288ba78abdcb3b314a0f085bf7d34da5dbc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bdbabc08_03058200",
+        "filename": "releasenotes/notes/change-helm-repo-55869552914bb9ed.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2024-10-01T03:48:50Z",
+      "side": 1,
+      "message": "it’s not deprecated, it’s not existent (and it broke all users)",
+      "revId": "40f37288ba78abdcb3b314a0f085bf7d34da5dbc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
