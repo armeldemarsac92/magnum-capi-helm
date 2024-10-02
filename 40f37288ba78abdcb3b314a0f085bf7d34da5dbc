@@ -18,6 +18,40 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "04278a9a_5a064894",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 33467
+      },
+      "writtenOn": "2024-10-02T14:43:38Z",
+      "side": 1,
+      "message": "I think this looks OK apart from one small typo. Please also address Michal\u0027s comments.",
+      "revId": "40f37288ba78abdcb3b314a0f085bf7d34da5dbc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e88a7a59_451e90e0",
+        "filename": "doc/source/index.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 33467
+      },
+      "writtenOn": "2024-10-02T14:43:38Z",
+      "side": 1,
+      "message": "Typo here - \"are\" is not required.",
+      "revId": "40f37288ba78abdcb3b314a0f085bf7d34da5dbc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c65f5b55_fec7e889",
@@ -48,6 +82,24 @@
       "writtenOn": "2024-10-01T03:48:50Z",
       "side": 1,
       "message": "it’s not deprecated, it’s not existent (and it broke all users)",
+      "revId": "40f37288ba78abdcb3b314a0f085bf7d34da5dbc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b987176_8bdfadc0",
+        "filename": "releasenotes/notes/change-helm-repo-55869552914bb9ed.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 33467
+      },
+      "writtenOn": "2024-10-02T14:43:38Z",
+      "side": 1,
+      "message": "It shouldn\u0027t have broken all users - the old repository still exists with all the tags up to that point. Perhaps this was a transient error that only occurred during the migration from stackhpc to azimuth-cloud.",
+      "parentUuid": "bdbabc08_03058200",
       "revId": "40f37288ba78abdcb3b314a0f085bf7d34da5dbc",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
