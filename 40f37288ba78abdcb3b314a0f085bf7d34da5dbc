@@ -228,6 +228,24 @@
       "parentUuid": "983bdf9f_8835587d",
       "revId": "40f37288ba78abdcb3b314a0f085bf7d34da5dbc",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e4e2106_a8e0ab83",
+        "filename": "releasenotes/notes/change-helm-repo-55869552914bb9ed.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 35260
+      },
+      "writtenOn": "2024-10-04T12:08:20Z",
+      "side": 1,
+      "message": "good idea",
+      "parentUuid": "99cc7e3b_bf331171",
+      "revId": "40f37288ba78abdcb3b314a0f085bf7d34da5dbc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
