@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a547998d_ac0c2492",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2024-10-04T11:11:00Z",
+      "side": 1,
+      "message": "nah, if it was transient then it\u0027s fine.",
+      "parentUuid": "b672f4f1_c4050297",
+      "revId": "40f37288ba78abdcb3b314a0f085bf7d34da5dbc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e88a7a59_451e90e0",
         "filename": "doc/source/index.rst",
         "patchSetId": 3
@@ -172,6 +190,24 @@
       "side": 1,
       "message": "I\u0027m going to side with Matt here and say it is a deprecation as the charts up to the 0.9.0 version tag are still accessible at the old URL. I can change \u0027features\u0027 to \u0027upgrade\u0027 though.",
       "parentUuid": "7b987176_8bdfadc0",
+      "revId": "40f37288ba78abdcb3b314a0f085bf7d34da5dbc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "99cc7e3b_bf331171",
+        "filename": "releasenotes/notes/change-helm-repo-55869552914bb9ed.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2024-10-04T11:11:00Z",
+      "side": 1,
+      "message": "Should we note what is the maximum version supported by the old repo?",
+      "parentUuid": "983bdf9f_8835587d",
       "revId": "40f37288ba78abdcb3b314a0f085bf7d34da5dbc",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
