@@ -124,6 +124,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0c8c55c0_40f236c5",
+        "filename": "doc/source/index.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 35260
+      },
+      "writtenOn": "2024-10-04T14:50:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7dedd1db_eae87c53",
+      "revId": "40f37288ba78abdcb3b314a0f085bf7d34da5dbc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c65f5b55_fec7e889",
