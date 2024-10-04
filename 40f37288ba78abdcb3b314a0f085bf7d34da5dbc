@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b672f4f1_c4050297",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 35260
+      },
+      "writtenOn": "2024-10-04T11:08:19Z",
+      "side": 1,
+      "message": "I think this perhaps was a transient error as Matt mentioned. Is this still required?",
+      "parentUuid": "439f379d_7db514ec",
+      "revId": "40f37288ba78abdcb3b314a0f085bf7d34da5dbc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e88a7a59_451e90e0",
         "filename": "doc/source/index.rst",
         "patchSetId": 3
@@ -54,6 +72,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7dedd1db_eae87c53",
+        "filename": "doc/source/index.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 35260
+      },
+      "writtenOn": "2024-10-04T11:08:19Z",
+      "side": 1,
+      "message": "ah, I meant \u0027live\u0027 as in active. currently \u0027live\u0027 as in \u0027living\u0027 also works :)",
+      "parentUuid": "e88a7a59_451e90e0",
+      "revId": "40f37288ba78abdcb3b314a0f085bf7d34da5dbc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c65f5b55_fec7e889",
         "filename": "releasenotes/notes/change-helm-repo-55869552914bb9ed.yaml",
         "patchSetId": 3
@@ -65,6 +101,24 @@
       "writtenOn": "2024-10-01T03:48:50Z",
       "side": 1,
       "message": "shouldn’t that be rather upgrade and fixes?",
+      "revId": "40f37288ba78abdcb3b314a0f085bf7d34da5dbc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "654a334e_4093fec8",
+        "filename": "releasenotes/notes/change-helm-repo-55869552914bb9ed.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 35260
+      },
+      "writtenOn": "2024-10-04T11:08:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c65f5b55_fec7e889",
       "revId": "40f37288ba78abdcb3b314a0f085bf7d34da5dbc",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -100,6 +154,24 @@
       "side": 1,
       "message": "It shouldn\u0027t have broken all users - the old repository still exists with all the tags up to that point. Perhaps this was a transient error that only occurred during the migration from stackhpc to azimuth-cloud.",
       "parentUuid": "bdbabc08_03058200",
+      "revId": "40f37288ba78abdcb3b314a0f085bf7d34da5dbc",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "983bdf9f_8835587d",
+        "filename": "releasenotes/notes/change-helm-repo-55869552914bb9ed.yaml",
+        "patchSetId": 3
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 35260
+      },
+      "writtenOn": "2024-10-04T11:08:19Z",
+      "side": 1,
+      "message": "I\u0027m going to side with Matt here and say it is a deprecation as the charts up to the 0.9.0 version tag are still accessible at the old URL. I can change \u0027features\u0027 to \u0027upgrade\u0027 though.",
+      "parentUuid": "7b987176_8bdfadc0",
       "revId": "40f37288ba78abdcb3b314a0f085bf7d34da5dbc",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
