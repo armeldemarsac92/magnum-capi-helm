@@ -1,5 +1,29 @@
 {
-  "comments": [],
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a4940e4b_fe15445c",
+        "filename": "releasenotes/notes/change-helm-repo-55869552914bb9ed.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 17685
+      },
+      "writtenOn": "2024-10-09T15:05:40Z",
+      "side": 1,
+      "message": "nit: this should be \u0027upgrade\u0027 otherwise reno does not understand it [1].\n\n[1] WARNING: The upgrades section of releasenotes/notes/change-helm-repo-55869552914bb9ed.yaml is not a recognized section. It should be one of: upgrade, fixes, deprecations, issues, features, critical, other, security. This will be an error in a future release.",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 2,
+        "endChar": 8
+      },
+      "revId": "fd6c6be84840fff504fd54f5fdfca7296abe9b7d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ],
   "submitRequirementResults": [
     {
       "submitRequirement": {
