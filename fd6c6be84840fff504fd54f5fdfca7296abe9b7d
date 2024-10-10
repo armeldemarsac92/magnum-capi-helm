@@ -22,6 +22,30 @@
       },
       "revId": "fd6c6be84840fff504fd54f5fdfca7296abe9b7d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4bfaaaf2_c034b49e",
+        "filename": "releasenotes/notes/change-helm-repo-55869552914bb9ed.yaml",
+        "patchSetId": 6
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 35260
+      },
+      "writtenOn": "2024-10-10T10:47:50Z",
+      "side": 1,
+      "message": "apologies, I just put a patch up to correct this: https://review.opendev.org/c/openstack/magnum-capi-helm/+/932050. I will bump the hash in the release when this merges",
+      "parentUuid": "a4940e4b_fe15445c",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 2,
+        "endChar": 8
+      },
+      "revId": "fd6c6be84840fff504fd54f5fdfca7296abe9b7d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ],
   "submitRequirementResults": [
