@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "12eadf86_67b1351a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 35572
+      },
+      "writtenOn": "2024-10-14T06:53:14Z",
+      "side": 1,
+      "message": "This is how we implemented this:\nhttps://gist.github.com/pawcykca/10d27b0cdda25abe43d1a35980d09013\n\nCurrent implementation doesn\u0027t allow to set AZ for additional Nodegroups.\n\nAlso one fix in Magnum is needed - deep copy of cluster\u0027s labels dictionary assigned to Nodegroup instead of using reference.",
+      "revId": "9358db7cc4eea7d07de004102d1a243c55ade0ff",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
