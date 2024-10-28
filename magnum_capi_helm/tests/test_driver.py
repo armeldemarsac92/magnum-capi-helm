@@ -1175,6 +1175,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             },
             "etcd": {},
             "apiServer": {
+                "associateFloatingIP": True,
                 "enableLoadBalancer": True,
                 "loadBalancerProvider": "amphora",
             },
