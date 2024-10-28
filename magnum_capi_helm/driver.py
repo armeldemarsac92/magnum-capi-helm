@@ -846,6 +846,8 @@ class Driver(driver.Driver):
             "cloudCredentialsSecretName": self._get_app_cred_name(cluster),
             "etcd": self._get_etcd_config(cluster),
             "apiServer": {
+                "associateFloatingIP": cluster.cluster_template.\
+                    floating_ip_enabled,
                 "enableLoadBalancer": True,
                 "loadBalancerProvider": self._get_octavia_provider(cluster),
             },
