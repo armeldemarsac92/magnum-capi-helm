@@ -847,6 +847,8 @@ class Driver(driver.Driver):
             "etcd": self._get_etcd_config(cluster),
             "apiServer": {
                 "enableLoadBalancer": True,
+                "associateFloatingIP": cluster.cluster_template.\
+                    floating_ip_enabled,
                 "loadBalancerProvider": self._get_octavia_provider(cluster),
             },
             "clusterNetworking": {
