@@ -33,6 +33,24 @@
       "message": "I think we should allow this to be overwritten as false by the relevant cluster label even when the template value is true as described in [1], ideally using a separate helper function in the same way that loadBalancerProvider key is implemented below.\n\n[1] https://docs.openstack.org/magnum/latest/user/#master-lb-floating-ip-enabled",
       "revId": "8dbf54c47a614129fee578e49a9c5c795e4f3bd1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1f72f40_54640cd1",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 850,
+      "author": {
+        "id": 32657
+      },
+      "writtenOn": "2024-11-05T07:44:45Z",
+      "side": 1,
+      "message": "Ack, fair point",
+      "parentUuid": "d6b2dabb_dfc28d20",
+      "revId": "8dbf54c47a614129fee578e49a9c5c795e4f3bd1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
