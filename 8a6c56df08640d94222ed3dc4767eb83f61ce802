@@ -16,6 +16,23 @@
       "message": "Thanks for the effort put into this!\nI\u0027ll be happy to W+1 if there are no comments from others.",
       "revId": "8a6c56df08640d94222ed3dc4767eb83f61ce802",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0bd83a4e_916c9be4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2024-11-27T09:28:08Z",
+      "side": 1,
+      "message": "LGTM, thanks Max.",
+      "revId": "8a6c56df08640d94222ed3dc4767eb83f61ce802",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
