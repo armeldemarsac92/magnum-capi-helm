@@ -33,6 +33,23 @@
       "message": "LGTM, thanks Max.",
       "revId": "8a6c56df08640d94222ed3dc4767eb83f61ce802",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6dafad33_839707df",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 8064
+      },
+      "writtenOn": "2024-11-28T21:47:30Z",
+      "side": 1,
+      "message": "+W docs, low impact",
+      "revId": "8a6c56df08640d94222ed3dc4767eb83f61ce802",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
