@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d30f5ddb_94faf9b4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2024-12-12T13:56:19Z",
+      "side": 1,
+      "message": "looks better, but I think some more unit tests would be nice to make sure it works (for both cases - floating ip label set or not)",
+      "revId": "bfb82e1f6a796845e5cdfb2cdf95b5f0b19a7d00",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
