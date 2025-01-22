@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ccd757a7_b9e38840",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-01-22T21:05:40Z",
+      "side": 1,
+      "message": "Can you please raise a bug in Launchpad and reference it?",
+      "revId": "7374f276eb4b810b10471a09e1ef76b69f9b54ae",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
