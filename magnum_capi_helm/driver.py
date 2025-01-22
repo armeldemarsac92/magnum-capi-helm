@@ -812,7 +812,7 @@ class Driver(driver.Driver):
             additionalStorageClasses=additional_storage_classes,
         )
 
-    def _process_node_groups(self, cluster):
+    def _process_node_groups(self, cluster, nodegroups):
         nodegroups = cluster.nodegroups
         nodegroup_set = []
         for ng in nodegroups:
@@ -878,7 +878,7 @@ class Driver(driver.Driver):
                     "enabled": self._get_autoheal_enabled(cluster),
                 },
             },
-            "nodeGroups": self._process_node_groups(cluster),
+            "nodeGroups": self._process_node_groups(cluster, nodegroups),
             "addons": {
                 "openstack": {
                     "csiCinder": self._storageclass_definitions(
