@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "733fc72b_adcd7749",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-01-23T06:37:52Z",
+      "side": 1,
+      "message": "Added linting of reno files with doc8 and reno lint - please fix reno",
+      "revId": "81973e12bd8aff7814f0a4f12a398d2a10550e6b",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
