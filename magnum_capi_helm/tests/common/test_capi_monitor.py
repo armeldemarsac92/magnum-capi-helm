@@ -61,6 +61,14 @@ class TestCAPIMonitor(base.DbTestCase):
         self.mock_k8s.get_machine_deployment.return_value = copy.deepcopy(
             ready_state
         )
+        self.mock_k8s.get_addons_by_label.return_value = [
+            {
+                "metadata": {
+                    "name": "cluster-example-a-111111111111-ccm-openstack",
+                },
+                "status": {"phase": "Deployed"},
+            },
+        ]
 
     def tearDown(self):
         super(TestCAPIMonitor, self).tearDown()
@@ -76,6 +84,7 @@ class TestCAPIMonitor(base.DbTestCase):
         self.assertEqual(
             self.monitor.data["health_status_reason"],
             {
+                "addons": "Ready",
                 "cluster": "Ready",
                 "controlplane": "Ready",
                 "infrastructure": "Ready",
@@ -94,6 +103,7 @@ class TestCAPIMonitor(base.DbTestCase):
         self.assertEqual(
             self.monitor.data["health_status_reason"],
             {
+                "addons": "Ready",
                 "cluster": "Cluster resource not found.",
                 "controlplane": "Ready",
                 "infrastructure": "Ready",
@@ -120,6 +130,7 @@ class TestCAPIMonitor(base.DbTestCase):
         self.assertEqual(
             self.monitor.data["health_status_reason"],
             {
+                "addons": "Ready",
                 "cluster": "Waiting on ['Ready', 'ControlPlaneReady']",
                 "controlplane": "Ready",
                 "infrastructure": "Ready",
@@ -143,6 +154,7 @@ class TestCAPIMonitor(base.DbTestCase):
         self.assertEqual(
             self.monitor.data["health_status_reason"],
             {
+                "addons": "Ready",
                 "cluster": "Ready",
                 "controlplane": "Ready",
                 "infrastructure": "Infrastructure not ready.",
@@ -168,6 +180,7 @@ class TestCAPIMonitor(base.DbTestCase):
         self.assertEqual(
             self.monitor.data["health_status_reason"],
             {
+                "addons": "Ready",
                 "cluster": "Ready",
                 "controlplane": "Ready",
                 "infrastructure": "123: abc",
@@ -209,6 +222,7 @@ class TestCAPIMonitor(base.DbTestCase):
         self.assertEqual(
             self.monitor.data["health_status_reason"],
             {
+                "addons": "Ready",
                 "cluster": "Ready",
                 "controlplane": cp_status,
                 "infrastructure": "Ready",
@@ -236,6 +250,7 @@ class TestCAPIMonitor(base.DbTestCase):
         self.assertEqual(
             self.monitor.data["health_status_reason"],
             {
+                "addons": "Ready",
                 "cluster": "Ready",
                 "controlplane": "Ready",
                 "infrastructure": "Ready",
@@ -254,10 +269,135 @@ class TestCAPIMonitor(base.DbTestCase):
         self.assertEqual(
             self.monitor.data["health_status_reason"],
             {
+                "addons": "Ready",
                 "cluster": "Ready",
                 "controlplane": "Ready",
                 "infrastructure": "Ready",
                 "nodegroup": "test-worker resource not found.",
+            },
+        )
+
+    def test_addon_unknown(self):
+        self.mock_k8s.get_addons_by_label.return_value = [
+            {
+                "metadata": {
+                    "name": "cluster-example-a-111111111111-ccm-openstack",
+                },
+                "status": {"phase": "Unknown"},
+            },
+        ]
+        self.monitor.poll_health_status()
+        self.assertEqual(
+            self.monitor.data["health_status"],
+            m_fields.ClusterHealthStatus.UNHEALTHY,
+        )
+        self.assertEqual(
+            self.monitor.data["health_status_reason"],
+            {
+                "addons": "Unknown: 1",
+                "cluster": "Ready",
+                "controlplane": "Ready",
+                "infrastructure": "Ready",
+                "nodegroup": "Ready",
+            },
+        )
+
+    def test_addon_deployed(self):
+        self.mock_k8s.get_addons_by_label.return_value = [
+            {
+                "metadata": {
+                    "name": "cluster-example-a-111111111111-ccm-openstack",
+                },
+                "status": {"phase": "Deployed"},
+            },
+        ]
+        self.monitor.poll_health_status()
+        self.assertEqual(
+            self.monitor.data["health_status"],
+            m_fields.ClusterHealthStatus.HEALTHY,
+        )
+        self.assertEqual(
+            self.monitor.data["health_status_reason"],
+            {
+                "addons": "Ready",
+                "cluster": "Ready",
+                "controlplane": "Ready",
+                "infrastructure": "Ready",
+                "nodegroup": "Ready",
+            },
+        )
+
+    def test_multiple_addons_one_not_ready(self):
+        self.mock_k8s.get_addons_by_label.return_value = [
+            {
+                "metadata": {
+                    "name": "cluster-example-a-111111111111-ccm-openstack",
+                },
+                "status": {"phase": "Deployed"},
+            },
+            {
+                "metadata": {
+                    "name": "cluster-example-a-111111111111-cni-calico",
+                },
+                "status": {"phase": "Pending"},
+            },
+        ]
+        self.monitor.poll_health_status()
+        self.assertEqual(
+            self.monitor.data["health_status"],
+            m_fields.ClusterHealthStatus.UNHEALTHY,
+        )
+        self.assertEqual(
+            self.monitor.data["health_status_reason"],
+            {
+                "addons": "Pending: 1",
+                "cluster": "Ready",
+                "controlplane": "Ready",
+                "infrastructure": "Ready",
+                "nodegroup": "Ready",
+            },
+        )
+
+    def test_multiple_addons_several_not_ready(self):
+        self.mock_k8s.get_addons_by_label.return_value = [
+            {
+                "metadata": {
+                    "name": "cluster-example-a-111111111111-csi-cinder",
+                },
+                "status": {"phase": "Pending"},
+            },
+            {
+                "metadata": {
+                    "name": "cluster-example-a-111111111111-ccm-openstack",
+                },
+                "status": {"phase": "Deployed"},
+            },
+            {
+                "metadata": {
+                    "name": "cluster-example-a-111111111111-k8s-auth",
+                },
+                "status": {"phase": "Pending"},
+            },
+            {
+                "metadata": {
+                    "name": "cluster-example-a-111111111111-cni-calico",
+                },
+                "status": {"phase": "Unknown"},
+            },
+        ]
+        self.monitor.poll_health_status()
+        self.assertEqual(
+            self.monitor.data["health_status"],
+            m_fields.ClusterHealthStatus.UNHEALTHY,
+        )
+        self.assertEqual(
+            self.monitor.data["health_status_reason"],
+            {
+                "addons": "Pending: 2, Unknown: 1",
+                "cluster": "Ready",
+                "controlplane": "Ready",
+                "infrastructure": "Ready",
+                "nodegroup": "Ready",
             },
         )
 
@@ -275,6 +415,7 @@ class TestCAPIMonitor(base.DbTestCase):
         self.assertEqual(
             self.monitor.data["health_status_reason"],
             {
+                "addons": "Ready",
                 "cluster": "Cluster resource not found.",
                 "controlplane": "Control plane resource not found.",
                 "infrastructure": "Infrastructure resource not found.",
