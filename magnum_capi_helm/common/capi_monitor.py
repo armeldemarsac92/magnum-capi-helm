@@ -15,8 +15,11 @@ from magnum.i18n import _
 from magnum.objects import fields as m_fields
 from magnum_capi_helm import driver_utils
 from magnum_capi_helm import kubernetes
+from oslo_log import log as logging
 
+from collections import defaultdict
 
+LOG = logging.getLogger(__name__)
 MONITOR_STATE_READY = _("Ready")
 
 
@@ -90,6 +93,7 @@ class CAPIMonitor(monitors.MonitorBase):
             ("infrastructure", self._poll_infra),
             ("controlplane", self._poll_controlplane),
             ("nodegroup", self._poll_nodegroups),
+            ("addons", self._poll_addons),
         ]:
             reason[monitor_type] = monitor_func()
             if reason[monitor_type] != MONITOR_STATE_READY:
@@ -207,6 +211,33 @@ class CAPIMonitor(monitors.MonitorBase):
                 )
         if nodegroup_reasons:
             return ",".join(nodegroup_reasons)
+
+        return MONITOR_STATE_READY
+
+    def _poll_addons(self):
+        """Fetch all addon manifests and summarise their state."""
+        addon_state_counts = defaultdict(int)
+        addons = self._k8s_client.get_addons_by_label(
+            {
+                "addons.stackhpc.com/cluster": driver_utils.chart_release_name(
+                    self.cluster
+                )
+            },
+            driver_utils.cluster_namespace(self.cluster),
+        )
+        for addon in addons:
+            addon_phase = addon.get("status", {}).get("phase", "Unknown")
+            if addon_phase == "Deployed":
+                # Ignore deployed addons
+                continue
+            addon_state_counts[addon_phase] += 1
+
+        # Format and return the addon counts.
+        addon_status = []
+        for key in sorted(addon_state_counts.keys()):
+            addon_status.append(f"{key}: {addon_state_counts[key]}")
+        if addon_status:
+            return ", ".join(addon_status)
 
         return MONITOR_STATE_READY
 
