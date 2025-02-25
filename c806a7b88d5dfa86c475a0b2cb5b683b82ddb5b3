@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e7a553ea_e740026b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 782
+      },
+      "writtenOn": "2025-02-25T14:35:12Z",
+      "side": 1,
+      "message": "I am bit worried about backwards compatibility concerns here. Although I don\u0027t have a solution to offer really, I am afraid.",
+      "revId": "c806a7b88d5dfa86c475a0b2cb5b683b82ddb5b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e843d60e_8c765363",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 960,
+      "author": {
+        "id": 782
+      },
+      "writtenOn": "2025-02-25T14:35:12Z",
+      "side": 1,
+      "message": "Are you OK to make sure this code is covered in a unit test please?\n\n(I know that wouldn\u0027t make any difference to the bug we are finding here).\n\nThe problem we have here is that adding this will break older clouds, so we might have to bump the minimum version of the capi helm charts that we support here (and equally, state we break when v1beta1 crds are not being used)\n\n... I am not sure I like the breaking change here. Although I am not really sure how we avoid that.\n\nI guess we could use the k8s API to detect which version of the CRD is being used, any only do the new format when we see v1beta1 registered? I am not really sure that works though. Yuck.",
+      "revId": "c806a7b88d5dfa86c475a0b2cb5b683b82ddb5b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97433cca_9e22c4d8",
+        "filename": "releasenotes/notes/fix-external-network-name-e597e5458ad1c717.yaml",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 782
+      },
+      "writtenOn": "2025-02-25T14:35:12Z",
+      "side": 1,
+      "message": "I think we need to tell people that to use this feature, you must now use at least v1beta1... and older versions will break horribly... although this seems pretty bad.",
+      "revId": "c806a7b88d5dfa86c475a0b2cb5b683b82ddb5b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
