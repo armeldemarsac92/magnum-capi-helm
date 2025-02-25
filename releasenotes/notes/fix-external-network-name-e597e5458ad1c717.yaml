@@ -1,0 +1,6 @@
+---
+fixes:
+  - |
+    Fixes an issue where, from CAPO version 0.10.0 onwards,
+    "extra_network_name" would not work.
+    `LP#2099997 <https://bugs.launchpad.net/magnum/+bug/2099997>`__

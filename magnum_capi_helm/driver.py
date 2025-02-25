@@ -957,7 +957,8 @@ class Driver(driver.Driver):
                             {},
                             {
                                 "network": {
-                                    "name": extra_network_name,
+                                    "filter":
+                                        "name": extra_network_name,
                                 },
                                 "securityGroups": [],
                             },
