@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d5e2908a_fa89f4ee",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 960,
+      "author": {
+        "id": 782
+      },
+      "writtenOn": "2025-02-25T14:37:36Z",
+      "side": 1,
+      "message": "PS, I think we need some extra curly braces on here, to create the extra dictionary.",
+      "parentUuid": "e843d60e_8c765363",
+      "revId": "c806a7b88d5dfa86c475a0b2cb5b683b82ddb5b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "97433cca_9e22c4d8",
         "filename": "releasenotes/notes/fix-external-network-name-e597e5458ad1c717.yaml",
         "patchSetId": 1
