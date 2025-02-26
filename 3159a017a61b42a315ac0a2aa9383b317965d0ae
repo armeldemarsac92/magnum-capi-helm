@@ -1,0 +1,10 @@
+Workflow+1: John Garbutt <john.garbutt@stackhpc.com>
+Code-Review+2: John Garbutt <john.garbutt@stackhpc.com>
+Verified+2: Zuul
+Code-Review+2: Michal Nasiadka <mnasiadka@gmail.com>
+Submitted-by: Zuul
+Submitted-at: Wed, 26 Feb 2025 21:59:22 +0000
+Reviewed-on: https://review.opendev.org/c/openstack/magnum-capi-helm/+/940110
+Comments-Total: 1
+Project: openstack/magnum-capi-helm
+Branch: refs/heads/master
