@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5c117539_6be79151",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-03-04T01:55:12Z",
+      "side": 1,
+      "message": "Hmm yeah, changing the **driver** makes it depend explicitly on CAPO v1beta1. That\u0027s okay by me (as my company has upgraded to CAPO 0.10), but magnum-capi-helm needs to make sure it\u0027s declared a breaking change and probably put a compatibility matrix somewhere to say which CAPO versions are supported by which driver versions.\n\nOne way to provide a wider support with the same driver would be to make this change in the CAPI Helm Chart repo. Right now the values for `nodeGroup.machineNetworking.ports` are free-form and applied as YAML.\n\nChanging the Helm chart means updating the **helm chart** version will require CAPO v1beta1 (and thus, there\u0027s a compatibility matrix in there), but the driver remains agnostic and there\u0027s no forced upgrade for older Clusters not using a new Helm Chart (eg. older `capi_helm_chart_version` label).\n\nThere\u0027s an upgrade required here somewhere, but how we communicate it and how widely we support older CAPO is the choice we have.\n\nI think it\u0027s reasonable to require this(with communication/docs!) - I\u0027m not sure I support looking up and supporting older v1alpha7 manifests as that will add to complexity of this codebase for little gain.",
+      "parentUuid": "e7a553ea_e740026b",
+      "revId": "c806a7b88d5dfa86c475a0b2cb5b683b82ddb5b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e843d60e_8c765363",
         "filename": "magnum_capi_helm/driver.py",
         "patchSetId": 1
