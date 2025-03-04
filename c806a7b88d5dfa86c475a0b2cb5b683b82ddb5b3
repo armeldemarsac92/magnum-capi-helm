@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6d4e4712_e93f9ccc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-03-04T02:03:25Z",
+      "side": 1,
+      "message": "Relevant capi-helm-charts code: https://github.com/azimuth-cloud/capi-helm-charts/blob/main/charts/openstack-cluster/templates/node-group/openstack-machine-template.yaml#L71\n\nIf this was changed to the v1beta1 format instead of the magnum driver, then no change would be required to values being passed in. Upgrading the chart is a requirement to support v1beta1, and it would include this change also.\n\nIt\u0027s another option; I\u0027m not sure which is preferred. It might be harder to define the chart values, and the driver remains with older-style YAML...",
+      "parentUuid": "5c117539_6be79151",
+      "revId": "c806a7b88d5dfa86c475a0b2cb5b683b82ddb5b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e843d60e_8c765363",
         "filename": "magnum_capi_helm/driver.py",
         "patchSetId": 1
