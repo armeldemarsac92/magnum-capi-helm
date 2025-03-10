@@ -56,6 +56,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "32c0ff64_4308f5b2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 34212
+      },
+      "writtenOn": "2025-03-10T19:21:33Z",
+      "side": 1,
+      "message": "I\u0027ve got a proposed fix pretty much as described in this comment chain: https://github.com/azimuth-cloud/capi-helm-charts/pull/501.\n\nIMHO, I think *not* changing the driver code and handling this down in the Helm charts is probably the preferred route to fix this for now.",
+      "parentUuid": "6d4e4712_e93f9ccc",
+      "revId": "c806a7b88d5dfa86c475a0b2cb5b683b82ddb5b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e843d60e_8c765363",
         "filename": "magnum_capi_helm/driver.py",
         "patchSetId": 1
