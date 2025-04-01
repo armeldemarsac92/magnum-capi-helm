@@ -388,6 +388,9 @@ class Driver(driver.Driver):
                 cluster
             )
 
+        # Apply changes to the Helm release to sync with updated cluster state
+        self._update_helm_release(context, cluster)
+
         if cluster.status in {
             fields.ClusterStatus.CREATE_IN_PROGRESS,
             fields.ClusterStatus.UPDATE_IN_PROGRESS,
@@ -812,9 +815,13 @@ class Driver(driver.Driver):
             additionalStorageClasses=additional_storage_classes,
         )
 
-    def _process_node_groups(self, cluster, nodegroups):
+    def _process_node_groups(self, cluster):
+        nodegroups = cluster.nodegroups
         nodegroup_set = []
         for ng in nodegroups:
+            # Don't include nodegroups flagged for deletion
+            if ng.status == fields.ClusterStatus.DELETE_IN_PROGRESS:
+                continue
             if ng.role != NODE_GROUP_ROLE_CONTROLLER:
                 nodegroup_item = dict(
                     name=driver_utils.sanitized_name(ng.name),
@@ -827,9 +834,8 @@ class Driver(driver.Driver):
                 nodegroup_set.append(nodegroup_item)
         return nodegroup_set
 
-    def _update_helm_release(self, context, cluster, nodegroups=None):
-        if nodegroups is None:
-            nodegroups = cluster.nodegroups
+    # Note: only call this from the context of the reconciliation loop
+    def _update_helm_release(self, context, cluster):
 
         image_id, kube_version, os_distro = self._get_image_details(
             context, cluster.cluster_template.image_id
@@ -877,7 +883,7 @@ class Driver(driver.Driver):
                     "enabled": self._get_autoheal_enabled(cluster),
                 },
             },
-            "nodeGroups": self._process_node_groups(cluster, nodegroups),
+            "nodeGroups": self._process_node_groups(cluster),
             "addons": {
                 "openstack": {
                     "csiCinder": self._storageclass_definitions(
@@ -994,14 +1000,22 @@ class Driver(driver.Driver):
             }
             values = helm.mergeconcat(values, allowed_cidrs_config)
 
-        self._helm_client.install_or_upgrade(
+        # Check for pending changes and apply if found
+        if self._helm_client.update_pending(
             driver_utils.chart_release_name(cluster),
+            self._get_chart_version(cluster),
             CONF.capi_helm.helm_chart_name,
             values,
-            repo=CONF.capi_helm.helm_chart_repo,
-            version=self._get_chart_version(cluster),
-            namespace=driver_utils.cluster_namespace(cluster),
-        )
+            driver_utils.cluster_namespace(cluster),
+        ):
+            self._helm_client.install_or_upgrade(
+                driver_utils.chart_release_name(cluster),
+                CONF.capi_helm.helm_chart_name,
+                values,
+                repo=CONF.capi_helm.helm_chart_repo,
+                version=self._get_chart_version(cluster),
+                namespace=driver_utils.cluster_namespace(cluster),
+            )
 
     def _generate_release_name(self, cluster):
         if cluster.stack_id:
@@ -1027,6 +1041,9 @@ class Driver(driver.Driver):
         nodegroups = cluster.nodegroups
         for ng in nodegroups:
             self._validate_allowed_flavor(context, ng.flavor_id)
+            if self._get_autoscale_enabled(cluster):
+                self._validate_allowed_node_counts(cluster, ng)
+
         # we generate this name (on the initial create call only)
         # so we hit no issues with duplicate cluster names
         # and it makes renaming clusters in the API possible
@@ -1040,7 +1057,7 @@ class Driver(driver.Driver):
         self._create_appcred_secret(context, cluster)
         self._ensure_certificate_secrets(context, cluster)
 
-        self._update_helm_release(context, cluster)
+        # Helm release is updated on next run of the reconciliation loop
 
     def update_cluster(
         self, context, cluster, scale_manager=None, rollback=False
@@ -1088,7 +1105,8 @@ class Driver(driver.Driver):
     ):
         if nodes_to_remove:
             LOG.warning("Removing specific nodes is not currently supported")
-        self._update_helm_release(context, cluster)
+
+        # Helm release is updated on next run of the reconciliation loop
 
     def upgrade_cluster(
         self,
@@ -1116,7 +1134,7 @@ class Driver(driver.Driver):
         cluster.save()
         cluster.refresh()
 
-        self._update_helm_release(context, cluster)
+        # Helm release is updated on next run of the reconciliation loop
 
     def create_nodegroup(self, context, cluster, nodegroup):
         nodegroup.status = fields.ClusterStatus.CREATE_IN_PROGRESS
@@ -1125,7 +1143,7 @@ class Driver(driver.Driver):
             self._validate_allowed_node_counts(cluster, nodegroup)
         nodegroup.save()
 
-        self._update_helm_release(context, cluster)
+        # Helm release is updated on next run of the reconciliation loop
 
     def update_nodegroup(self, context, cluster, nodegroup):
         nodegroup.status = fields.ClusterStatus.UPDATE_IN_PROGRESS
@@ -1134,19 +1152,14 @@ class Driver(driver.Driver):
             self._validate_allowed_node_counts(cluster, nodegroup)
         nodegroup.save()
 
-        self._update_helm_release(context, cluster)
+        # Helm release is updated on next run of the reconciliation loop
 
     def delete_nodegroup(self, context, cluster, nodegroup):
         nodegroup.status = fields.ClusterStatus.DELETE_IN_PROGRESS
         nodegroup.save()
 
         # Remove the nodegroup being deleted from the nodegroups
-        # for the Helm release
-        self._update_helm_release(
-            context,
-            cluster,
-            [ng for ng in cluster.nodegroups if ng.name != nodegroup.name],
-        )
+        # on next run of the reconciliation loop
 
     def create_federation(self, context, federation):
         raise NotImplementedError("Will not implement 'create_federation'")
