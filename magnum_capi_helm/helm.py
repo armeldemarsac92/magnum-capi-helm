@@ -110,7 +110,31 @@ class Client:
             ]
 
         process_input = json.dumps(mergeconcat({}, *values))
-        return json.loads(self._run(command, process_input=process_input))
+
+        try:
+            process_output = self._run(command, process_input=process_input)
+            result = json.loads(process_output)
+        except processutils.ProcessExecutionError as exc:
+            # If other updates are being applied concurrently, we can get:
+            # another operation (install/upgrade/rollback) is in progress
+            if exc.stderr and (
+                (
+                    "another operation (install/upgrade/rollback) is in "
+                    "progress" in exc.stderr
+                )
+                or ("release: already exists" in exc.stderr)
+            ):
+                LOG.info(
+                    f"Helm update conflict for {release_name}, retry required"
+                )
+            else:
+                LOG.info(
+                    f"Helm upgrade failed for {release_name}, "
+                    f"unknown reason: {exc}"
+                )
+            # Retry reconciliation on a later attempt
+            return {}
+        return result
 
     def uninstall_release(
         self,
@@ -133,3 +157,102 @@ class Client:
             # Swallow release not found errors, as that is our desired state
             if not exc.stderr or "release: not found" not in exc.stderr:
                 raise
+
+    def update_pending(
+        self,
+        release_name: str,
+        chart_version: str,
+        chart_name: str,
+        cluster_values: t.Dict[str, t.Any],
+        namespace: str,
+    ):
+        """Check for difference between cluster state and Helm state.
+
+        Returns True if changes need to be applied, False otherwise.
+
+        :param release_name: Cluster unique name, as used for instance prefix
+        :param chart_version: Helm chart version
+        :param chart_name: Helm chart name
+        :param cluster_values: Values for Helm chart
+        :param namespace: Cluster kubernetes namespace
+        """
+
+        cmd_meta = [
+            "get",
+            "metadata",
+            "--namespace",
+            namespace,
+            release_name,
+            "--output",
+            "json",
+        ]
+        try:
+            output_meta = self._run(cmd_meta)
+            chart_meta = json.loads(output_meta)
+        except processutils.ProcessExecutionError as exc:
+            # Swallow release not found errors - all change in that case
+            if not exc.stderr or "release: not found" not in exc.stderr:
+                raise
+            return True
+
+        if (
+            "revision" not in chart_meta
+            or "chart" not in chart_meta
+            or "status" not in chart_meta
+            or "version" not in chart_meta
+        ):
+            LOG.debug(
+                f"{release_name}: incomplete chart metadata: update needed"
+            )
+            return True
+
+        if chart_meta["chart"] != chart_name:
+            LOG.debug(
+                f"{release_name}: chart name update "
+                f"{chart_meta['chart']}->{chart_name}: "
+                f"update needed"
+            )
+            return True
+
+        if chart_meta["status"] != "deployed":
+            LOG.debug(
+                f"{release_name}: release status "
+                f"{chart_meta['status']}: update needed"
+            )
+            return True
+
+        if chart_meta["version"] != chart_version:
+            LOG.debug(
+                f"{release_name}: chart version update "
+                f"{chart_meta['version']}->{chart_version}: "
+                f"update needed"
+            )
+            return True
+
+        # Further details needed: compare release values
+        cmd_values = [
+            "get",
+            "values",
+            "--namespace",
+            namespace,
+            release_name,
+            "--output",
+            "json",
+        ]
+        try:
+            output_values = self._run(cmd_values)
+            chart_values = json.loads(output_values)
+        except processutils.ProcessExecutionError as exc:
+            # Cluster has disappeared since the last helm exec?
+            # Swallow release not found errors - all change in that case
+            if not exc.stderr or "release: not found" not in exc.stderr:
+                raise
+            return True
+
+        if chart_values != cluster_values:
+            LOG.debug(f"{release_name}: change in chart values: update needed")
+            return True
+
+        # No updates to apply to release state
+        LOG.debug(f"{release_name}: no update needed")
+        return False

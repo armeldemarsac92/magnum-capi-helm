@@ -64,12 +64,13 @@ class ClusterAPIDriverTest(base.DbTestCase):
             self.driver.provides,
         )
 
+    @mock.patch.object(driver.Driver, "_update_helm_release")
     @mock.patch.object(driver.Driver, "_update_status_deleting")
     @mock.patch.object(driver.Driver, "_update_status_updating")
     @mock.patch.object(driver.Driver, "_update_all_nodegroups_status")
     @mock.patch.object(driver.Driver, "_get_capi_cluster")
     def test_update_cluster_status_creating(
-        self, mock_capi, mock_ng, mock_update, mock_delete
+        self, mock_capi, mock_ng, mock_update, mock_delete, mock_helm
     ):
         mock_ng.return_value = True
         mock_capi.return_value = {"spec": {}}
@@ -80,13 +81,15 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_ng.assert_called_once_with(self.cluster_obj)
         mock_update.assert_not_called()
         mock_delete.assert_not_called()
+        mock_helm.assert_called_once()
 
+    @mock.patch.object(driver.Driver, "_update_helm_release")
     @mock.patch.object(driver.Driver, "_update_status_deleting")
     @mock.patch.object(driver.Driver, "_update_status_updating")
     @mock.patch.object(driver.Driver, "_update_all_nodegroups_status")
     @mock.patch.object(driver.Driver, "_get_capi_cluster")
     def test_update_cluster_status_creating_not_found(
-        self, mock_capi, mock_ng, mock_update, mock_delete
+        self, mock_capi, mock_ng, mock_update, mock_delete, mock_helm
     ):
         mock_ng.return_value = True
         mock_capi.return_value = None
@@ -97,13 +100,15 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_ng.assert_not_called()
         mock_update.assert_not_called()
         mock_delete.assert_not_called()
+        mock_helm.assert_called_once()
 
+    @mock.patch.object(driver.Driver, "_update_helm_release")
     @mock.patch.object(driver.Driver, "_update_status_deleting")
     @mock.patch.object(driver.Driver, "_update_status_updating")
     @mock.patch.object(driver.Driver, "_update_all_nodegroups_status")
     @mock.patch.object(driver.Driver, "_get_capi_cluster")
     def test_update_cluster_status_created(
-        self, mock_capi, mock_ng, mock_update, mock_delete
+        self, mock_capi, mock_ng, mock_update, mock_delete, mock_helm
     ):
         mock_ng.return_value = False
         mock_capi.return_value = {"spec": {}}
@@ -114,13 +119,15 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_ng.assert_called_once_with(self.cluster_obj)
         mock_update.assert_called_once_with(self.cluster_obj, {"spec": {}})
         mock_delete.assert_not_called()
+        mock_helm.assert_called_once()
 
+    @mock.patch.object(driver.Driver, "_update_helm_release")
     @mock.patch.object(driver.Driver, "_update_status_deleting")
     @mock.patch.object(driver.Driver, "_update_status_updating")
     @mock.patch.object(driver.Driver, "_update_all_nodegroups_status")
     @mock.patch.object(driver.Driver, "_get_capi_cluster")
     def test_update_cluster_status_deleted(
-        self, mock_capi, mock_ng, mock_update, mock_delete
+        self, mock_capi, mock_ng, mock_update, mock_delete, mock_helm
     ):
         mock_capi.return_value = None
         self.cluster_obj.status = fields.ClusterStatus.DELETE_IN_PROGRESS
@@ -130,13 +137,15 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_ng.assert_not_called()
         mock_update.assert_not_called()
         mock_delete.assert_called_once_with(self.context, self.cluster_obj)
+        mock_helm.assert_called_once()
 
+    @mock.patch.object(driver.Driver, "_update_helm_release")
     @mock.patch.object(driver.Driver, "_update_status_deleting")
     @mock.patch.object(driver.Driver, "_update_status_updating")
     @mock.patch.object(driver.Driver, "_update_all_nodegroups_status")
     @mock.patch.object(driver.Driver, "_get_capi_cluster")
     def test_update_cluster_status_deleting(
-        self, mock_capi, mock_ng, mock_update, mock_delete
+        self, mock_capi, mock_ng, mock_update, mock_delete, mock_helm
     ):
         mock_capi.return_value = {"spec": {}}
         self.cluster_obj.status = fields.ClusterStatus.DELETE_IN_PROGRESS
@@ -146,13 +155,20 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_ng.assert_called_once_with(self.cluster_obj)
         mock_update.assert_not_called()
         mock_delete.assert_not_called()
+        mock_helm.assert_called_once()
 
+    @mock.patch.object(driver.Driver, "_update_helm_release")
     @mock.patch.object(driver.Driver, "_update_status_deleting")
     @mock.patch.object(driver.Driver, "_update_status_updating")
     @mock.patch.object(driver.Driver, "_update_all_nodegroups_status")
     @mock.patch.object(driver.Driver, "_get_capi_cluster")
     def test_update_cluster_status_create_complete(
-        self, mock_capi, mock_ng, mock_update, mock_delete
+        self,
+        mock_capi,
+        mock_ng,
+        mock_update,
+        mock_delete,
+        mock_helm,
     ):
         mock_capi.return_value = {"spec": {}}
         self.cluster_obj.status = fields.ClusterStatus.CREATE_COMPLETE
@@ -1212,6 +1228,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             "machineSSHKeyName": None,
         }
 
+    @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
     @mock.patch.object(driver.Driver, "_get_allowed_cidrs")
     @mock.patch.object(
         driver.Driver, "_get_k8s_keystone_auth_enabled", return_value=False
@@ -1229,10 +1246,12 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "update_pending")
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
     def test_create_cluster(
         self,
         mock_install,
+        mock_update_pending,
         mock_image,
         mock_load,
         mock_appcred,
@@ -1242,7 +1261,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_storageclasses,
         mock_get_keystone_auth_enabled,
         mock_get_allowed_cidrs,
+        mock_control_plane_ng_status,
     ):
+        mock_update_pending.return_value = True
         mock_image.return_value = (
             "imageid1",
             "1.27.4",
@@ -1255,6 +1276,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         )
 
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
+
+        # Helm updates are applied during reconciliation
+        self.driver.update_cluster_status(self.context, self.cluster_obj)
 
         expected_values = self._get_cluster_helm_standard_values()
 
@@ -1282,6 +1306,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         )
         self.assertEqual([], mock_get_net.call_args_list)
 
+    @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
     @mock.patch.object(driver.Driver, "_get_allowed_cidrs")
     @mock.patch.object(
         driver.Driver, "_get_k8s_keystone_auth_enabled", return_value=False
@@ -1298,10 +1323,12 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "update_pending")
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
     def test_create_cluster_no_dns(
         self,
         mock_install,
+        mock_update_pending,
         mock_image,
         mock_load,
         mock_appcred,
@@ -1310,7 +1337,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_storageclasses,
         mock_get_keystone_auth_enabled,
         mock_get_allowed_cidrs,
+        mock_control_plane_ng_status,
     ):
+        mock_update_pending.return_value = True
         mock_image.return_value = ("imageid1", "1.27.4", "ubuntu")
         mock_client = mock.MagicMock(spec=kubernetes.Client)
         mock_load.return_value = mock_client
@@ -1318,6 +1347,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         self.cluster_obj.cluster_template.dns_nameserver = ""
 
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
+
+        # Helm updates are applied during reconciliation
+        self.driver.update_cluster_status(self.context, self.cluster_obj)
 
         expected_values = self._get_cluster_helm_standard_values()
         expected_values["clusterNetworking"]["dnsNameservers"] = None
@@ -1345,6 +1377,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             self.driver, self.context, self.cluster_obj
         )
 
+    @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
     @mock.patch.object(driver.Driver, "_get_allowed_cidrs")
     @mock.patch.object(
         driver.Driver, "_get_k8s_keystone_auth_enabled", return_value=False
@@ -1361,10 +1394,12 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "update_pending")
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
     def test_create_cluster_boot_volume(
         self,
         mock_install,
+        mock_update_pending,
         mock_image,
         mock_load,
         mock_appcred,
@@ -1373,7 +1408,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_storageclasses,
         mock_get_keystone_auth_enabled,
         mock_get_allowed_cidrs,
+        mock_control_plane_ng_status,
     ):
+        mock_update_pending.return_value = True
         mock_image.return_value = ("imageid1", "1.27.4", "ubuntu")
         mock_client = mock.MagicMock(spec=kubernetes.Client)
         mock_load.return_value = mock_client
@@ -1382,6 +1419,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         CONF.cinder.default_boot_volume_size = 12
 
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
+
+        # Helm updates are applied during reconciliation
+        self.driver.update_cluster_status(self.context, self.cluster_obj)
 
         # Get standard values and modify them to match this test
         expected_values = self._get_cluster_helm_standard_values()
@@ -1417,6 +1457,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             self.driver, self.context, self.cluster_obj
         )
 
+    @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
     @mock.patch.object(driver.Driver, "_get_allowed_cidrs")
     @mock.patch.object(
         driver.Driver, "_get_k8s_keystone_auth_enabled", return_value=False
@@ -1433,10 +1474,12 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "update_pending")
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
     def test_create_cluster_boot_volume_extra_network(
         self,
         mock_install,
+        mock_update_pending,
         mock_image,
         mock_load,
         mock_appcred,
@@ -1445,7 +1488,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_storageclasses,
         mock_get_keystone_auth_enabled,
         mock_get_allowed_cidrs,
+        mock_control_plane_ng_status,
     ):
+        mock_update_pending.return_value = True
         mock_image.return_value = (
             "imageid1",
             "1.27.4",
@@ -1460,6 +1505,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         self.cluster_obj.cluster_template.labels["extra_network_name"] = "foo"
 
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
+
+        # Helm updates are applied during reconciliation
+        self.driver.update_cluster_status(self.context, self.cluster_obj)
 
         expected_values = self._get_cluster_helm_standard_values()
         expected_values["controlPlane"]["machineRootVolume"] = {
@@ -1505,6 +1553,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             self.driver, self.context, self.cluster_obj
         )
 
+    @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
     @mock.patch.object(driver.Driver, "_get_allowed_cidrs")
     @mock.patch.object(
         driver.Driver, "_get_k8s_keystone_auth_enabled", return_value=False
@@ -1519,10 +1568,12 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_create_appcred_secret")
     @mock.patch.object(kubernetes.Client, "load")
     @mock.patch.object(driver.Driver, "_get_image_details")
+    @mock.patch.object(helm.Client, "update_pending")
     @mock.patch.object(helm.Client, "install_or_upgrade")
     def test_create_cluster_with_keypair(
         self,
         mock_install,
+        mock_update_pending,
         mock_image,
         mock_load,
         mock_appcred,
@@ -1531,7 +1582,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_storageclasses,
         mock_get_keystone_auth_enabled,
         mock_get_allowed_cidrs,
+        mock_control_plane_ng_status,
     ):
+        mock_update_pending.return_value = True
         mock_image.return_value = (
             "imageid1",
             "1.27.4",
@@ -1543,6 +1596,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         self.cluster_obj.keypair = "kp1"
 
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
+
+        # Helm updates are applied during reconciliation
+        self.driver.update_cluster_status(self.context, self.cluster_obj)
 
         expected_values = self._get_cluster_helm_standard_values()
         expected_values["machineSSHKeyName"] = "kp1"
@@ -1564,6 +1620,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_appcred.assert_called_once_with(self.context, self.cluster_obj)
         mock_certs.assert_called_once_with(self.context, self.cluster_obj)
 
+    @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
     @mock.patch.object(driver.Driver, "_get_allowed_cidrs")
     @mock.patch.object(
         driver.Driver, "_get_k8s_keystone_auth_enabled", return_value=False
@@ -1578,10 +1635,12 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_create_appcred_secret")
     @mock.patch.object(kubernetes.Client, "load")
     @mock.patch.object(driver.Driver, "_get_image_details")
+    @mock.patch.object(helm.Client, "update_pending")
     @mock.patch.object(helm.Client, "install_or_upgrade")
     def test_create_cluster_flatcar(
         self,
         mock_install,
+        mock_update_pending,
         mock_image,
         mock_load,
         mock_appcred,
@@ -1590,7 +1649,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_storageclasses,
         mock_get_keystone_auth_enabled,
         mock_get_allowed_cidrs,
+        mock_control_plane_ng_status,
     ):
+        mock_update_pending.return_value = True
         mock_image.return_value = (
             "imageid1",
             "1.27.4",
@@ -1600,6 +1661,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_load.return_value = mock_client
 
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
+
+        # Helm updates are applied during reconciliation
+        self.driver.update_cluster_status(self.context, self.cluster_obj)
 
         expected_values = self._get_cluster_helm_standard_values()
         expected_values["osDistro"] = "flatcar"
@@ -1619,6 +1683,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_appcred.assert_called_once_with(self.context, self.cluster_obj)
         mock_certs.assert_called_once_with(self.context, self.cluster_obj)
 
+    @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
     @mock.patch.object(driver.Driver, "_get_allowed_cidrs")
     @mock.patch.object(
         driver.Driver, "_get_k8s_keystone_auth_enabled", return_value=False
@@ -1635,10 +1700,12 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "update_pending")
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
     def test_create_cluster_no_autoheal(
         self,
         mock_install,
+        mock_update_pending,
         mock_image,
         mock_load,
         mock_appcred,
@@ -1647,7 +1714,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_storageclasses,
         mock_get_keystone_auth_enabled,
         mock_get_allowed_cidrs,
+        mock_control_plane_ng_status,
     ):
+        mock_update_pending.return_value = True
         mock_image.return_value = ("imageid1", "1.27.4", "ubuntu")
         mock_client = mock.MagicMock(spec=kubernetes.Client)
         mock_load.return_value = mock_client
@@ -1657,6 +1726,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         )
 
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
+
+        # Helm updates are applied during reconciliation
+        self.driver.update_cluster_status(self.context, self.cluster_obj)
 
         # Get standard values and modify them to match this test
         expected_values = self._get_cluster_helm_standard_values()
@@ -1685,6 +1757,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             self.driver, self.context, self.cluster_obj
         )
 
+    @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
     @mock.patch.object(driver.Driver, "_get_allowed_cidrs")
     @mock.patch.object(
         driver.Driver, "_get_k8s_keystone_auth_enabled", return_value=False
@@ -1701,10 +1774,12 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "update_pending")
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
     def test_create_cluster_etcd_block_device(
         self,
         mock_install,
+        mock_update_pending,
         mock_image,
         mock_load,
         mock_appcred,
@@ -1713,7 +1788,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_storageclasses,
         mock_get_keystone_auth_enabled,
         mock_get_allowed_cidrs,
+        mock_control_plane_ng_status,
     ):
+        mock_update_pending.return_value = True
         mock_image.return_value = ("imageid1", "1.27.4", "ubuntu")
         mock_client = mock.MagicMock(spec=kubernetes.Client)
         mock_load.return_value = mock_client
@@ -1726,6 +1803,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         )
 
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
+
+        # Helm updates are applied during reconciliation
+        self.driver.update_cluster_status(self.context, self.cluster_obj)
 
         # Get standard values and modify them to match this test
         expected_values = self._get_cluster_helm_standard_values()
@@ -1760,6 +1840,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             self.driver, self.context, self.cluster_obj
         )
 
+    @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
     @mock.patch.object(driver.Driver, "_get_allowed_cidrs")
     @mock.patch.object(
         driver.Driver, "_get_k8s_keystone_auth_enabled", return_value=False
@@ -1776,10 +1857,12 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "update_pending")
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
     def test_create_cluster_etcd_block_device_local(
         self,
         mock_install,
+        mock_update_pending,
         mock_image,
         mock_load,
         mock_appcred,
@@ -1788,7 +1871,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_storageclasses,
         mock_get_keystone_auth_enabled,
         mock_get_allowed_cidrs,
+        mock_control_plane_ng_status,
     ):
+        mock_update_pending.return_value = True
         mock_image.return_value = ("imageid1", "1.27.4", "ubuntu")
         mock_client = mock.MagicMock(spec=kubernetes.Client)
         mock_load.return_value = mock_client
@@ -1801,6 +1886,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         )
 
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
+
+        # Helm updates are applied during reconciliation
+        self.driver.update_cluster_status(self.context, self.cluster_obj)
 
         # Get standard values and modify them to match this test
         expected_values = self._get_cluster_helm_standard_values()
@@ -1834,6 +1922,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             self.driver, self.context, self.cluster_obj
         )
 
+    @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
     @mock.patch.object(driver.Driver, "_get_allowed_cidrs")
     @mock.patch.object(
         driver.Driver, "_get_k8s_keystone_auth_enabled", return_value=False
@@ -1850,10 +1939,12 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "update_pending")
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
     def test_create_cluster_etcd_block_device_legacy_labels(
         self,
         mock_install,
+        mock_update_pending,
         mock_image,
         mock_load,
         mock_appcred,
@@ -1862,7 +1953,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_storageclasses,
         mock_get_keystone_auth_enabled,
         mock_get_allowed_cidrs,
+        mock_control_plane_ng_status,
     ):
+        mock_update_pending.return_value = True
         mock_image.return_value = ("imageid1", "1.27.4", "ubuntu")
         mock_client = mock.MagicMock(spec=kubernetes.Client)
         mock_load.return_value = mock_client
@@ -1876,6 +1969,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         )
 
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
+
+        # Helm updates are applied during reconciliation
+        self.driver.update_cluster_status(self.context, self.cluster_obj)
 
         # Get standard values and modify them to match this test
         expected_values = self._get_cluster_helm_standard_values()
@@ -2093,7 +2189,8 @@ class ClusterAPIDriverTest(base.DbTestCase):
             None,
             None,
         )
-        mock_update.assert_called_once_with(self.context, self.cluster_obj)
+        # _update_helm_release should no longer be called here
+        mock_update.assert_not_called()
 
     @mock.patch.object(driver.Driver, "_update_helm_release")
     def test_resize_cluster_ignore_nodes_to_remove(self, mock_update):
@@ -2104,7 +2201,8 @@ class ClusterAPIDriverTest(base.DbTestCase):
             ["node1"],
             None,
         )
-        mock_update.assert_called_once_with(self.context, self.cluster_obj)
+        # _update_helm_release should no longer be called here
+        mock_update.assert_not_called()
 
     @mock.patch.object(driver.Driver, "_validate_allowed_flavor")
     @mock.patch.object(driver.Driver, "_update_helm_release")
@@ -2126,7 +2224,10 @@ class ClusterAPIDriverTest(base.DbTestCase):
         )
 
         # TODO(johngarbutt) improve the testing
-        mock_update.assert_called_once_with(self.context, self.cluster_obj)
+        # _update_helm_release should not be called outside the
+        # reconciliation loop, as it was previously.  Check for
+        # regression.
+        mock_update.assert_not_called()
         self.assertEqual("UPDATE_IN_PROGRESS", self.cluster_obj.status)
 
     @mock.patch.object(driver.Driver, "_validate_allowed_flavor")
@@ -2142,7 +2243,8 @@ class ClusterAPIDriverTest(base.DbTestCase):
             self.context, self.cluster_obj, node_group
         )
 
-        mock_update.assert_called_once_with(self.context, self.cluster_obj)
+        # _update_helm_release should no longer be called here
+        mock_update.assert_not_called()
         node_group.save.assert_called_once_with()
         self.assertEqual("CREATE_IN_PROGRESS", node_group.status)
 
@@ -2161,25 +2263,35 @@ class ClusterAPIDriverTest(base.DbTestCase):
             node_group,
         )
 
-        mock_update.assert_called_once_with(self.context, self.cluster_obj)
+        # _update_helm_release should no longer be called here
+        mock_update.assert_not_called()
         node_group.save.assert_called_once_with()
         self.assertEqual("UPDATE_IN_PROGRESS", node_group.status)
 
+    @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
+    @mock.patch.object(driver.Driver, "_update_worker_nodegroup_status")
     @mock.patch.object(driver.Driver, "_get_allowed_cidrs")
     @mock.patch.object(
         driver.Driver, "_storageclass_definitions", return_value=mock.ANY
     )
+    @mock.patch.object(driver.Driver, "_get_capi_cluster")
     @mock.patch.object(
         driver.Driver, "_get_image_details", return_value=3 * [mock.ANY]
     )
+    @mock.patch.object(helm.Client, "update_pending")
     @mock.patch.object(helm.Client, "install_or_upgrade")
     def test_delete_nodegroup(
         self,
         mock_helm_update,
+        mock_update_pending,
         mock_image_details,
+        mock_capi_cluster,
         mock_storageclasses,
         mock_get_cidrs,
+        mock_worker_ng_status,
+        mock_control_plane_ng_status,
     ):
+        mock_capi_cluster.return_value = {"spec": {}}
 
         ng_to_delete = next(
             ng for ng in self.cluster_obj.nodegroups if ng.role == "worker"
@@ -2191,6 +2303,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
             self.cluster_obj,
             ng_to_delete,
         )
+
+        # Helm updates are applied during reconciliation
+        self.driver.update_cluster_status(self.context, self.cluster_obj)
 
         # Check that node group has been removed from Helm values
         helm_values = mock_helm_update.call_args[0][2]
@@ -2373,6 +2488,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             node_group,
         )
 
+    @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
     @mock.patch.object(
         driver.Driver, "_get_k8s_keystone_auth_enabled", return_value=False
     )
@@ -2389,10 +2505,12 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "update_pending")
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
     def test_create_cluster_api_lb_allowed_cidrs(
         self,
         mock_install,
+        mock_update_pending,
         mock_image,
         mock_load,
         mock_appcred,
@@ -2401,9 +2519,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_validate_allowed_flavor,
         mock_storageclasses,
         mock_get_keystone_auth_enabled,
+        mock_control_plane_ng_status,
     ):
         cidrs = "192.168.0.0/16,10.0.0.0/8,123.123.123.123/32"
         self.cluster_obj.labels = dict(api_master_lb_allowed_cidrs=cidrs)
+        mock_update_pending.return_value = True
         mock_image.return_value = (
             "imageid1",
             "1.27.4",
@@ -2413,12 +2533,15 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_load.return_value = mock_client
 
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
+        # Helm updates are applied during reconciliation
+        self.driver.update_cluster_status(self.context, self.cluster_obj)
         cidr_list = cidrs.split(",")
         helm_install_values = mock_install.call_args[0][3]
         self.assertEqual(
             helm_install_values["apiServer"]["allowedCidrs"], cidr_list
         )
 
+    @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
     @mock.patch.object(driver.Driver, "_get_k8s_keystone_auth_enabled")
     @mock.patch.object(
         driver.Driver,
@@ -2433,10 +2556,12 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "update_pending")
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
     def test_create_cluster_keystone_webhook_enabled(
         self,
         mock_install,
+        mock_update_pending,
         mock_image,
         mock_load,
         mock_appcred,
@@ -2445,7 +2570,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_validate_allowed_flavor,
         mock_storageclasses,
         mock_get_keystone_auth_enabled,
+        mock_control_plane_ng_status,
     ):
+        mock_update_pending.return_value = True
         mock_image.return_value = (
             "imageid1",
             "1.27.4",
@@ -2459,6 +2586,8 @@ class ClusterAPIDriverTest(base.DbTestCase):
         self.driver.create_cluster(
             self.context, self.cluster_obj, "timeout-not-used"
         )
+        # Helm updates are applied during reconciliation
+        self.driver.update_cluster_status(self.context, self.cluster_obj)
 
         helm_install_values = mock_install.call_args[0][3]
         self.assertEqual(
@@ -2473,6 +2602,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             .get("enabled")
         )
 
+    @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
     @mock.patch.object(driver.Driver, "_get_k8s_keystone_auth_enabled")
     @mock.patch.object(
         driver.Driver,
@@ -2487,10 +2617,12 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "update_pending")
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
     def test_create_cluster_keystone_webhook_disabled(
         self,
         mock_install,
+        mock_update_pending,
         mock_image,
         mock_load,
         mock_appcred,
@@ -2499,7 +2631,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_validate_allowed_flavor,
         mock_storageclasses,
         mock_get_keystone_auth_enabled,
+        mock_control_plane_ng_status,
     ):
+        mock_update_pending.return_value = True
         mock_image.return_value = (
             "imageid1",
             "1.27.4",
@@ -2513,6 +2647,8 @@ class ClusterAPIDriverTest(base.DbTestCase):
         self.driver.create_cluster(
             self.context, self.cluster_obj, "timeout-not-used"
         )
+        # Helm updates are applied during reconciliation
+        self.driver.update_cluster_status(self.context, self.cluster_obj)
 
         helm_install_values = mock_install.call_args[0][3]
         self.assertNotEqual(
@@ -2525,6 +2661,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             .get("enabled")
         )
 
+    @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
     @mock.patch.object(
         driver.Driver,
         "_storageclass_definitions",
@@ -2538,10 +2675,12 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "update_pending")
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
     def test_create_cluster_octavia_provider_amphora(
         self,
         mock_install,
+        mock_update_pending,
         mock_image,
         mock_load,
         mock_appcred,
@@ -2549,7 +2688,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get_net,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_control_plane_ng_status,
     ):
+        mock_update_pending.return_value = True
         mock_image.return_value = (
             "imageid1",
             "1.27.4",
@@ -2567,6 +2708,8 @@ class ClusterAPIDriverTest(base.DbTestCase):
         self.driver.create_cluster(
             self.context, self.cluster_obj, "timeout-not-used"
         )
+        # Helm updates are applied during reconciliation
+        self.driver.update_cluster_status(self.context, self.cluster_obj)
 
         helm_install_values = mock_install.call_args[0][3]
         self.assertEqual(
@@ -2592,6 +2735,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             "SOURCE_IP_PORT",
         )
 
+    @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
     @mock.patch.object(
         driver.Driver,
         "_storageclass_definitions",
@@ -2605,10 +2749,12 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "update_pending")
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
     def test_create_cluster_octavia_provider_ovn(
         self,
         mock_install,
+        mock_update_pending,
         mock_image,
         mock_load,
         mock_appcred,
@@ -2616,7 +2762,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get_net,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_control_plane_ng_status,
     ):
+        mock_update_pending.return_value = True
         mock_image.return_value = (
             "imageid1",
             "1.27.4",
@@ -2633,6 +2781,8 @@ class ClusterAPIDriverTest(base.DbTestCase):
         self.driver.create_cluster(
             self.context, self.cluster_obj, "timeout-not-used"
         )
+        # Helm updates are applied during reconciliation
+        self.driver.update_cluster_status(self.context, self.cluster_obj)
 
         helm_install_values = mock_install.call_args[0][3]
         self.assertEqual(
@@ -2659,6 +2809,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             "SOURCE_IP_PORT",
         )
 
+    @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
     @mock.patch.object(
         driver.Driver,
         "_storageclass_definitions",
@@ -2672,10 +2823,12 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "update_pending")
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
     def test_create_cluster_octavia_disable_monitor(
         self,
         mock_install,
+        mock_update_pending,
         mock_image,
         mock_load,
         mock_appcred,
@@ -2683,7 +2836,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get_net,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_control_plane_ng_status,
     ):
+        mock_update_pending.return_value = True
         mock_image.return_value = (
             "imageid1",
             "1.27.4",
@@ -2700,6 +2855,8 @@ class ClusterAPIDriverTest(base.DbTestCase):
         self.driver.create_cluster(
             self.context, self.cluster_obj, "timeout-not-used"
         )
+        # Helm updates are applied during reconciliation
+        self.driver.update_cluster_status(self.context, self.cluster_obj)
 
         helm_install_values = mock_install.call_args[0][3]
         self.assertFalse(
@@ -2721,6 +2878,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             self.cluster_obj.nodegroups[0],
         )
 
+    @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
     @mock.patch.object(
         driver.Driver, "_get_k8s_keystone_auth_enabled", return_value=False
     )
@@ -2737,10 +2895,12 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "update_pending")
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
     def test_create_cluster_auto_scale_enabled(
         self,
         mock_install,
+        mock_update_pending,
         mock_image,
         mock_load,
         mock_appcred,
@@ -2749,12 +2909,14 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_validate_allowed_flavor,
         mock_storageclasses,
         mock_get_keystone_auth_enabled,
+        mock_control_plane_ng_status,
     ):
         auto_scale_labels = dict(
             auto_scaling_enabled="true", min_node_count=2, max_node_count=6
         )
         self.cluster_obj.labels = auto_scale_labels
 
+        mock_update_pending.return_value = True
         mock_image.return_value = (
             "imageid1",
             "1.27.4",
@@ -2764,6 +2926,8 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_load.return_value = mock_client
 
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
+        # Helm updates are applied during reconciliation
+        self.driver.update_cluster_status(self.context, self.cluster_obj)
         helm_install_values = mock_install.call_args[0][3]
         self.assertEqual(
             helm_install_values["nodeGroups"][0]["autoscale"],
@@ -2778,6 +2942,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             auto_scale_labels["max_node_count"],
         )
 
+    @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
     @mock.patch.object(
         driver.Driver, "_get_k8s_keystone_auth_enabled", return_value=False
     )
@@ -2794,10 +2959,12 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "update_pending")
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
     def test_create_cluster_auto_scale_disabled(
         self,
         mock_install,
+        mock_update_pending,
         mock_image,
         mock_load,
         mock_appcred,
@@ -2806,12 +2973,14 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_validate_allowed_flavor,
         mock_storageclasses,
         mock_get_keystone_auth_enabled,
+        mock_control_plane_ng_status,
     ):
         auto_scale_labels = dict(
             auto_scaling_enabled="false", min_node_count=2, max_node_count=6
         )
         self.cluster_obj.labels = auto_scale_labels
 
+        mock_update_pending.return_value = True
         mock_image.return_value = (
             "imageid1",
             "1.27.4",
@@ -2821,6 +2990,8 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_load.return_value = mock_client
 
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
+        # Helm updates are applied during reconciliation
+        self.driver.update_cluster_status(self.context, self.cluster_obj)
         helm_install_values = mock_install.call_args[0][3]
         self.assertNotIn(
             "autoscale",
@@ -2884,6 +3055,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             "not-used",
         )
 
+    @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
     @mock.patch.object(
         driver.Driver,
         "_storageclass_definitions",
@@ -2897,10 +3069,12 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "update_pending")
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
     def test_create_extra_nodegroup_auto_scale_values(
         self,
         mock_install,
+        mock_update_pending,
         mock_image,
         mock_load,
         mock_appcred,
@@ -2908,12 +3082,14 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get_net,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_control_plane_ng_status,
     ):
         auto_scale_labels = dict(
             auto_scaling_enabled="true", min_node_count=2, max_node_count=6
         )
         self.cluster_obj.labels = auto_scale_labels
 
+        mock_update_pending.return_value = True
         mock_image.return_value = (
             "imageid1",
             "1.27.4",
@@ -2942,6 +3118,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
         for ng in self.cluster_obj.nodegroups:
             print(ng)
+
+        # Helm updates are applied during reconciliation
+        self.driver.update_cluster_status(self.context, self.cluster_obj)
 
         # Unpack some values for asserting against
         helm_install_values = mock_install.call_args[0][3]
@@ -2995,6 +3174,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         self.assertEqual(ng.get("machineCountMin"), None)
         self.assertEqual(ng.get("machineCountMax"), None)
 
+    @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
     @mock.patch.object(
         driver.Driver,
         "_storageclass_definitions",
@@ -3008,10 +3188,12 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "update_pending")
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
     def test_create_cluster_boot_volume_size_label_valid(
         self,
         mock_install,
+        mock_update_pending,
         mock_image,
         mock_load,
         mock_appcred,
@@ -3019,6 +3201,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get_net,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_control_plane_ng_status,
     ):
         disk_size_configuration_value = 15
         disk_size_label_value = 32
@@ -3028,6 +3211,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             "boot_volume_size": str(disk_size_label_value)
         }
 
+        mock_update_pending.return_value = True
         mock_image.return_value = (
             "imageid1",
             "1.27.4",
@@ -3037,6 +3221,8 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_load.return_value = mock_client
 
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
+        # Helm updates are applied during reconciliation
+        self.driver.update_cluster_status(self.context, self.cluster_obj)
         helm_install_values = mock_install.call_args[0][3]
         self.assertEqual(
             helm_install_values["controlPlane"]["machineRootVolume"][
@@ -3051,6 +3237,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             disk_size_label_value,
         )
 
+    @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
     @mock.patch.object(
         driver.Driver,
         "_storageclass_definitions",
@@ -3064,10 +3251,12 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "update_pending")
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
     def test_create_cluster_boot_volume_size_label_default(
         self,
         mock_install,
+        mock_update_pending,
         mock_image,
         mock_load,
         mock_appcred,
@@ -3075,12 +3264,14 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get_net,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_control_plane_ng_status,
     ):
         disk_size_configuration_value = 15
 
         CONF.cinder.default_boot_volume_size = disk_size_configuration_value
         self.cluster_obj.labels = {}
 
+        mock_update_pending.return_value = True
         mock_image.return_value = (
             "imageid1",
             "1.27.4",
@@ -3090,6 +3281,8 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_load.return_value = mock_client
 
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
+        # Helm updates are applied during reconciliation
+        self.driver.update_cluster_status(self.context, self.cluster_obj)
         helm_install_values = mock_install.call_args[0][3]
         self.assertEqual(
             helm_install_values["controlPlane"]["machineRootVolume"][
@@ -3104,6 +3297,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             disk_size_configuration_value,
         )
 
+    @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
     @mock.patch.object(
         driver.Driver,
         "_storageclass_definitions",
@@ -3117,10 +3311,12 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "update_pending")
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
     def test_create_cluster_boot_volume_size_label_invalid(
         self,
         mock_install,
+        mock_update_pending,
         mock_image,
         mock_load,
         mock_appcred,
@@ -3128,12 +3324,14 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get_net,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_control_plane_ng_status,
     ):
         disk_size_configuration_value = 15
 
         CONF.cinder.default_boot_volume_size = disk_size_configuration_value
         self.cluster_obj.labels = {"boot_volume_size": "NotANumber"}
 
+        mock_update_pending.return_value = True
         mock_image.return_value = (
             "imageid1",
             "1.27.4",
@@ -3143,6 +3341,8 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_load.return_value = mock_client
 
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
+        # Helm updates are applied during reconciliation
+        self.driver.update_cluster_status(self.context, self.cluster_obj)
         helm_install_values = mock_install.call_args[0][3]
         self.assertEqual(
             helm_install_values["controlPlane"]["machineRootVolume"][
@@ -3157,6 +3357,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             disk_size_configuration_value,
         )
 
+    @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
     @mock.patch.object(
         driver.Driver,
         "_storageclass_definitions",
@@ -3170,10 +3371,12 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "update_pending")
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
     def test_nodegroup_node_count_min_max_equal(
         self,
         mock_install,
+        mock_update_pending,
         mock_image,
         mock_load,
         mock_appcred,
@@ -3181,17 +3384,21 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get_net,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_control_plane_ng_status,
     ):
         # When autoscaling is enabled but no min/max node counts are
         # provided for the default node group, we want autoscaling to
         # be disabled on the default node group.
         self.cluster_obj.labels = {"auto_scaling_enabled": "true"}
+        mock_update_pending.return_value = True
         mock_image.return_value = (
             "imageid1",
             "1.27.4",
             "ubuntu",
         )
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
+        # Helm updates are applied during reconciliation
+        self.driver.update_cluster_status(self.context, self.cluster_obj)
         helm_install_values = mock_install.call_args[0][3]
         helm_values_default_ng = next(
             ng

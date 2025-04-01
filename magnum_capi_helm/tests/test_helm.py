@@ -77,6 +77,367 @@ class TestHelmClient(base.TestCase):
         )
 
     @mock.patch.object(utils, "execute")
+    def test_install_or_upgrade_noversion(self, mock_execute):
+        mock_execute.return_value = '[{"foo": "bar"}]', ""
+
+        client = helm.Client()
+        result = client.install_or_upgrade(
+            "myfirstcluster",
+            "mychart",
+            dict(foo="bar", b=42),
+            repo="http://myrepo",
+            namespace="mynamespace",
+        )
+
+        self.assertEqual([{"foo": "bar"}], result)
+        mock_execute.assert_called_once_with(
+            "helm",
+            "upgrade",
+            "myfirstcluster",
+            "mychart",
+            "--history-max",
+            10,
+            "--install",
+            "--output",
+            "json",
+            "--timeout",
+            "5m",
+            "--values",
+            "-",
+            "--namespace",
+            "mynamespace",
+            "--repo",
+            "http://myrepo",
+            process_input='{"foo": "bar", "b": 42}',
+        )
+
+    # Apply update and handle a Helm update conflict.
+    # We will throw an exception, which should be caught.
+    # and get an empty result back.
+    @mock.patch.object(utils, "execute")
+    def test_install_or_upgrade_conflict(self, mock_execute):
+        mock_execute.side_effect = processutils.ProcessExecutionError(
+            stderr="Error: UPGRADE FAILED: another operation "
+            "(install/upgrade/rollback) is in progress"
+        )
+
+        client = helm.Client()
+        result = client.install_or_upgrade(
+            "myfirstcluster",
+            "mychart",
+            dict(foo="bar", b=42),
+            repo="http://myrepo",
+            version="v1.42",
+            namespace="mynamespace",
+        )
+
+        mock_execute.assert_called_once_with(
+            "helm",
+            "upgrade",
+            "myfirstcluster",
+            "mychart",
+            "--history-max",
+            10,
+            "--install",
+            "--output",
+            "json",
+            "--timeout",
+            "5m",
+            "--values",
+            "-",
+            "--namespace",
+            "mynamespace",
+            "--repo",
+            "http://myrepo",
+            "--version",
+            "v1.42",
+            process_input='{"foo": "bar", "b": 42}',
+        )
+        self.assertEqual(result, {})
+
+    @mock.patch.object(utils, "execute")
+    def test_install_or_upgrade_conflict_2(self, mock_execute):
+        mock_execute.side_effect = processutils.ProcessExecutionError(
+            stderr="Error: UPGRADE FAILED: release: already exists"
+        )
+
+        client = helm.Client()
+        result = client.install_or_upgrade(
+            "myfirstcluster",
+            "mychart",
+            dict(foo="bar", b=42),
+            repo="http://myrepo",
+            version="v1.42",
+            namespace="mynamespace",
+        )
+
+        mock_execute.assert_called_once_with(
+            "helm",
+            "upgrade",
+            "myfirstcluster",
+            "mychart",
+            "--history-max",
+            10,
+            "--install",
+            "--output",
+            "json",
+            "--timeout",
+            "5m",
+            "--values",
+            "-",
+            "--namespace",
+            "mynamespace",
+            "--repo",
+            "http://myrepo",
+            "--version",
+            "v1.42",
+            process_input='{"foo": "bar", "b": 42}',
+        )
+        self.assertEqual(result, {})
+
+    @mock.patch.object(utils, "execute")
+    def test_install_or_upgrade_conflict_3(self, mock_execute):
+        mock_execute.side_effect = processutils.ProcessExecutionError(
+            stderr="Error: UPGRADE FAILED: other unexpected error"
+        )
+
+        client = helm.Client()
+        result = client.install_or_upgrade(
+            "myfirstcluster",
+            "mychart",
+            dict(foo="bar", b=42),
+            repo="http://myrepo",
+            version="v1.42",
+            namespace="mynamespace",
+        )
+
+        mock_execute.assert_called_once_with(
+            "helm",
+            "upgrade",
+            "myfirstcluster",
+            "mychart",
+            "--history-max",
+            10,
+            "--install",
+            "--output",
+            "json",
+            "--timeout",
+            "5m",
+            "--values",
+            "-",
+            "--namespace",
+            "mynamespace",
+            "--repo",
+            "http://myrepo",
+            "--version",
+            "v1.42",
+            process_input='{"foo": "bar", "b": 42}',
+        )
+        self.assertEqual(result, {})
+
+    # Test pending update when the chart release is not found.
+    # An exception should be raised and handled.
+    @mock.patch.object(utils, "execute")
+    def test_update_pending_notfound(self, mock_execute):
+        mock_execute.side_effect = processutils.ProcessExecutionError(
+            stderr="release: not found"
+        )
+
+        client = helm.Client()
+        result = client.update_pending(
+            "myfirstcluster",
+            "0.10.2",
+            "openstack-test-chart",
+            dict(foo="bar", b=42),
+            namespace="magnum-1231023942304982304",
+        )
+
+        self.assertEqual(True, result)
+        mock_execute.assert_called_once_with(
+            "helm",
+            "get",
+            "metadata",
+            "--namespace",
+            "magnum-1231023942304982304",
+            "myfirstcluster",
+            "--output",
+            "json",
+        )
+
+    @mock.patch.object(utils, "execute")
+    def test_update_pending(self, mock_execute):
+        mock_execute.return_value = (
+            '{"name":"mynamespace","chart":"openstack-test-chart",'
+            '"version":"0.10.1","appVersion":"abc123",'
+            '"namespace":"magnum-1231023942304982304","revision":2,'
+            '"status":"deployed","deployedAt":"2025-01-01T10:10:10Z"}',
+            "",
+        )
+
+        client = helm.Client()
+        result = client.update_pending(
+            "myfirstcluster",
+            "0.10.2",
+            "openstack-test-chart",
+            dict(foo="bar", b=42),
+            namespace="magnum-1231023942304982304",
+        )
+
+        self.assertEqual(True, result)
+        mock_execute.assert_called_once_with(
+            "helm",
+            "get",
+            "metadata",
+            "--namespace",
+            "magnum-1231023942304982304",
+            "myfirstcluster",
+            "--output",
+            "json",
+        )
+
+    @mock.patch.object(utils, "execute")
+    def test_update_pending_incomplete_meta(self, mock_execute):
+        mock_execute.return_value = (
+            '{"name":"mynamespace","chart":"openstack-test-chart",'
+            '"namespace":"magnum-1231023942304982304","status":"deployed",'
+            '"deployedAt":"2025-01-01T10:10:10Z"}',
+            "",
+        )
+
+        client = helm.Client()
+        result = client.update_pending(
+            "myfirstcluster",
+            "0.10.2",
+            "openstack-test-chart",
+            dict(foo="bar", b=42),
+            namespace="magnum-1231023942304982304",
+        )
+
+        self.assertEqual(True, result)
+        mock_execute.assert_called_once_with(
+            "helm",
+            "get",
+            "metadata",
+            "--namespace",
+            "magnum-1231023942304982304",
+            "myfirstcluster",
+            "--output",
+            "json",
+        )
+
+    # Bump the chart version: update needed
+    @mock.patch.object(utils, "execute")
+    def test_update_pending_mismatch_version(self, mock_execute):
+        mock_execute.return_value = (
+            '{"name": "mynamespace", "chart": "openstack-test-chart",'
+            '"version": "0.10.1", "appVersion": "abc123",'
+            '"namespace": "magnum-1231023942304982304", "revision": 2,'
+            '"status": "deployed",'
+            '"deployedAt": "2025-01-01T10:10:10Z"}',
+            "",
+        )
+
+        client = helm.Client()
+        result = client.update_pending(
+            "myfirstcluster",
+            "0.11.2",
+            "openstack-test-chart",
+            dict(foo="bar", b=42),
+            namespace="magnum-1231023942304982304",
+        )
+
+        self.assertEqual(True, result)
+        mock_execute.assert_called_once_with(
+            "helm",
+            "get",
+            "metadata",
+            "--namespace",
+            "magnum-1231023942304982304",
+            "myfirstcluster",
+            "--output",
+            "json",
+        )
+
+    # Test pending update when the chart values match
+    @mock.patch.object(utils, "execute")
+    def test_update_pending_values_nochange(self, mock_execute):
+        mock_execute.side_effect = [
+            # Output from first call to mock_execute
+            (
+                '{"name": "mynamespace", "chart": "openstack-test-chart",'
+                '"version": "0.10.1", "appVersion": "abc123",'
+                '"namespace": "magnum-1231023942304982304", "revision": 2,'
+                '"status": "deployed",'
+                '"deployedAt": "2025-01-01T10:10:10Z"}',
+                "",
+            ),
+            # Output from second call to mock_execute
+            (
+                '{"addons": { "ingress": {"enabled": false}},'
+                '"apiServer":{"enableLoadBalancer": true},'
+                '"kubernetesVersion": "1.31.2",'
+                '"nodeGroups":[]}',
+                "",
+            ),
+        ]
+
+        client = helm.Client()
+        result = client.update_pending(
+            "myfirstcluster",
+            "0.10.1",
+            "openstack-test-chart",
+            dict(
+                addons=dict(ingress=dict(enabled=False)),
+                apiServer=dict(enableLoadBalancer=True),
+                kubernetesVersion="1.31.2",
+                nodeGroups=[],
+            ),
+            namespace="magnum-1231023942304982304",
+        )
+
+        self.assertEqual(False, result)
+        self.assertEqual(mock_execute.call_count, 2)
+
+    # Test pending update when the chart values don't match
+    @mock.patch.object(utils, "execute")
+    def test_update_pending_values_change(self, mock_execute):
+        mock_execute.side_effect = [
+            (
+                '{"name": "mynamespace", "chart": "openstack-test-chart",'
+                '"version": "0.10.1", "appVersion": "abc123",'
+                '"namespace": "magnum-1231023942304982304", "revision": 2,'
+                '"status": "deployed",'
+                '"deployedAt": "2025-01-01T10:10:10Z"}',
+                "",
+            ),
+            (
+                '{"addons": { "ingress": {"enabled": false}},'
+                '"apiServer":{"enableLoadBalancer": true},'
+                '"kubernetesVersion": "1.31.2",'
+                '"nodeGroups":[{"machineCount":2,"machineFlavor":"medium",'
+                '"name":"worker-ng"}]}',
+                "",
+            ),
+        ]
+
+        client = helm.Client()
+        result = client.update_pending(
+            "myfirstcluster",
+            "0.10.1",
+            "openstack-test-chart",
+            dict(
+                addons=dict(ingress=dict(enabled=False)),
+                apiServer=dict(enableLoadBalancer=True),
+                kubernetesVersion="1.31.2",
+                nodeGroups=[],
+            ),
+            namespace="magnum-1231023942304982304",
+        )
+
+        self.assertEqual(True, result)
+        self.assertEqual(mock_execute.call_count, 2)
+
+    @mock.patch.object(utils, "execute")
     def test_install_or_upgrade_oci(self, mock_execute):
         mock_execute.return_value = '[{"foo": "bar"}]', ""
 
