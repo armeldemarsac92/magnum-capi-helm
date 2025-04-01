@@ -1,0 +1,9 @@
+---
+fixes:
+  - |
+    An issue was resolved in which concurrent requests to add node
+    groups to a cluster would occasionally fail and not recover.
+    Handling of Helm updates has been deferred to the reconciliation
+    loop, and handling of conflicts arising from concurrent operations
+    on the Helm release has been improved.  With thanks to the team at
+    stepping stone AG for reporting this issue.
