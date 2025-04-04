@@ -1,0 +1,11 @@
+---
+features:
+  - |
+    Adds support for passing node labels to worker nodes. Labels defined in
+    the nodegroup_labels will be passed directly to the Kubernetes nodes
+    when they are created via the Cluster API provider.
+upgrade:
+  - |
+    Node labels can now be added to nodegroups by specifying them in the
+    nodegroup_labels driver label. These labels will be applied to all worker nodes
+    in that nodegroup when they are created.

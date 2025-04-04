@@ -817,14 +817,36 @@ class Driver(driver.Driver):
             additionalStorageClasses=additional_storage_classes,
         )
 
+    def _process_nodegroup_labels(self, cluster, nodegroup_name):
+        """Process the nodegroup_labels from cluster labels into a dict.
+
+        The nodegroup_labels format in cluster labels should be:
+        nodegroup_labels: '{"group1": {"label1": "value1", "label2": "value2"}, "group2": {...}}'
+        """
+        nodegroup_labels_str = self._label(cluster, 'nodegroup_labels', '{}')
+        try:
+            import json
+            nodegroup_labels = json.loads(nodegroup_labels_str)
+            return nodegroup_labels.get(nodegroup_name, {})
+        except (json.JSONDecodeError, AttributeError):
+            LOG.warning(f"Invalid nodegroup_labels format in cluster labels: {nodegroup_labels_str}")
+            return {}
+
     def _process_node_groups(self, cluster, nodegroups):
         nodegroup_set = []
         for ng in nodegroups:
             if ng.role != NODE_GROUP_ROLE_CONTROLLER:
+                # Get any additional labels for this nodegroup from cluster labels
+                additional_labels = self._process_nodegroup_labels(cluster, ng.name)
+
+                # Merge nodegroup's own labels with additional labels from cluster
+                merged_labels = helm.mergeconcat(ng.labels or {}, additional_labels)
+
                 nodegroup_item = dict(
                     name=driver_utils.sanitized_name(ng.name),
                     machineFlavor=ng.flavor_id,
                     machineCount=ng.node_count,
+                    nodeLabels=merged_labels,
                 )
                 if self._get_autoscale_enabled(cluster):
                     values = self._get_autoscale_values(cluster, ng)
