@@ -1204,6 +1204,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
                     "name": "test-worker",
                     "machineFlavor": "flavor_medium",
                     "machineCount": 3,
+                    "nodeLabels": {},
                 },
             ],
             "osDistro": "ubuntu",
@@ -3298,3 +3299,65 @@ class ClusterAPIDriverTest(base.DbTestCase):
             "loadBalancerProvider": "amphora",
         }
         self.assertEqual(apiserver_expected, helm_install_values["apiServer"])
+
+    @mock.patch.object(
+        driver.Driver, "_storageclass_definitions", return_value=mock.ANY
+    )
+    @mock.patch.object(driver.Driver, "_validate_allowed_flavor")
+    @mock.patch.object(neutron, "get_network", autospec=True)
+    @mock.patch.object(
+        driver.Driver, "_ensure_certificate_secrets", autospec=True
+    )
+    @mock.patch.object(driver.Driver, "_get_allowed_cidrs")
+    @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(kubernetes.Client, "load", autospec=True)
+    @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
+    def test_create_nodegroup_with_labels(
+        self,
+        mock_install,
+        mock_image,
+        mock_load,
+        mock_appcred,
+        mock_certs,
+        mock_get_net,
+        mock_validate_allowed_flavor,
+        mock_storageclasses,
+        mock_get_allowed_cidrs,
+    ):
+        mock_image.return_value = (
+            "imageid1",
+            "1.27.4",
+            "ubuntu",
+        )
+        mock_client = mock.MagicMock(spec=kubernetes.Client)
+        mock_load.return_value = mock_client
+
+        # Create a new nodegroup with custom labels
+        custom_labels = {
+            "environment": "test2",
+            "role": "nodegroup-worker",
+            "custom.label/nodegroup-label": "value",
+        }
+        new_nodegroup = obj_utils.create_test_nodegroup(
+            self.context,
+            uuid=uuid4(),
+            name="nodegroup-workers",
+            node_count=2,
+            labels=custom_labels,
+        )
+
+        # Add the nodegroup to the cluster
+        self.driver.create_nodegroup(
+            self.context, self.cluster_obj, new_nodegroup
+        )
+
+        # Verify the labels were passed through to the Helm values
+        helm_install_values = mock_install.call_args[0][3]
+        helm_new_ng = next(
+            ng
+            for ng in helm_install_values["nodeGroups"]
+            if ng["name"] == new_nodegroup.name
+        )
+
+        self.assertEqual(helm_new_ng["nodeLabels"], custom_labels)
