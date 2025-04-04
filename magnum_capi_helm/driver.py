@@ -820,6 +820,7 @@ class Driver(driver.Driver):
                     name=driver_utils.sanitized_name(ng.name),
                     machineFlavor=ng.flavor_id,
                     machineCount=ng.node_count,
+                    nodeLabels=ng.labels,
                 )
                 if self._get_autoscale_enabled(cluster):
                     values = self._get_autoscale_values(cluster, ng)
