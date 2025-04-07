@@ -16,6 +16,24 @@
       "message": "In Magnum `labels` are an extension of fields/properties on an object (ClusterTemplate, Cluster, NodeGroup), and allow extra configuration for a driver. A better name for these would be \"driver configuration\".\n\nIn Kubernetes `labels` are used by selectors and are expected to accept arbitrary values[1].\n\nI think this patchset has good intentions and a good use case but it takes Magnum driver configuration values and shoves it all into the Kubernetes Node as labels. I feel we **must** separate the two.\n\nI would really like to clean up our use of \"labels\" in Magnum, and allow arbitrary Kubernetes labels to end up on the target nodes. So I\u0027m keen to hear more - this is a good topic for the vPTG this week.\n\nThis patchset also conflicts with my Label Normalisation spec[1] as the spec proposes a much tighter limit on acceptable labels, and this patchset implies arbitrary labels would be possible, so please add any feedback there, too!\n\nHow do you think Magnum, and the Magnum-CAPI driver should proceed here?\n\n[1] https://kubernetes.io/docs/reference/node/node-labels/\n[2] https://review.opendev.org/c/openstack/magnum-specs/+/943358",
       "revId": "b5daafe2ff7f2fa0fa41c409fd88da0644e13d42",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ad7a3cc1_7492f078",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-04-07T00:34:59Z",
+      "side": 1,
+      "message": "Marking comment as unresolved.",
+      "parentUuid": "aa60f3ef_6c939216",
+      "revId": "b5daafe2ff7f2fa0fa41c409fd88da0644e13d42",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
