@@ -366,7 +366,7 @@ class Driver(driver.Driver):
                 return True
         return False
 
-    def update_cluster_status(self, context, cluster):
+    def update_cluster_status(self, context, cluster, use_admin_ctx=False):
         # NOTE(mkjpryor)
         # Because Kubernetes operators are built around reconciliation loops,
         # Cluster API clusters don't really go into an error state
