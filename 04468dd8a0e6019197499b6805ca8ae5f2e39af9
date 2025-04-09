@@ -16,6 +16,40 @@
       "message": "Looks nice, should streamline the inner workings. @jake.yip@ardc.edu.au would you take a look?",
       "revId": "04468dd8a0e6019197499b6805ca8ae5f2e39af9",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "687ae032_ce45702c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-04-09T04:53:51Z",
+      "side": 1,
+      "message": "Minor logic issue to note.\n\nI\u0027ll continue reviewing this week, as time allows.",
+      "revId": "04468dd8a0e6019197499b6805ca8ae5f2e39af9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "416fa638_9a3c8c3e",
+        "filename": "magnum_capi_helm/helm.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-04-09T04:53:51Z",
+      "side": 1,
+      "message": "This `if` statement needs brackets added.\n\nThis is currently in the format of `if (a and b or c)`, which should be changed to `if (a and (b or c))`, otherwise `c` is evaluated even when `a` evaluates to False.",
+      "revId": "04468dd8a0e6019197499b6805ca8ae5f2e39af9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
