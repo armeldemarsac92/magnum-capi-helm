@@ -81,6 +81,19 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_update.assert_not_called()
         mock_delete.assert_not_called()
 
+    @mock.patch.object(driver.Driver, "_update_all_nodegroups_status")
+    @mock.patch.object(driver.Driver, "_get_capi_cluster")
+    def test_update_cluster_status_admin_arg(self, mock_capi, mock_ng):
+        mock_ng.return_value = True
+        mock_capi.return_value = {"spec": {}}
+        self.cluster_obj.status = fields.ClusterStatus.CREATE_IN_PROGRESS
+
+        self.driver.update_cluster_status(
+            self.context, self.cluster_obj, use_admin_ctx=False
+        )
+
+        mock_ng.assert_called_once_with(self.cluster_obj)
+
     @mock.patch.object(driver.Driver, "_update_status_deleting")
     @mock.patch.object(driver.Driver, "_update_status_updating")
     @mock.patch.object(driver.Driver, "_update_all_nodegroups_status")
