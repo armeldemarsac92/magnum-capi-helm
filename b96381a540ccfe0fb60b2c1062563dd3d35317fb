@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a9b0897a_df9b4c55",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-04-10T05:19:44Z",
+      "side": 1,
+      "message": "This is admittedly not the ideal place to perform this action - it would be better to have a machine info reconciliation update being called from Magnum Conductor. \n\nThere is other info that may be useful to pull into the NodeGroup; such as machine addresses(existing field) and machine names(field we may consider adding).",
+      "revId": "b96381a540ccfe0fb60b2c1062563dd3d35317fb",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
