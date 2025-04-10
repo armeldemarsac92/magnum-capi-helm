@@ -613,6 +613,13 @@ class Driver(driver.Driver):
                 context, network, source="name", target="id", external=False
             )
 
+    def _get_apilb_fip_enabled(self, cluster):
+        return self._get_label_bool(
+            cluster,
+            "master_lb_floating_ip_enabled",
+            True,
+        )
+
     def _validate_allowed_flavor(self, context, requested_flavor):
         # Compare requested flavor with allowed for Kubernetes node
         flavors = (
@@ -846,6 +853,7 @@ class Driver(driver.Driver):
             "etcd": self._get_etcd_config(cluster),
             "apiServer": {
                 "enableLoadBalancer": True,
+                "associateFloatingIP": self._get_apilb_fip_enabled(cluster),
                 "loadBalancerProvider": self._get_octavia_provider(cluster),
             },
             "clusterNetworking": {
