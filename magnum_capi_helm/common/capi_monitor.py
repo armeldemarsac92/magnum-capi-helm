@@ -182,6 +182,7 @@ class CAPIMonitor(monitors.MonitorBase):
         nodegroup_reasons = []
         for nodegroup in self.cluster.nodegroups:
             if nodegroup.role == "master":
+                # The control plane doesn't have a normal MachineDeployment.
                 continue
             resource_name = driver_utils.get_k8s_resource_name(
                 self.cluster, nodegroup.name
@@ -196,6 +197,26 @@ class CAPIMonitor(monitors.MonitorBase):
                 )
                 continue
 
+            # If we're using autoscaling, update node_count from
+            # MachineDeployment replicas.
+            if api_utils.get_label_bool(
+                self.cluster, "auto_scaling_enabled", False
+            ):
+                replicas = resource_md.get("status", {}).get("replicas", -1)
+                if replicas >= 0 and replicas != nodegroup.node_count:
+                    LOG.info(
+                        "Updating nodegroup %(nodegroup_name) from"
+                        "%(nodegroup_count)  to %(replicas) replicas.",
+                        {
+                            "nodegroup_name": nodegroup.name,
+                            "nodegroup_count": nodegroup.node_count,
+                            "replicas": replicas,
+                        },
+                    )
+                    nodegroup.node_count = replicas
+                    nodegroup.save()
+
+            # Look at MachineDeployment conditions, and store as health data.
             conditions = [
                 c.get("type")
                 for c in resource_md.get("status", {}).get("conditions", {})
