@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "51cedc35_f2abd5c9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 36695
+      },
+      "writtenOn": "2025-04-11T08:00:32Z",
+      "side": 1,
+      "message": "We tested the change in our test OpenStack cloud. From what we have seen it appears to be working just fine - everything that\u0027s worked before is still working plus we are no longer able to trigger the race conditions we were seeing before.\n\nThis get the thumbs up from me!",
+      "revId": "e818aa503546fb43b9149c26f3e05e4ad646d486",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
