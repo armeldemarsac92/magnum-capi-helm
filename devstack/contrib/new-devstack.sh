@@ -171,6 +171,7 @@ sudo chmod go+rw `tty`
 #
 # Install this checkout and restart the Magnum services
 #
+source /opt/stack/data/venv/bin/activate
 SELF_PATH="$(realpath "${BASH_SOURCE[0]:-${(%):-%x}}")"
 REPO_PATH="$(dirname "$(dirname "$(dirname "$SELF_PATH")")")"
 python3 -m pip install -e "$REPO_PATH"
