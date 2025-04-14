@@ -16,6 +16,74 @@
       "message": "We tested the change in our test OpenStack cloud. From what we have seen it appears to be working just fine - everything that\u0027s worked before is still working plus we are no longer able to trigger the race conditions we were seeing before.\n\nThis get the thumbs up from me!",
       "revId": "e818aa503546fb43b9149c26f3e05e4ad646d486",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "94c40a55_db3cd6cb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-04-14T00:35:08Z",
+      "side": 1,
+      "message": "This is not behaving quite right for me in my testing - possibly my configuration but I think the patchset could be improved.\n\nLet me know your thoughts and if you see the same issues.",
+      "revId": "e818aa503546fb43b9149c26f3e05e4ad646d486",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c1bbb7e_5f3f791a",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-04-14T00:35:08Z",
+      "side": 1,
+      "message": "Is this in the right place? Perhaps it should be within the `if` statement that checks for UPDATE or CREATE in progress?\n\nIn my testing, when the cluster state is DELETE_IN_PROGRESS, the uninstall has been done and then this triggers a new installation of the helm chart.\n\nDo you see the same behaviour?",
+      "revId": "e818aa503546fb43b9149c26f3e05e4ad646d486",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d42e445a_13c06a0e",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1044,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-04-14T00:35:08Z",
+      "side": 1,
+      "message": "This change appears to be unrelated to the rest of the patchset.\n\nCould you please submit this separately in case we need to revert the other parts of this.",
+      "revId": "e818aa503546fb43b9149c26f3e05e4ad646d486",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cc1dec0e_74178f5a",
+        "filename": "magnum_capi_helm/helm.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-04-14T00:35:08Z",
+      "side": 1,
+      "message": "When I run this, the value for chart_name is `oci://example.com/capi-helm-charts/openstack-cluster`, and the chart_meta[\"chart\"] value is `openstack-cluster`.\n\nThis causes repeated `helm upgrade` every update loop, while the cluster is creating which doesn\u0027t seem ideal.\n\nDo I have an \u0027odd\u0027 config compared to what you use, or could this check be improved to a more accurate one?",
+      "revId": "e818aa503546fb43b9149c26f3e05e4ad646d486",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
