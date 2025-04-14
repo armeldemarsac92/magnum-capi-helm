@@ -37,6 +37,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "99bc3473_8b59d881",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-04-14T04:02:59Z",
+      "side": 1,
+      "message": "This test case is leaving behind clusters in `DELETE_IN_PROGRESS` state (which may transition to DELETE_COMPLETE) but the CAPI cluster and Helm deployment remains.\n\n$ openstack coe cluster create --cluster-template \u003ctemplate\u003e test10; sleep 0.5; openstack coe cluster delete test10\nRequest to create cluster 1166eb5d-f18a-4829-91e7-113d99a1d06d accepted\nRequest to delete cluster test10 has been accepted.\n\nThis environment has a single magnum-conductor running, so the race isn\u0027t between two magnum-conductors.",
+      "revId": "e818aa503546fb43b9149c26f3e05e4ad646d486",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1c1bbb7e_5f3f791a",
         "filename": "magnum_capi_helm/driver.py",
         "patchSetId": 3
