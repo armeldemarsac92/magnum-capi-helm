@@ -72,6 +72,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "42e7b893_efb0e766",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-04-17T11:12:56Z",
+      "side": 1,
+      "message": "I\u0027m seeing similar issues with cluster deletion in my testing to those Dale is reporting. When a `coe cluster delete` command is issued the `openstack-cluster` Helm release does get uninstalled so that all VMs and other OpenStack resources are deleted but then, before the Magnum cluster object deletion is complete, the Helm release is re-installed.\n\nFor some reason this re-install doesn\u0027t seem to actually recreate the CAPI objects on the management cluster (and therefore no new OpenStack resources are created) which is not a Helm behaviour I\u0027ve ever seen before - possibly some kind of race condition between uninstalling and re-installing the Helm release.\n\nThis leaves the cluster in a state where all OpenStack resources are correctly deleted and so are most of the CAPI k8s resources on the management cluster but the Helm release for the user cluster is still present on the management cluster and so is the cluster-autoscaler pod for the (now non-existent) workload cluster.\n\nFWIW these cluster deletion issues may have been masked in DevStack testing due to [1] which is now fixed upstream but is not yet in a tagged release. To get the CAPI janitor fixes into a DevStack environment you can run:\n\n```\nhelm repo add capi-janitor https://azimuth-cloud.github.io/cluster-api-janitor-openstack\nhelm repo update\nhelm upgrade -n capi-janitor-system cluster-api-janitor-openstack capi-janitor/cluster-api-janitor-openstack --reuse-values --version 0.8.2-dev.0.main.4\n```\n\n[1] https://github.com/azimuth-cloud/cluster-api-janitor-openstack/pull/167",
+      "revId": "e818aa503546fb43b9149c26f3e05e4ad646d486",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1c1bbb7e_5f3f791a",
         "filename": "magnum_capi_helm/driver.py",
         "patchSetId": 3
