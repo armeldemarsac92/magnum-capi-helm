@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e48f0803_d61b64d4",
+        "filename": "devstack/contrib/new-devstack.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-04-23T08:53:26Z",
+      "side": 1,
+      "message": "Can we add a note in docs (https://docs.openstack.org/magnum-capi-helm/latest/contributor/index.html) that you should use Ubuntu Noble for the Devstack setup?",
+      "revId": "e069939bc1de35e1793e996474820859ca20a079",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
