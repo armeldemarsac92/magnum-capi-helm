@@ -16,6 +16,24 @@
       "message": "I think we will need to update requirements.txt with magnum\u003e\u003d15.0.0, since this is not backwards-compatible.",
       "revId": "fed704e73c993d68ebaec4dea15eff4aac505871",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "43b7855d_cfd56fa1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-04-30T19:46:04Z",
+      "side": 1,
+      "message": "The added argument has a default, so calling the functional without this arg continues to work fine?",
+      "parentUuid": "c6653ec9_4c81042b",
+      "revId": "fed704e73c993d68ebaec4dea15eff4aac505871",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
