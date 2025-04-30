@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "06a8db6e_8263e8ad",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 8064
+      },
+      "writtenOn": "2025-04-30T09:37:52Z",
+      "side": 1,
+      "message": "-1 for visibility",
+      "revId": "fc10e704bc18bdb377db6d17cce075fbd324c91f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a1693c2f_ed64fb9d",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 856,
+      "author": {
+        "id": 8064
+      },
+      "writtenOn": "2025-04-30T09:37:52Z",
+      "side": 1,
+      "message": "why do we not call `self._get_label_bool()` directly?",
+      "range": {
+        "startLine": 856,
+        "startChar": 39,
+        "endLine": 856,
+        "endChar": 76
+      },
+      "revId": "fc10e704bc18bdb377db6d17cce075fbd324c91f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
