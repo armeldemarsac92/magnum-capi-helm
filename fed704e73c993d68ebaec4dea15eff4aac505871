@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c6653ec9_4c81042b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 8064
+      },
+      "writtenOn": "2025-04-30T09:57:34Z",
+      "side": 1,
+      "message": "I think we will need to update requirements.txt with magnum\u003e\u003d15.0.0, since this is not backwards-compatible.",
+      "revId": "fed704e73c993d68ebaec4dea15eff4aac505871",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
