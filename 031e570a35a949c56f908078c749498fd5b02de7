@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b92750e5_de063dbf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-05-02T00:53:40Z",
+      "side": 1,
+      "message": "This change is improved significantly by https://review.opendev.org/c/openstack/magnum/+/948681 - more clusters will be polled for health updates during creation.",
+      "revId": "031e570a35a949c56f908078c749498fd5b02de7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
