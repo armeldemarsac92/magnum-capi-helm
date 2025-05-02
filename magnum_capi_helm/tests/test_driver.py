@@ -2754,6 +2754,13 @@ class ClusterAPIDriverTest(base.DbTestCase):
             auto_scaling_enabled="true", min_node_count=2, max_node_count=6
         )
         self.cluster_obj.labels = auto_scale_labels
+        # Labels are always copied to default worker nodegroups on creation
+        ng = self.cluster_obj.default_ng_worker
+        ng.labels = auto_scale_labels
+        # Magnum conductor utils copies min_node_count from labels to field.
+        # So we need to replicate that.
+        ng.min_node_count = auto_scale_labels["min_node_count"]
+        ng.save()
 
         mock_image.return_value = (
             "imageid1",
@@ -2836,6 +2843,363 @@ class ClusterAPIDriverTest(base.DbTestCase):
         )
 
     @mock.patch.object(
+        driver.Driver, "_get_k8s_keystone_auth_enabled", return_value=False
+    )
+    @mock.patch.object(
+        driver.Driver,
+        "_storageclass_definitions",
+        return_value=mock.ANY,
+    )
+    @mock.patch.object(driver.Driver, "_validate_allowed_flavor")
+    @mock.patch.object(neutron, "get_network", autospec=True)
+    @mock.patch.object(
+        driver.Driver, "_ensure_certificate_secrets", autospec=True
+    )
+    @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(kubernetes.Client, "load", autospec=True)
+    @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
+    def test_create_cluster_auto_scale_enabled_updated_min(
+        self,
+        mock_install,
+        mock_image,
+        mock_load,
+        mock_appcred,
+        mock_certs,
+        mock_get_net,
+        mock_validate_allowed_flavor,
+        mock_storageclasses,
+        mock_get_keystone_auth_enabled,
+    ):
+        auto_scale_labels = dict(
+            auto_scaling_enabled="true", min_node_count=2, max_node_count=6
+        )
+        self.cluster_obj.labels = auto_scale_labels
+        # Labels are always copied to default worker nodegroups on creation
+        ng = self.cluster_obj.default_ng_worker
+        ng.labels = auto_scale_labels
+        # Magnum conductor utils copies min_node_count from labels to field.
+        # So we need to replicate that.
+        ng.min_node_count = auto_scale_labels["min_node_count"]
+        ng.save()
+
+        mock_image.return_value = (
+            "imageid1",
+            "1.27.4",
+            "ubuntu",
+        )
+        mock_client = mock.MagicMock(spec=kubernetes.Client)
+        mock_load.return_value = mock_client
+
+        self.driver.create_cluster(self.context, self.cluster_obj, 10)
+
+        # Increase the nodegroup min_node_count, and check the driver uses
+        # the new value.
+        ng = self.cluster_obj.default_ng_worker
+        updated_min_count = 3
+        ng.min_node_count = updated_min_count
+        ng.save()
+        self.driver.update_nodegroup(self.context, self.cluster_obj, ng)
+        helm_install_values = mock_install.call_args[0][3]
+        self.assertEqual(
+            helm_install_values["nodeGroups"][0]["machineCountMin"],
+            updated_min_count,
+        )
+
+        # Decrease the nodegroup min_node_count
+        ng = self.cluster_obj.default_ng_worker
+        updated_min_count = 1
+        ng.min_node_count = updated_min_count
+        ng.save()
+        self.driver.update_nodegroup(self.context, self.cluster_obj, ng)
+        helm_install_values = mock_install.call_args[0][3]
+        self.assertEqual(
+            helm_install_values["nodeGroups"][0]["machineCountMin"],
+            updated_min_count,
+        )
+
+    @mock.patch.object(
+        driver.Driver, "_get_k8s_keystone_auth_enabled", return_value=False
+    )
+    @mock.patch.object(
+        driver.Driver,
+        "_storageclass_definitions",
+        return_value=mock.ANY,
+    )
+    @mock.patch.object(driver.Driver, "_validate_allowed_flavor")
+    @mock.patch.object(neutron, "get_network", autospec=True)
+    @mock.patch.object(
+        driver.Driver, "_ensure_certificate_secrets", autospec=True
+    )
+    @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(kubernetes.Client, "load", autospec=True)
+    @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
+    def test_create_cluster_auto_scale_enabled_updated_max(
+        self,
+        mock_install,
+        mock_image,
+        mock_load,
+        mock_appcred,
+        mock_certs,
+        mock_get_net,
+        mock_validate_allowed_flavor,
+        mock_storageclasses,
+        mock_get_keystone_auth_enabled,
+    ):
+        auto_scale_labels = dict(
+            auto_scaling_enabled="true", min_node_count=2, max_node_count=6
+        )
+        self.cluster_obj.labels = auto_scale_labels
+        # Labels are always copied to default worker nodegroups on creation
+        ng = self.cluster_obj.default_ng_worker
+        ng.labels = auto_scale_labels
+        # Magnum conductor utils copies min_node_count from labels to field.
+        # So we need to replicate that.
+        ng.min_node_count = auto_scale_labels["min_node_count"]
+        ng.save()
+
+        mock_image.return_value = (
+            "imageid1",
+            "1.27.4",
+            "ubuntu",
+        )
+        mock_client = mock.MagicMock(spec=kubernetes.Client)
+        mock_load.return_value = mock_client
+
+        self.driver.create_cluster(self.context, self.cluster_obj, 10)
+
+        # Increase the nodegroup min_node_count, and check the driver uses
+        # the new value.
+        ng = self.cluster_obj.default_ng_worker
+        updated_max_count = 7
+        ng.max_node_count = updated_max_count
+        ng.save()
+        self.driver.update_nodegroup(self.context, self.cluster_obj, ng)
+        helm_install_values = mock_install.call_args[0][3]
+        self.assertEqual(
+            helm_install_values["nodeGroups"][0]["machineCountMax"],
+            updated_max_count,
+        )
+
+        # Decrease the min node count
+        ng = self.cluster_obj.default_ng_worker
+        updated_max_count = 4
+        ng.max_node_count = updated_max_count
+        ng.save()
+        self.driver.update_nodegroup(self.context, self.cluster_obj, ng)
+        helm_install_values = mock_install.call_args[0][3]
+        self.assertEqual(
+            helm_install_values["nodeGroups"][0]["machineCountMax"],
+            updated_max_count,
+        )
+
+    @mock.patch.object(
+        driver.Driver, "_get_k8s_keystone_auth_enabled", return_value=False
+    )
+    @mock.patch.object(
+        driver.Driver,
+        "_storageclass_definitions",
+        return_value=mock.ANY,
+    )
+    @mock.patch.object(driver.Driver, "_validate_allowed_flavor")
+    @mock.patch.object(neutron, "get_network", autospec=True)
+    @mock.patch.object(
+        driver.Driver, "_ensure_certificate_secrets", autospec=True
+    )
+    @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(kubernetes.Client, "load", autospec=True)
+    @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
+    def test_create_cluster_auto_scale_enabled_no_minmax(
+        self,
+        mock_install,
+        mock_image,
+        mock_load,
+        mock_appcred,
+        mock_certs,
+        mock_get_net,
+        mock_validate_allowed_flavor,
+        mock_storageclasses,
+        mock_get_keystone_auth_enabled,
+    ):
+        auto_scale_labels = dict(auto_scaling_enabled="true")
+        self.cluster_obj.labels = auto_scale_labels
+        # Labels are always copied to default worker nodegroups on creation
+        ng = self.cluster_obj.default_ng_worker
+        ng.labels = auto_scale_labels
+        ng.save()
+
+        mock_image.return_value = (
+            "imageid1",
+            "1.27.4",
+            "ubuntu",
+        )
+        mock_client = mock.MagicMock(spec=kubernetes.Client)
+        mock_load.return_value = mock_client
+
+        self.driver.create_cluster(self.context, self.cluster_obj, 10)
+        helm_install_values = mock_install.call_args[0][3]
+        self.assertNotIn(
+            "autoscale",
+            helm_install_values["nodeGroups"][0],
+        )
+        self.assertNotIn(
+            "machineCountMin",
+            helm_install_values["nodeGroups"][0],
+        )
+        self.assertNotIn(
+            "machineCountMax",
+            helm_install_values["nodeGroups"][0],
+        )
+
+    @mock.patch.object(
+        driver.Driver, "_get_k8s_keystone_auth_enabled", return_value=False
+    )
+    @mock.patch.object(
+        driver.Driver,
+        "_storageclass_definitions",
+        return_value=mock.ANY,
+    )
+    @mock.patch.object(driver.Driver, "_validate_allowed_flavor")
+    @mock.patch.object(neutron, "get_network", autospec=True)
+    @mock.patch.object(
+        driver.Driver, "_ensure_certificate_secrets", autospec=True
+    )
+    @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(kubernetes.Client, "load", autospec=True)
+    @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
+    def test_create_cluster_auto_scale_enabled_no_label_minmax(
+        self,
+        mock_install,
+        mock_image,
+        mock_load,
+        mock_appcred,
+        mock_certs,
+        mock_get_net,
+        mock_validate_allowed_flavor,
+        mock_storageclasses,
+        mock_get_keystone_auth_enabled,
+    ):
+        auto_scale_labels = dict(auto_scaling_enabled="yes")
+        self.cluster_obj.labels = auto_scale_labels
+        # Labels are always copied to default worker nodegroups on creation
+        ng = self.cluster_obj.default_ng_worker
+        ng.labels = auto_scale_labels
+        ng.save()
+
+        mock_image.return_value = (
+            "imageid1",
+            "1.27.4",
+            "ubuntu",
+        )
+        mock_client = mock.MagicMock(spec=kubernetes.Client)
+        mock_load.return_value = mock_client
+
+        self.driver.create_cluster(self.context, self.cluster_obj, 10)
+        helm_install_values = mock_install.call_args[0][3]
+        self.assertNotIn(
+            "autoscale",
+            helm_install_values["nodeGroups"][0],
+        )
+        self.assertNotIn(
+            "machineCountMin",
+            helm_install_values["nodeGroups"][0],
+        )
+        self.assertNotIn(
+            "machineCountMax",
+            helm_install_values["nodeGroups"][0],
+        )
+
+        # Increase the nodegroup min_node_count, and check the driver uses
+        # the new value.
+        ng = self.cluster_obj.default_ng_worker
+        updated_min_count = 3
+        updated_max_count = 7
+        ng.min_node_count = updated_min_count
+        ng.max_node_count = updated_max_count
+        ng.save()
+        self.driver.update_nodegroup(self.context, self.cluster_obj, ng)
+        helm_install_values = mock_install.call_args[0][3]
+        self.assertEqual(
+            helm_install_values["nodeGroups"][0]["autoscale"],
+            "true",
+        )
+        self.assertEqual(
+            helm_install_values["nodeGroups"][0]["machineCountMin"],
+            updated_min_count,
+        )
+        self.assertEqual(
+            helm_install_values["nodeGroups"][0]["machineCountMax"],
+            updated_max_count,
+        )
+
+    @mock.patch.object(
+        driver.Driver, "_get_k8s_keystone_auth_enabled", return_value=False
+    )
+    @mock.patch.object(
+        driver.Driver,
+        "_storageclass_definitions",
+        return_value=mock.ANY,
+    )
+    @mock.patch.object(driver.Driver, "_validate_allowed_flavor")
+    @mock.patch.object(neutron, "get_network", autospec=True)
+    @mock.patch.object(
+        driver.Driver, "_ensure_certificate_secrets", autospec=True
+    )
+    @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(kubernetes.Client, "load", autospec=True)
+    @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
+    def test_create_cluster_auto_scale_enabled_zero_min(
+        self,
+        mock_install,
+        mock_image,
+        mock_load,
+        mock_appcred,
+        mock_certs,
+        mock_get_net,
+        mock_validate_allowed_flavor,
+        mock_storageclasses,
+        mock_get_keystone_auth_enabled,
+    ):
+        auto_scale_labels = dict(
+            auto_scaling_enabled="true", min_node_count=2, max_node_count=6
+        )
+        self.cluster_obj.labels = auto_scale_labels
+        # Labels are always copied to default worker nodegroups on creation
+        ng = self.cluster_obj.default_ng_worker
+        ng.labels = auto_scale_labels
+        ng.min_node_count = 0
+        ng.max_node_count = None
+        ng.save()
+
+        mock_image.return_value = (
+            "imageid1",
+            "1.27.4",
+            "ubuntu",
+        )
+        mock_client = mock.MagicMock(spec=kubernetes.Client)
+        mock_load.return_value = mock_client
+
+        self.driver.create_cluster(self.context, self.cluster_obj, 10)
+        helm_install_values = mock_install.call_args[0][3]
+        # Both values should default to using label values
+        self.assertEqual(
+            helm_install_values["nodeGroups"][0]["autoscale"],
+            "true",
+        )
+        self.assertEqual(
+            helm_install_values["nodeGroups"][0]["machineCountMin"],
+            2,
+        )
+        self.assertEqual(
+            helm_install_values["nodeGroups"][0]["machineCountMax"],
+            6,
+        )
+
+    @mock.patch.object(
         driver.Driver,
         "_storageclass_definitions",
         return_value=mock.ANY,
@@ -2913,6 +3277,13 @@ class ClusterAPIDriverTest(base.DbTestCase):
             auto_scaling_enabled="true", min_node_count=2, max_node_count=6
         )
         self.cluster_obj.labels = auto_scale_labels
+        # Labels are always copied to default worker nodegroups on creation
+        ng = self.cluster_obj.default_ng_worker
+        ng.labels = auto_scale_labels
+        # Magnum conductor utils copies min_node_count from labels to field.
+        # So we need to replicate that.
+        ng.min_node_count = auto_scale_labels["min_node_count"]
+        ng.save()
 
         mock_image.return_value = (
             "imageid1",

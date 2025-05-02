@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    Autoscaling min and max values for nodegroups now defaults to using fields
+    over labels. This allows users to update these for both `default-worker`
+    and additional nodegroups.
+    Example CLI command to update `max_node_count` field: ``openstack coe nodegroup update mycluster1
+    default-worker replace max_node_count=10``
