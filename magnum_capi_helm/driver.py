@@ -593,12 +593,13 @@ class Driver(driver.Driver):
         return self._get_label_bool(cluster, "auto_scaling_enabled", False)
 
     def _get_autoscale_values(self, cluster, nodegroup):
-        auto_scale = self._get_autoscale_enabled(cluster)
-        min_nodes, max_nodes = self._validate_allowed_node_counts(
-            cluster, nodegroup
-        )
+        # Cluster labels determine autoscaling enabled for any nodegroup.
+        min_nodes, max_nodes = self._get_node_counts(cluster, nodegroup)
+        self._validate_allowed_node_counts(nodegroup, min_nodes, max_nodes)
+
         auto_scale_args = {}
-        if auto_scale and min_nodes != max_nodes:
+        # Nodegroup autoscaling is only enabled if min/max counts differ
+        if min_nodes != max_nodes:
             auto_scale_args["autoscale"] = "true"
             auto_scale_args["machineCountMin"] = min_nodes
             auto_scale_args["machineCountMax"] = max_nodes
@@ -668,52 +669,56 @@ class Driver(driver.Driver):
         # If min/max node counts are not defined on the default
         # worker group then fall back to equivalent cluster labels
         if self._is_default_worker_nodegroup(cluster, nodegroup):
-            # NOTE(scott): Magnum seems to set min_node_count = 1
-            # on the default group so treat this as if it were None
-            if nodegroup.min_node_count == 1:
-                min_nodes = nodegroup.node_count
+            # NOTE(dalees): We do not want to override the
+            # nodegroup.min_node_count with label values since labels are
+            # already copied for default-worker.
+            # All other nodegroups can be set explicitly and labels should
+            # not be used.
 
-            # We still want to be able to override the default node
-            # group values with labels for consistent behaviour with
-            # Magnum Heat driver.
-            min_nodes = self._get_label_int(
-                cluster, "min_node_count", min_nodes
-            )
-            max_nodes = self._get_label_int(
-                cluster, "max_node_count", max_nodes
-            )
+            # Max node count is not defaulted to labels, so we do that here.
+            # But we need to only do this when max_node_count isn't set,
+            # otherwise changes to the field will not be respected.
+            if nodegroup.max_node_count is None:
+                max_nodes = self._get_label_int(
+                    cluster, "max_node_count", None
+                )
+            # Min node count zero is invalid in CAPO, but possible in Magnum
+            # with clusters created before validation was introduced.
+            # So we should default to label value
+            # TODO(dalees): This *should* be nodegroup label, not cluster.
+            #               However, they are the same for default-worker.
+            if min_nodes == 0:
+                min_nodes = self._get_label_int(cluster, "min_node_count", 0)
+            # Finally, if there is no max node count from any source, disable
+            # autoscaling by setting min/max to the same value.
+            if max_nodes is None:
+                min_nodes = nodegroup.node_count
+                max_nodes = nodegroup.node_count
 
         return min_nodes, max_nodes
 
-    def _validate_allowed_node_counts(self, cluster, nodegroup):
-        min_nodes, max_nodes = self._get_node_counts(cluster, nodegroup)
-
+    def _validate_allowed_node_counts(self, nodegroup, min_nodes, max_nodes):
         LOG.debug(
             f"Checking if node group {nodegroup.name} has valid "
             f"node count parameters (count, min, max) = "
             f"{(nodegroup.node_count, min_nodes, max_nodes)}"
         )
 
-        if min_nodes is not None:
-            # ClusterAPI Provider OpenStack (CAPO)
-            # doesn't support scale to zero yet.
-            if min_nodes < 1:
-                raise exception.NodeGroupInvalidInput(
-                    message="Min node count must be greater than "
-                    "or equal to 1 for all node groups."
-                )
-            if min_nodes > nodegroup.node_count:
-                raise exception.NodeGroupInvalidInput(
-                    message="Min node count must be less than "
-                    "or equal to current node count"
-                )
-            if max_nodes is not None and max_nodes < min_nodes:
-                raise exception.NodeGroupInvalidInput(
-                    message="Max node count must be greater than "
-                    "or equal to min node count"
-                )
+        if min_nodes is None:
+            return
 
-        return min_nodes, max_nodes
+        # ClusterAPI Provider OpenStack (CAPO)
+        # doesn't support scale to zero yet.
+        if min_nodes < 1:
+            raise exception.NodeGroupInvalidInput(
+                message="Min node count must be greater than "
+                "or equal to 1 for all node groups."
+            )
+        if max_nodes is not None and max_nodes < min_nodes:
+            raise exception.NodeGroupInvalidInput(
+                message="Max node count must be greater than "
+                "or equal to min node count"
+            )
 
     def _get_csi_cinder_availability_zone(self, cluster):
         return self._label(
@@ -820,16 +825,17 @@ class Driver(driver.Driver):
     def _process_node_groups(self, cluster, nodegroups):
         nodegroup_set = []
         for ng in nodegroups:
-            if ng.role != NODE_GROUP_ROLE_CONTROLLER:
-                nodegroup_item = dict(
-                    name=driver_utils.sanitized_name(ng.name),
-                    machineFlavor=ng.flavor_id,
-                    machineCount=ng.node_count,
-                )
-                if self._get_autoscale_enabled(cluster):
-                    values = self._get_autoscale_values(cluster, ng)
-                    nodegroup_item = helm.mergeconcat(nodegroup_item, values)
-                nodegroup_set.append(nodegroup_item)
+            if ng.role == NODE_GROUP_ROLE_CONTROLLER:
+                continue
+            nodegroup_item = dict(
+                name=driver_utils.sanitized_name(ng.name),
+                machineFlavor=ng.flavor_id,
+                machineCount=ng.node_count,
+            )
+            if self._get_autoscale_enabled(cluster):
+                values = self._get_autoscale_values(cluster, ng)
+                nodegroup_item = helm.mergeconcat(nodegroup_item, values)
+            nodegroup_set.append(nodegroup_item)
         return nodegroup_set
 
     def _update_helm_release(self, context, cluster, nodegroups=None):
@@ -1127,7 +1133,8 @@ class Driver(driver.Driver):
         nodegroup.status = fields.ClusterStatus.CREATE_IN_PROGRESS
         self._validate_allowed_flavor(context, nodegroup.flavor_id)
         if self._get_autoscale_enabled(cluster):
-            self._validate_allowed_node_counts(cluster, nodegroup)
+            min_nodes, max_nodes = self._get_node_counts(cluster, nodegroup)
+            self._validate_allowed_node_counts(nodegroup, min_nodes, max_nodes)
         nodegroup.save()
 
         self._update_helm_release(context, cluster)
@@ -1136,7 +1143,8 @@ class Driver(driver.Driver):
         nodegroup.status = fields.ClusterStatus.UPDATE_IN_PROGRESS
         self._validate_allowed_flavor(context, nodegroup.flavor_id)
         if self._get_autoscale_enabled(cluster):
-            self._validate_allowed_node_counts(cluster, nodegroup)
+            min_nodes, max_nodes = self._get_node_counts(cluster, nodegroup)
+            self._validate_allowed_node_counts(nodegroup, min_nodes, max_nodes)
         nodegroup.save()
 
         self._update_helm_release(context, cluster)
