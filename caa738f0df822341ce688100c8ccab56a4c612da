@@ -16,6 +16,23 @@
       "message": "Outside of fixing this particular issue, we could push all of the values-templating down into capi-helm-charts by allowing the values passed to the charts to be overridden by a JSON-formatted cluster(template) label.\n\nThe driver code could/should continue to pass a sensible set of default values to get a cluster working, but which could be overridden by the contents of the JSON-formatted label.\n\nThis would be a nice addition to the driver that StackHPC could contribute over the coming months.",
       "revId": "caa738f0df822341ce688100c8ccab56a4c612da",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5783acda_2b659720",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-05-07T10:06:06Z",
+      "side": 1,
+      "message": "Update: This issue was resolved in helm charts[1] instead of magnum helm driver.\n\n[1] https://github.com/azimuth-cloud/capi-helm-charts/pull/501",
+      "revId": "caa738f0df822341ce688100c8ccab56a4c612da",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
