@@ -16,6 +16,40 @@
       "message": "looks better, but I think some more unit tests would be nice to make sure it works (for both cases - floating ip label set or not)",
       "revId": "bfb82e1f6a796845e5cdfb2cdf95b5f0b19a7d00",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3bf9d116_1f2b4a90",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-05-14T23:51:30Z",
+      "side": 1,
+      "message": "Label doesn\u0027t match documentation. Needs unit test added for negative case.",
+      "revId": "bfb82e1f6a796845e5cdfb2cdf95b5f0b19a7d00",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ae4363e5_c31b368e",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 743,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-05-14T23:51:30Z",
+      "side": 1,
+      "message": "this label should be `master_lb_floating_ip_enabled`, not `master_lb_floating_enabled`\n\nSee https://docs.openstack.org/magnum/latest/user/#master-lb-floating-ip-enabled",
+      "revId": "bfb82e1f6a796845e5cdfb2cdf95b5f0b19a7d00",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
