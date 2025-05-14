@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6dcc4dcf_d3811c24",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-05-14T23:58:42Z",
+      "side": 1,
+      "message": "Thank you! I hadn\u0027t noticed that patchset.\n\nI will review there - it\u0027s the same functionality.",
+      "parentUuid": "d28fcb32_4277807b",
+      "revId": "fc10e704bc18bdb377db6d17cce075fbd324c91f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a1693c2f_ed64fb9d",
         "filename": "magnum_capi_helm/driver.py",
         "patchSetId": 1
