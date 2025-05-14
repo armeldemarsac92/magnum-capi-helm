@@ -37,6 +37,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "05a968c8_8f62503b",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 741,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-05-14T23:57:58Z",
+      "side": 1,
+      "message": "This function name could be more specific. There are two \"floating ip enabled\" settings, even if not implemented in this driver.\n\n1) `cluster_template.floating_ip_enabled` is for adding a floating ip to all control plane and worker nodes. This is not implemented in CAPI Helm, and I don\u0027t see a use case for it. However, that is the documentation and design.\n2) Label `master_lb_floating_ip_enabled` is whether to add a floating IP to the API Loadbalancer. This is documented as defaulting to the same value as the above. (I think this should change, but that is beyond this patchset).\n\nReference: https://review.opendev.org/c/openstack/magnum/+/641547",
+      "revId": "bfb82e1f6a796845e5cdfb2cdf95b5f0b19a7d00",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ae4363e5_c31b368e",
         "filename": "magnum_capi_helm/driver.py",
         "patchSetId": 9
