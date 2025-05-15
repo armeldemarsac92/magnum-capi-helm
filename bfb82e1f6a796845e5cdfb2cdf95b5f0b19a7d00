@@ -35,6 +35,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e2eaf07b_9f92aab5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-05-15T00:27:27Z",
+      "side": 1,
+      "message": "FYI: I have a duplicate change in https://review.opendev.org/c/openstack/magnum-capi-helm/+/946857 - you can incorporate the test case from there and expand/adjust, or I can update this patchset to move this forward.",
+      "revId": "bfb82e1f6a796845e5cdfb2cdf95b5f0b19a7d00",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "05a968c8_8f62503b",
