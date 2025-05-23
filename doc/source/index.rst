@@ -62,6 +62,13 @@ Configuration Reference
 
    configuration/index
 
+Compatibility Reference
+-----------------------
+.. toctree::
+   :maxdepth: 2
+
+   compatibility/index
+
 Contributor Guide
 -----------------
 

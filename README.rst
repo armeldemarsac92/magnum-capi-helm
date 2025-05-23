@@ -18,6 +18,31 @@ intended to be specific to Magnum. The hope is
 they can also be used by ArgoCD, Flux or Azimuth
 to create k8s clusters on OpenStack.
 
+
+Compatible versions
+===================
+
+Due to the fast-changing nature of Cluster API and Cluster API OpenStack provider <https://github.com/kubernetes-sigs/cluster-api-provider-openstack>_, care should be taken to keep 
+
+
+.. list-table:: Versions
+   :header-rows: 1
+
+   * - magnum-capi-helm (Driver)
+     - capi-helm-chart (Helm Chart)
+     - cluster-api-provider-openstack (Cluster-API OpenStack provider)
+   * - Row 1, column 1
+     -
+     - Row 1, column 3
+   * - Row 2, column 1
+     - Row 2, column 2
+     - Row 2, column 3
+
+https://github.com/kubernetes-sigs/cluster-api-provider-openstack
+
+History
+=======
+
 Work on this driver started upstream around October 2021.
 After failing to get merged during Bobcat,
 we created this downstream repo as a stop-gap to help
