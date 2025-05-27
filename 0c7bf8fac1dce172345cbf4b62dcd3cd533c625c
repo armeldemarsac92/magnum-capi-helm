@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c22a3e08_c326de8b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-05-27T08:10:29Z",
+      "side": 1,
+      "message": "Thanks for starting the compatibility table!",
+      "revId": "0c7bf8fac1dce172345cbf4b62dcd3cd533c625c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2013bbda_4de96e15",
+        "filename": "README.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-05-27T08:10:29Z",
+      "side": 1,
+      "message": "incomplete line?",
+      "revId": "0c7bf8fac1dce172345cbf4b62dcd3cd533c625c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c986fdf5_11d7566b",
+        "filename": "README.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-05-27T08:10:29Z",
+      "side": 1,
+      "message": "incomplete table?",
+      "revId": "0c7bf8fac1dce172345cbf4b62dcd3cd533c625c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9de3e71d_511e14f8",
+        "filename": "magnum_capi_helm/kubernetes.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-05-27T08:10:29Z",
+      "side": 1,
+      "message": "v1alpha7 is no longer served from the latest CAPO version. Perhaps we should jump to requesting v1beta1?\n\nIt would exclude some lower CAPO version, but the other api_versions in this file already cover v1beta1, and then we shouldn\u0027t have an upper limit on CAPO.",
+      "revId": "0c7bf8fac1dce172345cbf4b62dcd3cd533c625c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
