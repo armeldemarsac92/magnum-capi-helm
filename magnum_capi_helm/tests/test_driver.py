@@ -985,17 +985,31 @@ class ClusterAPIDriverTest(base.DbTestCase):
 
     def test_sanitized_name_no_suffix(self):
         self.assertEqual(
-            "123-456fab", driver_utils.sanitized_name("123-456Fab")
+            "123-456-fab", driver_utils.sanitized_name("123-456.Fab")
+        )
+        self.assertEqual(
+            "123-456-fab",
+            driver_utils.sanitized_name("123-456.Fab", allow_fullstop=False),
+        )
+        self.assertEqual(
+            "123-456.fab",
+            driver_utils.sanitized_name("123-456.Fab", allow_fullstop=True),
         )
 
     def test_sanitized_name_with_suffix(self):
         self.assertEqual(
             "123-456-fab-1-asdf",
-            driver_utils.sanitized_name("123-456_Fab!!_1!!", "asdf"),
+            driver_utils.sanitized_name("123-456_Fab!.$!_1!!", "asdf"),
         )
         self.assertEqual(
-            "123-456-fab-1-asdf",
-            driver_utils.sanitized_name("123-456_Fab-1", "asdf"),
+            "123-456-fab-1-as-df",
+            driver_utils.sanitized_name("123-456_.Fab-1", "as.df"),
+        )
+        self.assertEqual(
+            "123-456-fab-.-1-as.df",
+            driver_utils.sanitized_name(
+                "123-456_Fab!.$!_1!!", "as.df", allow_fullstop=True
+            ),
         )
 
     def test_get_kube_version_raises(self):

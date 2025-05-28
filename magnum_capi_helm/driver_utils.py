@@ -27,11 +27,14 @@ def cluster_namespace(cluster):
     return f"{prefix}-{project_id}"
 
 
-def sanitized_name(name, suffix=None):
+def sanitized_name(name, suffix=None, allow_fullstop=False):
     if not name:
         return None
+    regex_replace = "[^a-z0-9]+"
+    if allow_fullstop:
+        regex_replace = "[^a-z0-9\\.]+"
     return re.sub(
-        "[^a-z0-9]+",
+        regex_replace,
         "-",
         (f"{name}-{suffix}" if suffix else name).lower(),
     ).strip("-")
