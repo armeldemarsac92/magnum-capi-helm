@@ -1,0 +1,7 @@
+---
+features:
+  - |
+    Added `CONF.capi_helm.helm_value_override_files` to allow magnum
+    operators to add additional helm values to all clusters, based
+    on labels added to that cluster, alongside option to specify
+    `all` which applies to all clusters.
