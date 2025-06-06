@@ -22,6 +22,7 @@ from magnum.objects import fields
 from oslo_log import log as logging
 from oslo_utils import strutils
 from oslo_utils import uuidutils
+import yaml
 
 from magnum_capi_helm.common import app_creds
 from magnum_capi_helm.common import ca_certificates
@@ -832,6 +833,14 @@ class Driver(driver.Driver):
                 nodegroup_set.append(nodegroup_item)
         return nodegroup_set
 
+    def _get_values_from_config(self):
+        values = {}
+        filename = CONF.capi_helm.helm_value_overrides_file
+        if filename:
+            with open(filename, mode="r") as f:
+                values = yaml.safe_load(f)
+        return values
+
     def _update_helm_release(self, context, cluster, nodegroups=None):
         if nodegroups is None:
             nodegroups = cluster.nodegroups
@@ -843,74 +852,84 @@ class Driver(driver.Driver):
         network_id = self._get_fixed_network_id(context, cluster)
         subnet_id = neutron.get_fixed_subnet_id(context, cluster.fixed_subnet)
 
-        values = {
-            "kubernetesVersion": kube_version,
-            "machineImageId": image_id,
-            "machineSSHKeyName": cluster.keypair or None,
-            "cloudCredentialsSecretName": self._get_app_cred_name(cluster),
-            "etcd": self._get_etcd_config(cluster),
-            "apiServer": {
-                "enableLoadBalancer": True,
-                "loadBalancerProvider": self._get_octavia_provider(cluster),
-            },
-            "clusterNetworking": {
-                "dnsNameservers": self._get_dns_nameservers(cluster),
-                "externalNetworkId": neutron.get_external_network_id(
-                    context, cluster.cluster_template.external_network_id
-                ),
-                "internalNetwork": {
-                    "networkFilter": (
-                        {"id": network_id} if network_id else None
-                    ),
-                    "subnetFilter": ({"id": subnet_id} if subnet_id else None),
-                    # This is only used if a fixed network is not specified
-                    "nodeCidr": self._label(
-                        cluster, "fixed_subnet_cidr", "10.0.0.0/24"
+        values = self._get_values_from_config()
+        values = helm.mergeconcat(
+            values,
+            {
+                "kubernetesVersion": kube_version,
+                "machineImageId": image_id,
+                "machineSSHKeyName": cluster.keypair or None,
+                "cloudCredentialsSecretName": self._get_app_cred_name(cluster),
+                "etcd": self._get_etcd_config(cluster),
+                "apiServer": {
+                    "enableLoadBalancer": True,
+                    "loadBalancerProvider": self._get_octavia_provider(
+                        cluster
                     ),
                 },
-            },
-            "osDistro": os_distro,
-            "controlPlane": {
-                "machineFlavor": cluster.master_flavor_id,
-                "machineCount": cluster.master_count,
-                "healthCheck": {
-                    "enabled": self._get_autoheal_enabled(cluster),
-                },
-            },
-            "nodeGroupDefaults": {
-                "healthCheck": {
-                    "enabled": self._get_autoheal_enabled(cluster),
-                },
-            },
-            "nodeGroups": self._process_node_groups(cluster, nodegroups),
-            "addons": {
-                "openstack": {
-                    "csiCinder": self._storageclass_definitions(
-                        context, cluster
+                "clusterNetworking": {
+                    "dnsNameservers": self._get_dns_nameservers(cluster),
+                    "externalNetworkId": neutron.get_external_network_id(
+                        context, cluster.cluster_template.external_network_id
                     ),
-                    "cloudConfig": {
-                        "LoadBalancer": {
-                            "lb-provider": self._get_octavia_provider(cluster),
-                            "lb-method": self._get_octavia_lb_algorithm(
-                                cluster
-                            ),
-                            "create-monitor": self._get_label_bool(
-                                cluster, "octavia_lb_healthcheck", True
-                            ),
-                        }
+                    "internalNetwork": {
+                        "networkFilter": (
+                            {"id": network_id} if network_id else None
+                        ),
+                        "subnetFilter": (
+                            {"id": subnet_id} if subnet_id else None
+                        ),
+                        # This is only used if a fixed network is not specified
+                        "nodeCidr": self._label(
+                            cluster, "fixed_subnet_cidr", "10.0.0.0/24"
+                        ),
                     },
                 },
-                "monitoring": {
-                    "enabled": self._get_monitoring_enabled(cluster)
+                "osDistro": os_distro,
+                "controlPlane": {
+                    "machineFlavor": cluster.master_flavor_id,
+                    "machineCount": cluster.master_count,
+                    "healthCheck": {
+                        "enabled": self._get_autoheal_enabled(cluster),
+                    },
                 },
-                "kubernetesDashboard": {
-                    "enabled": self._get_kube_dash_enabled(cluster)
+                "nodeGroupDefaults": {
+                    "healthCheck": {
+                        "enabled": self._get_autoheal_enabled(cluster),
+                    },
                 },
-                # TODO(mkjpryor): can't enable ingress until code exists to
-                #                 remove the load balancer
-                "ingress": {"enabled": False},
+                "nodeGroups": self._process_node_groups(cluster, nodegroups),
+                "addons": {
+                    "openstack": {
+                        "csiCinder": self._storageclass_definitions(
+                            context, cluster
+                        ),
+                        "cloudConfig": {
+                            "LoadBalancer": {
+                                "lb-provider": self._get_octavia_provider(
+                                    cluster
+                                ),
+                                "lb-method": self._get_octavia_lb_algorithm(
+                                    cluster
+                                ),
+                                "create-monitor": self._get_label_bool(
+                                    cluster, "octavia_lb_healthcheck", True
+                                ),
+                            }
+                        },
+                    },
+                    "monitoring": {
+                        "enabled": self._get_monitoring_enabled(cluster)
+                    },
+                    "kubernetesDashboard": {
+                        "enabled": self._get_kube_dash_enabled(cluster)
+                    },
+                    # TODO(mkjpryor): can't enable ingress until code exists to
+                    #                 remove the load balancer
+                    "ingress": {"enabled": False},
+                },
             },
-        }
+        )
 
         # Add boot disk details, if defined in config file.
         # Helm chart defaults to ephemeral disks, if unset.

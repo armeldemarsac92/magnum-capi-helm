@@ -66,6 +66,10 @@ capi_helm_opts = [
             "A cluster label can override this."
         ),
     ),
+    cfg.StrOpt(
+        "helm_value_overrides_file",
+        help=("Path to a yaml file that contains extra helm values."),
+    ),
     cfg.IntOpt(
         "minimum_flavor_ram",
         default=2048,

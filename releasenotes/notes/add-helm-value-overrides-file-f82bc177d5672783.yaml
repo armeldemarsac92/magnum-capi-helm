@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Added `CONF.capi_helm.helm_value_overrides_file` to allow magnum
+    operators to add additional helm values to all clusters.
