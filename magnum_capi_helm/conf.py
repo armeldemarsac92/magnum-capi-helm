@@ -66,6 +66,17 @@ capi_helm_opts = [
             "A cluster label can override this."
         ),
     ),
+    cfg.DictOpt(
+        "helm_value_override_files",
+        value_type=str,
+        help=(
+            "A dict of cluster template labels to additional values. "
+            "Take care to not break existing clusters that may already "
+            "be using the configured labels."
+            "If configure the label 'all' those values will be applied "
+            "to all clusters."
+        ),
+    ),
     cfg.IntOpt(
         "minimum_flavor_ram",
         default=2048,
