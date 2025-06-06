@@ -66,6 +66,20 @@ capi_helm_opts = [
             "A cluster label can override this."
         ),
     ),
+    cfg.DictOpt(
+        "helm_value_override_files",
+        help=(
+            "A comma separated key:value list where the key corresponds "
+            "to the label 'helm_value_override_files' on cluster templates "
+            "and the key 'all' is applied to all clusters. "
+            "The value must be a path to file of a yaml values file that is "
+            "used as overrides to the helm chart."
+            "This can be useful to apply operator customisations to helm "
+            "charts without modifying and publishing the entire chart."
+            "Take care to not break existing clusters that may already "
+            "be using the configured labels."
+        ),
+    ),
     cfg.IntOpt(
         "minimum_flavor_ram",
         default=2048,
