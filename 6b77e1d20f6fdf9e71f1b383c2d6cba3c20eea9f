@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a88fd007_48d55149",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-06-09T00:14:44Z",
+      "side": 1,
+      "message": "Great! This enables several other features I\u0027m looking to implement at some point.",
+      "revId": "6b77e1d20f6fdf9e71f1b383c2d6cba3c20eea9f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
