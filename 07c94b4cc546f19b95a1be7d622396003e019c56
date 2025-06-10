@@ -51,6 +51,24 @@
       "message": "Consider `OPENSTACK_VERSION\u003d\"${OPENSTACK_VERSION:-master}\"` so it can be optionally provided outside the script?",
       "revId": "07c94b4cc546f19b95a1be7d622396003e019c56",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f82dcd98_622489c8",
+        "filename": "devstack/contrib/new-devstack.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-06-10T09:17:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a952ce9_5d0d6eb5",
+      "revId": "07c94b4cc546f19b95a1be7d622396003e019c56",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
