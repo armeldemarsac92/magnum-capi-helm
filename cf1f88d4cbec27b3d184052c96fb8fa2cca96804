@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d4b072a_f91e5458",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 782
+      },
+      "writtenOn": "2025-06-10T09:11:14Z",
+      "side": 1,
+      "message": "I was hoping on a simple approach to unblock people quickly.\n\nI should update the commit message on the risks here, certainly you can break existing clusters with this config.\n\nI did wonder about caching the conf on cluster create, but this may depend on core magnum changes, unless I can find someone odd to put the details. ideas welcome!",
+      "revId": "cf1f88d4cbec27b3d184052c96fb8fa2cca96804",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
