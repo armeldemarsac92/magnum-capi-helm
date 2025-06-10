@@ -1,0 +1,9 @@
+Code-Review+2: Michal Nasiadka <mnasiadka@gmail.com>
+Verified+2: Zuul
+Workflow+1: Michal Nasiadka <mnasiadka@gmail.com>
+Submitted-by: Zuul
+Submitted-at: Tue, 10 Jun 2025 17:09:44 +0000
+Reviewed-on: https://review.opendev.org/c/openstack/magnum-capi-helm/+/940249
+Comments-Total: 8
+Project: openstack/magnum-capi-helm
+Branch: refs/heads/master
