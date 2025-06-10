@@ -16,6 +16,23 @@
       "message": "I was hoping on a simple approach to unblock people quickly.\n\nI should update the commit message on the risks here, certainly you can break existing clusters with this config.\n\nI did wonder about caching the conf on cluster create, but this may depend on core magnum changes, unless I can find someone odd to put the details. ideas welcome!",
       "revId": "cf1f88d4cbec27b3d184052c96fb8fa2cca96804",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a3931fdb_afd79720",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-06-10T21:35:45Z",
+      "side": 1,
+      "message": "Some discussion on this feature in Magnum meeting: https://meetings.opendev.org/meetings/magnum/2025/magnum.2025-06-10-08.00.log.html#l-30",
+      "revId": "cf1f88d4cbec27b3d184052c96fb8fa2cca96804",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
