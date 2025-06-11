@@ -16,6 +16,24 @@
       "message": "This may be a problem - existing clusters have non-default nodegroups created with labels inherited from cluster (or set directly) with the desired min_node_count and max_node_count.\n\nThe values of these nodegroups is the default of min_node_count\u003d0, max_node_count\u003dNone.\n\nSo to maintain backwards compatibility, it seems we need to default to labels for these, if the fields are invalid or default.",
       "revId": "3051971a36ac69a74f09d020798da67a79ac5465",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "84f362f7_d62b7591",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 671,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-06-11T00:12:22Z",
+      "side": 1,
+      "message": "Updated to now apply the defaulting behaviour to all nodegroups.",
+      "parentUuid": "902e9e73_dd9aa95c",
+      "revId": "3051971a36ac69a74f09d020798da67a79ac5465",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
