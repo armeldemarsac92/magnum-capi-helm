@@ -71,6 +71,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ff91809c_9fbddcb9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-06-17T01:47:33Z",
+      "side": 1,
+      "message": "Hi Piotr and reviewers,\n\nI have updated I48fda8cdb6e9de915528e47de40a771614c092d1 with changes from this patchset and made changes I think are necessary.\n\nPlease review there, and hopefully it replaces this (with co-author).",
+      "revId": "bfb82e1f6a796845e5cdfb2cdf95b5f0b19a7d00",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "05a968c8_8f62503b",
         "filename": "magnum_capi_helm/driver.py",
         "patchSetId": 9
