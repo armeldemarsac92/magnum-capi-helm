@@ -53,6 +53,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "56f9d488_86aa94c3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-06-17T01:49:58Z",
+      "side": 1,
+      "message": "Included changes from referenced patchset and added co-author line",
+      "parentUuid": "6dcc4dcf_d3811c24",
+      "revId": "fc10e704bc18bdb377db6d17cce075fbd324c91f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a1693c2f_ed64fb9d",
