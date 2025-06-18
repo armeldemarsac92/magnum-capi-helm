@@ -261,6 +261,60 @@ class TestCAPIMonitor(base.DbTestCase):
             },
         )
 
+    def test_autoscaling_enabled(self):
+        ng_state = {
+            "metadata": {
+                "annotations": {
+                    "cluster.x-k8s.io/"
+                    "cluster-api-autoscaler-node-group-max-size": 5,
+                    "cluster.x-k8s.io/"
+                    "cluster-api-autoscaler-node-group-min-size": 2,
+                }
+            },
+            "status": {"replicas": 5},
+        }
+        self.mock_k8s.get_machine_deployment.return_value = ng_state
+
+        self.cluster_obj["labels"] = {"auto_scaling_enabled": "true"}
+        self.cluster_obj.default_ng_worker.node_count = 3
+
+        self.monitor.poll_health_status()
+
+        # With autoscaling on, node count should now be 5
+        self.assertEqual(self.cluster_obj.default_ng_worker.node_count, 5)
+
+    def test_autoscaling_cluster_label_disabled(self):
+        ng_state = {
+            "metadata": {
+                "annotations": {
+                    "cluster.x-k8s.io/"
+                    "cluster-api-autoscaler-node-group-max-size": 5,
+                    "cluster.x-k8s.io/"
+                    "cluster-api-autoscaler-node-group-min-size": 2,
+                }
+            },
+            "status": {"replicas": 5},
+        }
+        self.mock_k8s.get_machine_deployment.return_value = ng_state
+
+        self.cluster_obj["labels"] = {"auto_scaling_enabled": "false"}
+        self.cluster_obj.default_ng_worker.node_count = 3
+
+        self.monitor.poll_health_status()
+
+        self.assertEqual(self.cluster_obj.default_ng_worker.node_count, 3)
+
+    def test_autoscaling_annotation_absent(self):
+        ng_state = {"metadata": {"annotations": {}}, "status": {"replicas": 5}}
+        self.mock_k8s.get_machine_deployment.return_value = ng_state
+
+        self.cluster_obj["labels"] = {"auto_scaling_enabled": "true"}
+        self.cluster_obj.default_ng_worker.node_count = 3
+
+        self.monitor.poll_health_status()
+
+        self.assertEqual(self.cluster_obj.default_ng_worker.node_count, 3)
+
     def test_all_missing(self):
         self.mock_k8s.get_capi_cluster.return_value = None
         self.mock_k8s.get_capi_openstackcluster.return_value = None

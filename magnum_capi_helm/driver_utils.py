@@ -15,6 +15,8 @@
 import re
 
 from magnum_capi_helm import conf
+from magnum_capi_helm import helm
+from oslo_utils import strutils
 
 CONF = conf.CONF
 
@@ -43,3 +45,29 @@ def chart_release_name(cluster):
 
 def get_k8s_resource_name(cluster, name):
     return sanitized_name(chart_release_name(cluster), name)
+
+
+def get_label(cluster, key, default):
+    all_labels = helm.mergeconcat(
+        cluster.cluster_template.labels, cluster.labels
+    )
+    if not all_labels:
+        return default
+    raw = all_labels.get(key, default)
+    # NOTE(johngarbutt): filtering untrusted user input
+    return re.sub(r"[^a-zA-Z0-9\.\-\/ _]+", "", raw)
+
+
+def get_label_bool(cluster, label, default):
+    cluster_label = get_label(cluster, label, "")
+    return strutils.bool_from_string(cluster_label, default=default)
+
+
+def get_label_int(cluster, label, default):
+    cluster_label = get_label(cluster, label, "")
+    if not cluster_label:
+        return default
+    try:
+        return int(cluster_label)
+    except ValueError:
+        return default

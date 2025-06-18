@@ -15,8 +15,10 @@ from magnum.i18n import _
 from magnum.objects import fields as m_fields
 from magnum_capi_helm import driver_utils
 from magnum_capi_helm import kubernetes
+from oslo_log import log as logging
 
 
+LOG = logging.getLogger(__name__)
 MONITOR_STATE_READY = _("Ready")
 
 
@@ -196,6 +198,46 @@ class CAPIMonitor(monitors.MonitorBase):
                 )
                 continue
 
+            # If we're using autoscaling, update node_count from
+            # MachineDeployment replicas.
+            if driver_utils.get_label_bool(
+                self.cluster, "auto_scaling_enabled", False
+            ):
+                replicas = resource_md.get("status", {}).get("replicas", -1)
+                # Also make sure the nodegroup has autoscaling annotations.
+                annotations = resource_md.get("metadata", {}).get(
+                    "annotations", {}
+                )
+                max_size = annotations.get(
+                    "cluster.x-k8s.io/"
+                    "cluster-api-autoscaler-node-group-max-size",
+                    None,
+                )
+                min_size = annotations.get(
+                    "cluster.x-k8s.io/"
+                    "cluster-api-autoscaler-node-group-min-size",
+                    None,
+                )
+                autoscaling_valid = (
+                    max_size and min_size and max_size != min_size
+                )
+                update_replicas = (
+                    replicas >= 0 and replicas != nodegroup.node_count
+                )
+                if autoscaling_valid and update_replicas:
+                    LOG.info(
+                        "Updating nodegroup %(nodegroup_name)s from"
+                        " %(nodegroup_count)d to %(replicas)d replicas.",
+                        {
+                            "nodegroup_name": nodegroup.name,
+                            "nodegroup_count": nodegroup.node_count,
+                            "replicas": replicas,
+                        },
+                    )
+                    nodegroup.node_count = replicas
+                    nodegroup.save()
+
+            # Look at MachineDeployment conditions, and store as health data.
             conditions = [
                 c.get("type")
                 for c in resource_md.get("status", {}).get("conditions", {})
