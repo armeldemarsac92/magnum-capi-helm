@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    Added feature to update NodeGroup node_count value to the current
+    cluster autoscaler value from CAPI when autoscaling is enabled. This
+    value was previously unused with autoscaling enabled. With autoscaling
+    disabled, node_count will continue to function as normal and not be
+    updated by the driver.

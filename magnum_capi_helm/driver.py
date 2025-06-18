@@ -71,6 +71,15 @@ class Driver(driver.Driver):
             },
         ]
 
+    def _label(self, cluster, key, default):
+        return driver_utils.get_label(cluster, key, default)
+
+    def _get_label_bool(self, cluster, label, default):
+        return driver_utils.get_label_bool(cluster, label, default)
+
+    def _get_label_int(self, cluster, label, default):
+        return driver_utils.get_label_int(cluster, label, default)
+
     def validate_master_resize(self, node_count):
         # This driver supports resizing to the same values
         # as initial create, so re-use the Base class validation.
@@ -467,29 +476,6 @@ class Driver(driver.Driver):
                 },
                 driver_utils.cluster_namespace(cluster),
             )
-
-    def _label(self, cluster, key, default):
-        all_labels = helm.mergeconcat(
-            cluster.cluster_template.labels, cluster.labels
-        )
-        if not all_labels:
-            return default
-        raw = all_labels.get(key, default)
-        # NOTE(johngarbutt): filtering untrusted user input
-        return re.sub(r"[^a-zA-Z0-9\.\-\/ _]+", "", raw)
-
-    def _get_label_bool(self, cluster, label, default):
-        cluster_label = self._label(cluster, label, "")
-        return strutils.bool_from_string(cluster_label, default=default)
-
-    def _get_label_int(self, cluster, label, default):
-        cluster_label = self._label(cluster, label, "")
-        if not cluster_label:
-            return default
-        try:
-            return int(cluster_label)
-        except ValueError:
-            return default
 
     def _get_chart_version(self, cluster):
         version = cluster.cluster_template.labels.get(
