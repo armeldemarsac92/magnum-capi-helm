@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "13324078_fde2126b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-06-18T00:00:58Z",
+      "side": 1,
+      "message": "I need to spend some time with this to test and understand it fully before +2, but want to signal my support for the updated approach.\n\nIt has the flexibility needed to allow versioning and controlled updates during upgrades, which was my previous concern.",
+      "revId": "25ffe4ab89b18a6142b2d6881314df498db30691",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
