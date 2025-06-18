@@ -202,6 +202,7 @@ class Driver(driver.Driver):
                 if is_update_operation
                 else fields.ClusterStatus.CREATE_COMPLETE
             )
+            nodegroup.status_reason = None
             LOG.debug(
                 f"Node group ready: {nodegroup.name} "
                 f"in cluster {cluster.uuid}"
@@ -214,6 +215,7 @@ class Driver(driver.Driver):
                 if is_update_operation
                 else fields.ClusterStatus.CREATE_FAILED
             )
+            nodegroup.status_reason = None
             LOG.debug(
                 f"Node group failed: {nodegroup.name} "
                 f"in cluster {cluster.uuid}"
@@ -303,6 +305,7 @@ class Driver(driver.Driver):
                     if is_update_operation
                     else fields.ClusterStatus.CREATE_FAILED
                 )
+                cluster.status_reason = "Addon failed to install."
                 cluster.save()
                 return
             elif addon_phase and addon_phase == "Deployed":
@@ -323,6 +326,7 @@ class Driver(driver.Driver):
             if is_update_operation
             else fields.ClusterStatus.CREATE_COMPLETE
         )
+        cluster.status_reason = None
         cluster.save()
 
     def _update_status_deleting(self, context, cluster):
@@ -338,6 +342,7 @@ class Driver(driver.Driver):
         app_creds.delete_app_cred(context, cluster)
 
         cluster.status = fields.ClusterStatus.DELETE_COMPLETE
+        cluster.status_reason = None
         cluster.save()
 
     def _get_capi_cluster(self, cluster):
@@ -1066,6 +1071,7 @@ class Driver(driver.Driver):
         # update_cluster_status can get called before we return
         for ng in cluster.nodegroups:
             ng.status = fields.ClusterStatus.DELETE_IN_PROGRESS
+            ng.status_reason = None
             ng.save()
 
         release_name = driver_utils.chart_release_name(cluster)
@@ -1112,12 +1118,14 @@ class Driver(driver.Driver):
         # So mark them all as having an update in progress
         for nodegroup in cluster.nodegroups:
             nodegroup.status = fields.ClusterStatus.UPDATE_IN_PROGRESS
+            nodegroup.status_reason = None
             self._validate_allowed_flavor(context, nodegroup.flavor_id)
             nodegroup.save()
 
         # Move the cluster to the new template
         cluster.cluster_template_id = cluster_template.uuid
         cluster.status = fields.ClusterStatus.UPDATE_IN_PROGRESS
+        cluster.status_reason = None
         cluster.save()
         cluster.refresh()
 
@@ -1125,6 +1133,7 @@ class Driver(driver.Driver):
 
     def create_nodegroup(self, context, cluster, nodegroup):
         nodegroup.status = fields.ClusterStatus.CREATE_IN_PROGRESS
+        nodegroup.status_reason = None
         self._validate_allowed_flavor(context, nodegroup.flavor_id)
         if self._get_autoscale_enabled(cluster):
             self._validate_allowed_node_counts(cluster, nodegroup)
@@ -1134,6 +1143,7 @@ class Driver(driver.Driver):
 
     def update_nodegroup(self, context, cluster, nodegroup):
         nodegroup.status = fields.ClusterStatus.UPDATE_IN_PROGRESS
+        nodegroup.status_reason = None
         self._validate_allowed_flavor(context, nodegroup.flavor_id)
         if self._get_autoscale_enabled(cluster):
             self._validate_allowed_node_counts(cluster, nodegroup)
@@ -1143,6 +1153,7 @@ class Driver(driver.Driver):
 
     def delete_nodegroup(self, context, cluster, nodegroup):
         nodegroup.status = fields.ClusterStatus.DELETE_IN_PROGRESS
+        nodegroup.status_reason = None
         nodegroup.save()
 
         # Remove the nodegroup being deleted from the nodegroups
