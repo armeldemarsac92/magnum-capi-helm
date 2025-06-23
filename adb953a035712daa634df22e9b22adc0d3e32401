@@ -33,6 +33,24 @@
       "message": "Can\u0027t we just use cluster.cluster_template.floating_ip_enabled instead of None?",
       "revId": "adb953a035712daa634df22e9b22adc0d3e32401",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "550f35fe_1dbae40c",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 748,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-06-23T21:21:40Z",
+      "side": 1,
+      "message": "Oh, yes we can! Thanks - I made a wrong assumption about how boolean False and default was treated.\n\nTest cases pass with your suggestion and that also allows us to remove this function.",
+      "parentUuid": "aa86bcba_b69f78f8",
+      "revId": "adb953a035712daa634df22e9b22adc0d3e32401",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
