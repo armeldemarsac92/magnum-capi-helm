@@ -16,6 +16,29 @@
       "message": "Thanks!",
       "revId": "95c627efbf17803b3879c35ffb60f3b0c4ba1bbf",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7285d1c9_5b663462",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 856,
+      "author": {
+        "id": 8064
+      },
+      "writtenOn": "2025-06-24T09:05:15Z",
+      "side": 1,
+      "message": "so I think this was originally used to mean - \"do I want FIP on my nodes\" which isn\u0027t supported in CAPI\nis there a reason why we are falling back to using that value?\nis it better to drop that, instead of having two ways of defining the same thing??",
+      "range": {
+        "startLine": 856,
+        "startChar": 45,
+        "endLine": 856,
+        "endChar": 64
+      },
+      "revId": "95c627efbf17803b3879c35ffb60f3b0c4ba1bbf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
