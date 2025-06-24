@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cbbec8cc_4ad76f4f",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 596,
+      "author": {
+        "id": 8064
+      },
+      "writtenOn": "2025-06-24T08:42:41Z",
+      "side": 1,
+      "message": "I am unsure what this means. do you mean \n1) the cluster label \u0027auto_scaling_enabled\u0027\n2) or the nodegroup properties determine autoscaling enabled (as with your comment below)",
+      "range": {
+        "startLine": 596,
+        "startChar": 0,
+        "endLine": 596,
+        "endChar": 2
+      },
+      "revId": "3051971a36ac69a74f09d020798da67a79ac5465",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "902e9e73_dd9aa95c",
         "filename": "magnum_capi_helm/driver.py",
         "patchSetId": 2
@@ -32,6 +55,75 @@
       "side": 1,
       "message": "Updated to now apply the defaulting behaviour to all nodegroups.",
       "parentUuid": "902e9e73_dd9aa95c",
+      "revId": "3051971a36ac69a74f09d020798da67a79ac5465",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ea83ee57_d0011c02",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 708,
+      "author": {
+        "id": 8064
+      },
+      "writtenOn": "2025-06-24T08:42:41Z",
+      "side": 1,
+      "message": "is `min_nodes \u003d None` valid and when will that be? it seems to default to node_count.",
+      "range": {
+        "startLine": 707,
+        "startChar": 0,
+        "endLine": 708,
+        "endChar": 18
+      },
+      "revId": "3051971a36ac69a74f09d020798da67a79ac5465",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "468b48fa_93ace00f",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1135,
+      "author": {
+        "id": 8064
+      },
+      "writtenOn": "2025-06-24T08:42:41Z",
+      "side": 1,
+      "message": "this is kind of weird because currently I can do `openstack coe nodegroup create --min-nodes 1 --max-nodes 0 \u003ccluster\u003e \u003cnodegroup\u003e`",
+      "range": {
+        "startLine": 1135,
+        "startChar": 0,
+        "endLine": 1135,
+        "endChar": 2
+      },
+      "revId": "3051971a36ac69a74f09d020798da67a79ac5465",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "84ce3f97_ef1dd65c",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1137,
+      "author": {
+        "id": 8064
+      },
+      "writtenOn": "2025-06-24T08:42:41Z",
+      "side": 1,
+      "message": "I think I\u0027m missing something - why is there a need to change this from `_validate_allowed_node_counts(cluster, nodegroup)` to `_validate_allowed_node_counts(nodegroup, min_nodes, max_nodes)`?\n\nthis seems to result in every call needing an additional\n`min_nodes, max_nodes \u003d self._get_node_counts(cluster, nodegroup)`?",
+      "range": {
+        "startLine": 1137,
+        "startChar": 0,
+        "endLine": 1137,
+        "endChar": 2
+      },
       "revId": "3051971a36ac69a74f09d020798da67a79ac5465",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
