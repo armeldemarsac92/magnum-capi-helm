@@ -85,6 +85,24 @@
       "parentUuid": "9de3e71d_511e14f8",
       "revId": "0c7bf8fac1dce172345cbf4b62dcd3cd533c625c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6dab2d01_e52419b9",
+        "filename": "magnum_capi_helm/kubernetes.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-06-24T10:44:24Z",
+      "side": 1,
+      "message": "Moving to v1beta1 would also close this bug which we see when using capi-helm-charts \u003e\u003d v0.11.0: https://bugs.launchpad.net/magnum/+bug/2115207",
+      "parentUuid": "cb900183_a6405688",
+      "revId": "0c7bf8fac1dce172345cbf4b62dcd3cd533c625c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
