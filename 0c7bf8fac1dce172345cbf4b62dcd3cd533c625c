@@ -67,6 +67,24 @@
       "message": "v1alpha7 is no longer served from the latest CAPO version. Perhaps we should jump to requesting v1beta1?\n\nIt would exclude some lower CAPO version, but the other api_versions in this file already cover v1beta1, and then we shouldn\u0027t have an upper limit on CAPO.",
       "revId": "0c7bf8fac1dce172345cbf4b62dcd3cd533c625c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb900183_a6405688",
+        "filename": "magnum_capi_helm/kubernetes.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-06-24T10:17:09Z",
+      "side": 1,
+      "message": "+1 for moving to v1beta1 instead, it has been supported by CAPO since v0.10.0 which was released in April 2024 [1] and became the default in capi-helm-charts since v0.11.0 which was released in October 2024 [2].\n\n[1] https://github.com/kubernetes-sigs/cluster-api-provider-openstack/releases/tag/v0.10.0\n[2] https://github.com/azimuth-cloud/capi-helm-charts/releases/tag/0.11.0",
+      "parentUuid": "9de3e71d_511e14f8",
+      "revId": "0c7bf8fac1dce172345cbf4b62dcd3cd533c625c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
