@@ -103,6 +103,24 @@
       "parentUuid": "cb900183_a6405688",
       "revId": "0c7bf8fac1dce172345cbf4b62dcd3cd533c625c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a8f7b8f2_f76282ca",
+        "filename": "magnum_capi_helm/kubernetes.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-06-25T08:06:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6dab2d01_e52419b9",
+      "revId": "0c7bf8fac1dce172345cbf4b62dcd3cd533c625c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
