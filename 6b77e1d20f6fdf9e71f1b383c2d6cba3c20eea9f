@@ -16,6 +16,23 @@
       "message": "Great! This enables several other features I\u0027m looking to implement at some point.",
       "revId": "6b77e1d20f6fdf9e71f1b383c2d6cba3c20eea9f",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e9e89ae_9c889421",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 38122
+      },
+      "writtenOn": "2025-06-25T14:55:45Z",
+      "side": 1,
+      "message": "Tested this with terraform resize node-count and it works well.",
+      "revId": "6b77e1d20f6fdf9e71f1b383c2d6cba3c20eea9f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
