@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "57579036_93a8559e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-06-26T21:57:30Z",
+      "side": 1,
+      "message": "Resolved",
+      "parentUuid": "c22a3e08_c326de8b",
+      "revId": "0c7bf8fac1dce172345cbf4b62dcd3cd533c625c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2013bbda_4de96e15",
@@ -35,6 +53,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "85caed93_75936197",
+        "filename": "README.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-06-26T21:57:30Z",
+      "side": 1,
+      "message": "Resolved",
+      "parentUuid": "2013bbda_4de96e15",
+      "revId": "0c7bf8fac1dce172345cbf4b62dcd3cd533c625c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c986fdf5_11d7566b",
@@ -48,6 +84,24 @@
       "writtenOn": "2025-05-27T08:10:29Z",
       "side": 1,
       "message": "incomplete table?",
+      "revId": "0c7bf8fac1dce172345cbf4b62dcd3cd533c625c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1276349e_5afcb709",
+        "filename": "README.rst",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-06-26T21:57:30Z",
+      "side": 1,
+      "message": "Resolved",
+      "parentUuid": "c986fdf5_11d7566b",
       "revId": "0c7bf8fac1dce172345cbf4b62dcd3cd533c625c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
