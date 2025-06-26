@@ -24,6 +24,30 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "78a9b179_ce2e2069",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 596,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-06-26T04:26:22Z",
+      "side": 1,
+      "message": "It was `1)`, but this comment is not relevant in this function. Removed.",
+      "parentUuid": "cbbec8cc_4ad76f4f",
+      "range": {
+        "startLine": 596,
+        "startChar": 0,
+        "endLine": 596,
+        "endChar": 2
+      },
+      "revId": "3051971a36ac69a74f09d020798da67a79ac5465",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "902e9e73_dd9aa95c",
@@ -82,6 +106,30 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b21adcd_939fecf7",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 708,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-06-26T04:26:22Z",
+      "side": 1,
+      "message": "Hmm agreed, removed.\n\nIt was a hangover from refactoring line 697: https://github.com/openstack/magnum-capi-helm/blob/60dc96c4dae8628e92c20b1ca594c4cf10eba5e4/magnum_capi_helm/driver.py#L697",
+      "parentUuid": "ea83ee57_d0011c02",
+      "range": {
+        "startLine": 707,
+        "startChar": 0,
+        "endLine": 708,
+        "endChar": 18
+      },
+      "revId": "3051971a36ac69a74f09d020798da67a79ac5465",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "468b48fa_93ace00f",
@@ -107,6 +155,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7bdfdc05_89b19a0a",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1135,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-06-26T04:26:22Z",
+      "side": 1,
+      "message": "The actual `nodegroup create` is done in Magnum conductor via an async RPC call, which does limit the validation the driver can do.\n\nSo I would expect this to result in a new nodegroup created and ending up in `state: CREATE_FAILED` with `status_reason: Max node count must be greater than or equal to min node count`.\n\nMagnum Conductor also raises an Exception: `ERROR oslo_messaging.rpc.server magnum.common.exception.NodeGroupInvalidInput: Max node count must be greater than or equal to min node count`",
+      "parentUuid": "468b48fa_93ace00f",
+      "range": {
+        "startLine": 1135,
+        "startChar": 0,
+        "endLine": 1135,
+        "endChar": 2
+      },
+      "revId": "3051971a36ac69a74f09d020798da67a79ac5465",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "84ce3f97_ef1dd65c",
         "filename": "magnum_capi_helm/driver.py",
         "patchSetId": 2
@@ -118,6 +190,30 @@
       "writtenOn": "2025-06-24T08:42:41Z",
       "side": 1,
       "message": "I think I\u0027m missing something - why is there a need to change this from `_validate_allowed_node_counts(cluster, nodegroup)` to `_validate_allowed_node_counts(nodegroup, min_nodes, max_nodes)`?\n\nthis seems to result in every call needing an additional\n`min_nodes, max_nodes \u003d self._get_node_counts(cluster, nodegroup)`?",
+      "range": {
+        "startLine": 1137,
+        "startChar": 0,
+        "endLine": 1137,
+        "endChar": 2
+      },
+      "revId": "3051971a36ac69a74f09d020798da67a79ac5465",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9106beac_f4c18118",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1137,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-06-26T04:26:22Z",
+      "side": 1,
+      "message": "Thanks - I see your point, definitely could be improved.\n\nMy initial reasoning was that the function `_validate_allowed_node_counts` was doing two jobs - validation and returning returning the final min and max values to be used.\n\nI want this function to be really clear about what it does and do one job, instead of being used for multiple purposes, however I\u0027m not sure I improved it, here.\n\nI\u0027ll revise the function refactor and split it into another commit so it can be reviewed separately, it\u0027s not relevant for this autoscaling min/max change even if I consider it addressing a code smell.",
+      "parentUuid": "84ce3f97_ef1dd65c",
       "range": {
         "startLine": 1137,
         "startChar": 0,
