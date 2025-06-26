@@ -592,16 +592,26 @@ class Driver(driver.Driver):
     def _get_autoscale_enabled(self, cluster):
         return self._get_label_bool(cluster, "auto_scaling_enabled", False)
 
+    def _validate_autoscale_values(self, cluster, nodegroup):
+        # NOTE(dalees): Retrieving the autoscale values performs validation on
+        #               allowed node counts.
+        _ = self._get_autoscale_values(cluster, nodegroup)
+
     def _get_autoscale_values(self, cluster, nodegroup):
-        auto_scale = self._get_autoscale_enabled(cluster)
-        min_nodes, max_nodes = self._validate_allowed_node_counts(
-            cluster, nodegroup
-        )
-        auto_scale_args = {}
-        if auto_scale and min_nodes != max_nodes:
-            auto_scale_args["autoscale"] = "true"
-            auto_scale_args["machineCountMin"] = min_nodes
-            auto_scale_args["machineCountMax"] = max_nodes
+        if not self._get_autoscale_enabled(cluster):
+            return {}
+
+        min_nodes, max_nodes = self._get_node_counts(cluster, nodegroup)
+        if min_nodes == max_nodes:
+            # Autoscaling is not enabled if min/max are the same.
+            return {}
+        self._validate_allowed_node_counts(nodegroup, min_nodes, max_nodes)
+
+        auto_scale_args = {
+            "autoscale": "true",
+            "machineCountMin": min_nodes,
+            "machineCountMax": max_nodes,
+        }
         return auto_scale_args
 
     def _get_k8s_keystone_auth_enabled(self, cluster):
@@ -687,9 +697,7 @@ class Driver(driver.Driver):
 
         return min_nodes, max_nodes
 
-    def _validate_allowed_node_counts(self, cluster, nodegroup):
-        min_nodes, max_nodes = self._get_node_counts(cluster, nodegroup)
-
+    def _validate_allowed_node_counts(self, nodegroup, min_nodes, max_nodes):
         LOG.debug(
             f"Checking if node group {nodegroup.name} has valid "
             f"node count parameters (count, min, max) = "
@@ -708,7 +716,6 @@ class Driver(driver.Driver):
                 message="Max node count must be greater than "
                 "or equal to min node count"
             )
-        return min_nodes, max_nodes
 
     def _get_csi_cinder_availability_zone(self, cluster):
         return self._label(
@@ -1122,8 +1129,7 @@ class Driver(driver.Driver):
     def create_nodegroup(self, context, cluster, nodegroup):
         nodegroup.status = fields.ClusterStatus.CREATE_IN_PROGRESS
         self._validate_allowed_flavor(context, nodegroup.flavor_id)
-        if self._get_autoscale_enabled(cluster):
-            self._validate_allowed_node_counts(cluster, nodegroup)
+        self._validate_autoscale_values(cluster, nodegroup)
         nodegroup.save()
 
         self._update_helm_release(context, cluster)
@@ -1131,8 +1137,7 @@ class Driver(driver.Driver):
     def update_nodegroup(self, context, cluster, nodegroup):
         nodegroup.status = fields.ClusterStatus.UPDATE_IN_PROGRESS
         self._validate_allowed_flavor(context, nodegroup.flavor_id)
-        if self._get_autoscale_enabled(cluster):
-            self._validate_allowed_node_counts(cluster, nodegroup)
+        self._validate_autoscale_values(cluster, nodegroup)
         nodegroup.save()
 
         self._update_helm_release(context, cluster)
