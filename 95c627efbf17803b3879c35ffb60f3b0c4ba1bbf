@@ -39,6 +39,30 @@
       },
       "revId": "95c627efbf17803b3879c35ffb60f3b0c4ba1bbf",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ede2fce4_7b0b40dd",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 856,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-06-27T01:42:32Z",
+      "side": 1,
+      "message": "Well, I\u0027m not sure - but I\u0027m open to changing this. It really would be cleaner to treat the cluster template field `floating_ip_enabled` as meaning purely \"FIP on nodes\".\n\nAnd then having only this `master_lb_floating_ip_enabled` label meaning `FIP on Kube API Loadbalancer`.\n\nThis differs from the patchset I was referencing [1], but I\u0027m okay with that if we agree on this more explicit meaning.\n\nRef:\n[1] https://review.opendev.org/c/openstack/magnum/+/641547",
+      "parentUuid": "7285d1c9_5b663462",
+      "range": {
+        "startLine": 856,
+        "startChar": 45,
+        "endLine": 856,
+        "endChar": 64
+      },
+      "revId": "95c627efbf17803b3879c35ffb60f3b0c4ba1bbf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
