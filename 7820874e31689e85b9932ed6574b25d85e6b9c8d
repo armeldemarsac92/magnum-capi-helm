@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8871bc61_68565690",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-06-27T05:41:35Z",
+      "side": 1,
+      "message": "Does that require people to upgrade to 0.10.0 before running that version? If yes - should we have a reno and some support matrix in the docs?",
+      "revId": "7820874e31689e85b9932ed6574b25d85e6b9c8d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
