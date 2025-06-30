@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "58d00444_e24ef81d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-06-30T11:06:03Z",
+      "side": 1,
+      "message": "Looks sensible to me",
+      "revId": "fd8f03bcb404e3c6f2dfd970da30ba8e631e455d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9f82ec0_b6995b9b",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-06-30T11:06:03Z",
+      "side": 1,
+      "message": "Is this comment missing a word?",
+      "revId": "fd8f03bcb404e3c6f2dfd970da30ba8e631e455d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7fc1fb5_9d42ee78",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-06-30T11:06:03Z",
+      "side": 1,
+      "message": "Based on the above TODO, why can\u0027t we use nodegroup instead of cluster here?",
+      "revId": "fd8f03bcb404e3c6f2dfd970da30ba8e631e455d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
