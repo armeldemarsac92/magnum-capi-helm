@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "07894ebe_61d1e044",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 38122
+      },
+      "writtenOn": "2025-07-02T13:47:47Z",
+      "side": 1,
+      "message": "TODO: Unittests and release notes",
+      "revId": "af43a1e1c8d8c389ebbceaec9bf3aa81c0c3fee8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
