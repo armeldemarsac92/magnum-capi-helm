@@ -45,6 +45,27 @@ users:
 """
 TEST_KUBECONFIG = yaml.safe_load(TEST_KUBECONFIG_YAML)
 
+TEST_KUBECONFIG_YAML_TOKEN = f"""\
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority: "cafile"
+    server: {TEST_SERVER}
+  name: default
+contexts:
+- context:
+    cluster: default
+    user: default
+  name: default
+current-context: default
+kind: Config
+users:
+- name: default
+  user:
+    token: "secret_token"
+"""
+TEST_KUBECONFIG_TOKEN = yaml.safe_load(TEST_KUBECONFIG_YAML_TOKEN)
+
 
 class TestKubernetesClient(base.TestCase):
     # Basic lookup, non "-data" key
@@ -82,6 +103,31 @@ class TestKubernetesClient(base.TestCase):
         self.assertEqual(TEST_SERVER, client.server)
         self.assertEqual("cafile", client.verify)
         self.assertEqual(("certfile", "keyfile"), client.cert)
+        self.assertNotIn("Authorization", client.headers)
+
+    def test_token_auth(self):
+        client = kubernetes.Client(TEST_KUBECONFIG_TOKEN)
+        self.assertEqual(TEST_SERVER, client.server)
+        self.assertEqual("cafile", client.verify)
+        self.assertEqual(
+            "Bearer secret_token", client.headers["Authorization"]
+        )
+        self.assertIsNone(client.cert)
+
+    def test_neither_token_clientcert_defined(self):
+        kubeconfig_token = yaml.safe_load(TEST_KUBECONFIG_YAML_TOKEN)
+        kubeconfig_cert = yaml.safe_load(TEST_KUBECONFIG_YAML)
+        del kubeconfig_token["users"][0]["user"]["token"]
+        del kubeconfig_cert["users"][0]["user"]["client-certificate"]
+        del kubeconfig_cert["users"][0]["user"]["client-key"]
+        with self.assertRaisesRegex(
+            Exception, "No supported authentication method found in kubeconfig"
+        ):
+            kubernetes.Client(kubeconfig_cert)
+        with self.assertRaisesRegex(
+            Exception, "No supported authentication method found in kubeconfig"
+        ):
+            kubernetes.Client(kubeconfig_token)
 
     @mock.patch.object(tempfile, "NamedTemporaryFile")
     @mock.patch.object(os, "remove")
