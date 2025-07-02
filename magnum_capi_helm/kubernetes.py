@@ -75,19 +75,28 @@ class Client(requests.Session):
 
         # convert certs into files as required by requests
         # https://requests.readthedocs.io/en/latest/api/#requests.Session.cert
+
         client_cert, cleanup_file = ensure_file_cert(
             user, "client-certificate"
         )
-        if cleanup_file and client_cert:
-            self._tempfiles.append(client_cert)
-        assert client_cert is not None
-        client_key, cleanup_file = ensure_file_cert(user, "client-key")
-        if cleanup_file and client_key:
-            self._tempfiles.append(client_key)
-        assert client_key is not None
-        self.cert = (client_cert, client_key)
+        client_key, cleanup_file_key = ensure_file_cert(user, "client-key")
+
+        if client_cert and client_key:
+
+            if cleanup_file and client_cert:
+                self._tempfiles.append(client_cert)
+            if cleanup_file_key and client_key:
+                self._tempfiles.append(client_key)
+            self.cert = (client_cert, client_key)
+        elif user.get("token"):
+            self.headers.update({"Authorization": f"Bearer {user['token']}"})
+        else:
+            raise Exception(
+                "No supported authentication method found in kubeconfig"
+            )
 
     def __del__(self):
+
         # Remove any temporary certificate files this class owns.
         for file_path in self._tempfiles:
             try:
