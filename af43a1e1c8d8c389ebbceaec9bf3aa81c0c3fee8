@@ -16,6 +16,24 @@
       "message": "TODO: Unittests and release notes",
       "revId": "af43a1e1c8d8c389ebbceaec9bf3aa81c0c3fee8",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "21d18999_5dd33c2a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 38122
+      },
+      "writtenOn": "2025-07-03T12:42:00Z",
+      "side": 1,
+      "message": "Release notes and unittests added",
+      "parentUuid": "07894ebe_61d1e044",
+      "revId": "af43a1e1c8d8c389ebbceaec9bf3aa81c0c3fee8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
