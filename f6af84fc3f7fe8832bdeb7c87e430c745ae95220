@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a850977_262568ad",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-07-11T13:52:32Z",
+      "side": 1,
+      "message": "Missing docs on what types of authentication do we support",
+      "revId": "f6af84fc3f7fe8832bdeb7c87e430c745ae95220",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
