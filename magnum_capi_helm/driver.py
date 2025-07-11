@@ -119,8 +119,8 @@ class Driver(driver.Driver):
         if (
             kcp_ready
             and target_replicas == current_replicas
-            and current_replicas == updated_replicas
-            and updated_replicas == ready_replicas
+            and target_replicas == updated_replicas
+            and target_replicas == ready_replicas
         ):
             ng_state = NodeGroupState.READY
 
@@ -158,11 +158,19 @@ class Driver(driver.Driver):
 
         md_status = md.get("status", {}) if md else {}
         md_phase = md_status.get("phase")
-        if md_phase:
-            if md_phase == "Running":
-                ng_state = NodeGroupState.READY
-            elif md_phase in {"Failed", "Unknown"}:
-                ng_state = NodeGroupState.FAILED
+        md_spec_replicas = md.get("spec", {}).get("replicas")
+        md_ready_replicas = md_status.get("readyReplicas")
+        md_updated_replicas = md_status.get("updatedReplicas")
+        md_status_replicas = md_status.get("replicas")
+        if (
+            md_phase == "Running"
+            and md_spec_replicas == md_ready_replicas
+            and md_spec_replicas == md_updated_replicas
+            and md_spec_replicas == md_status_replicas
+        ):
+            ng_state = NodeGroupState.READY
+        elif md_phase in {"Failed", "Unknown"}:
+            ng_state = NodeGroupState.FAILED
 
         return self._update_nodegroup_status(cluster, nodegroup, ng_state)
 
