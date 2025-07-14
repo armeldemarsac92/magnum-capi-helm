@@ -16,6 +16,42 @@
       "message": "I think it would look better in a note - see https://145c848ab8b40afe5c57-498f1015c47ee06cc2525a14ef8131d8.ssl.cf1.rackcdn.com/openstack/fde1beec3158421e8c9f7c9f4bffdb21/docs/install/index.html for rendered output",
       "revId": "bd16779ed1932cb358283245910cbff42474d421",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d1ab8b56_c55197e3",
+        "filename": "doc/source/install/index.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 38122
+      },
+      "writtenOn": "2025-07-14T12:29:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5dcb86e_5796f8c3",
+      "revId": "bd16779ed1932cb358283245910cbff42474d421",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dab3e781_5219a790",
+        "filename": "doc/source/install/index.rst",
+        "patchSetId": 8
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 38122
+      },
+      "writtenOn": "2025-07-14T12:29:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5dcb86e_5796f8c3",
+      "revId": "bd16779ed1932cb358283245910cbff42474d421",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
