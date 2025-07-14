@@ -16,6 +16,24 @@
       "message": "Missing docs on what types of authentication do we support",
       "revId": "f6af84fc3f7fe8832bdeb7c87e430c745ae95220",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ca97928_4df8ef63",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 38122
+      },
+      "writtenOn": "2025-07-14T10:16:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a850977_262568ad",
+      "revId": "f6af84fc3f7fe8832bdeb7c87e430c745ae95220",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
