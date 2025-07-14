@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "17997157_7aea01ef",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-07-14T04:10:48Z",
+      "side": 1,
+      "message": "thanks, I\u0027ll update or remove this.",
+      "parentUuid": "a9f82ec0_b6995b9b",
+      "revId": "fd8f03bcb404e3c6f2dfd970da30ba8e631e455d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e7fc1fb5_9d42ee78",
         "filename": "magnum_capi_helm/driver.py",
         "patchSetId": 4
@@ -48,6 +66,24 @@
       "writtenOn": "2025-06-30T11:06:03Z",
       "side": 1,
       "message": "Based on the above TODO, why can\u0027t we use nodegroup instead of cluster here?",
+      "revId": "fd8f03bcb404e3c6f2dfd970da30ba8e631e455d",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8c9341c0_6201055c",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-07-14T04:10:48Z",
+      "side": 1,
+      "message": "Yeah, I had some reasons here, but it leaves a strange behaviour when creating a new nodegroup (cluster labels from creation would be used instead of nodegroup labels, if the fields aren\u0027t set).\n\nI was avoiding adding a parameter to `self._get_label*()` for the nodegroup, but perhaps this is now necessary.",
+      "parentUuid": "e7fc1fb5_9d42ee78",
       "revId": "fd8f03bcb404e3c6f2dfd970da30ba8e631e455d",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
