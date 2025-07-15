@@ -130,6 +130,14 @@ capi_helm_opts = [
             "generated application credentials."
         ),
     ),
+    cfg.ListOpt(
+        "required_user_roles",
+        default=["member", "load-balancer_member"],
+        help=(
+            "A comma-separated list of roles required for "
+            "a user to create a workload cluster."
+        ),
+    ),
 ]
 
 CONF = cfg.CONF

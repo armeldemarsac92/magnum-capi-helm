@@ -15,10 +15,12 @@ from unittest import mock
 import keystoneauth1
 from magnum.common import clients
 from magnum.common import utils
+import magnum.conf
 from magnum.tests.unit.db import base
 from magnum.tests.unit.objects import utils as obj_utils
-
 from magnum_capi_helm.common import app_creds
+
+CONF = magnum.conf.CONF
 
 
 class TestAppCreds(base.DbTestCase):
@@ -55,7 +57,7 @@ class TestAppCreds(base.DbTestCase):
         app_cred = collections.namedtuple("appcred", ["id", "secret"])
         mock_app_cred.create.return_value = app_cred("id", "pass")
         context = mock.MagicMock()
-        context.roles = ["member", "foo", "admin"]
+        context.roles = CONF.capi_helm.required_user_roles + ["admin", "foo"]
 
         app_cred = app_creds._create_app_cred(context, self.cluster_obj)
 
@@ -75,6 +77,9 @@ class TestAppCreds(base.DbTestCase):
                 }
             }
         }
+        expected_roles = [
+            {"name": role} for role in CONF.capi_helm.required_user_roles
+        ]
         self.assertEqual(expected, app_cred)
         mock_client().url_for.assert_called_once_with(
             service_type="identity", interface="public"
@@ -83,7 +88,7 @@ class TestAppCreds(base.DbTestCase):
             user="fake_user",
             name=f"magnum-{self.cluster_obj.uuid}",
             description=f"Magnum cluster ({self.cluster_obj.uuid})",
-            # roles=["member", "foo"],
+            roles=expected_roles,
         )
 
     @mock.patch.object(app_creds, "_get_openstack_ca_certificate")
