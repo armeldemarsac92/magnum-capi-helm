@@ -35,6 +35,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2775cedd_163b5027",
+        "filename": "magnum_capi_helm/common/app_creds.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 38122
+      },
+      "writtenOn": "2025-07-15T16:03:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a5b0d2ba_1be66a7b",
+      "revId": "e74fdf1e220939c7146fb51219854df795984f16",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e2ef7330_db2220fd",
@@ -48,6 +66,24 @@
       "writtenOn": "2025-07-15T15:45:55Z",
       "side": 1,
       "message": "This line doesn\u0027t need to be an f-string",
+      "revId": "e74fdf1e220939c7146fb51219854df795984f16",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "04b3734c_46abf465",
+        "filename": "magnum_capi_helm/common/app_creds.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 38122
+      },
+      "writtenOn": "2025-07-15T16:03:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e2ef7330_db2220fd",
       "revId": "e74fdf1e220939c7146fb51219854df795984f16",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
