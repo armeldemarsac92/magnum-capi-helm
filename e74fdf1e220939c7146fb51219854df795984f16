@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "041a628f_c099f255",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-07-15T15:45:55Z",
+      "side": 1,
+      "message": "Thanks for the fix, just a couple of minor suggestions",
+      "revId": "e74fdf1e220939c7146fb51219854df795984f16",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a5b0d2ba_1be66a7b",
+        "filename": "magnum_capi_helm/common/app_creds.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-07-15T15:45:55Z",
+      "side": 1,
+      "message": "Nit: You could use set(a) \u003c set(b) here instead of the issubset method.",
+      "revId": "e74fdf1e220939c7146fb51219854df795984f16",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e2ef7330_db2220fd",
+        "filename": "magnum_capi_helm/common/app_creds.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-07-15T15:45:55Z",
+      "side": 1,
+      "message": "This line doesn\u0027t need to be an f-string",
+      "revId": "e74fdf1e220939c7146fb51219854df795984f16",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
