@@ -43,9 +43,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
         )
         # add in missing node group flavor
         for ng in self.cluster_obj.nodegroups:
-            if ng.role != "master":
+            if ng.role == "master":
+                ng.flavor_id = "flavor_small"
+            else:
                 ng.flavor_id = "flavor_medium"
-                ng.save()
+            ng.save()
 
     def test_provides(self):
         self.assertEqual(

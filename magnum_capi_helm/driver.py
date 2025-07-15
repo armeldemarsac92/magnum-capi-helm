@@ -871,8 +871,8 @@ class Driver(driver.Driver):
             },
             "osDistro": os_distro,
             "controlPlane": {
-                "machineFlavor": cluster.master_flavor_id,
-                "machineCount": cluster.master_count,
+                "machineFlavor": cluster.default_ng_master.flavor_id,
+                "machineCount": cluster.default_ng_master.node_count,
                 "healthCheck": {
                     "enabled": self._get_autoheal_enabled(cluster),
                 },
@@ -1028,7 +1028,9 @@ class Driver(driver.Driver):
     def create_cluster(self, context, cluster, cluster_create_timeout):
         LOG.info("Starting to create cluster %s", cluster.uuid)
 
-        self._validate_allowed_flavor(context, cluster.master_flavor_id)
+        self._validate_allowed_flavor(
+            context, cluster.default_ng_master.flavor_id
+        )
         nodegroups = cluster.nodegroups
         for ng in nodegroups:
             self._validate_allowed_flavor(context, ng.flavor_id)
