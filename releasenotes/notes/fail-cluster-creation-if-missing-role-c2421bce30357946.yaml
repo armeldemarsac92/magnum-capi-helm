@@ -1,0 +1,15 @@
+---
+fixes:
+  - |
+    Adds a check which verifies that the user has the required
+    roles for the cluster creation process to succeed. If the
+    check fails, the cluster enters a CREATE_FAILED
+    state and the status_reason field is populated with an
+    appropriate error message.
+
+
+
+
+
+
+
