@@ -23,8 +23,10 @@ import keystoneauth1
 from oslo_log import log as logging
 
 from magnum.common import clients
+from magnum.common.exception import PolicyNotAuthorized
 from magnum.common import utils
 import magnum.conf
+
 
 CONF = magnum.conf.CONF
 LOG = logging.getLogger(__name__)
@@ -48,6 +50,16 @@ def _get_openstack_ca_certificate():
 
 
 def _create_app_cred(context, cluster):
+    if not set(CONF.capi_helm.required_user_roles).issubset(
+        set(context.roles)
+    ):
+        raise PolicyNotAuthorized(
+            message=(
+                f"Unauthorized - required roles: "
+                f"{CONF.capi_helm.required_user_roles}"
+            )
+        )
+
     osc = clients.OpenStackClients(context)
     # TODO(johngarbutt) be sure not to allow the admin role
     # roles = [role for role in context.roles if role != "admin"]

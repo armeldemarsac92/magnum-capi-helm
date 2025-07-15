@@ -55,7 +55,7 @@ class TestAppCreds(base.DbTestCase):
         app_cred = collections.namedtuple("appcred", ["id", "secret"])
         mock_app_cred.create.return_value = app_cred("id", "pass")
         context = mock.MagicMock()
-        context.roles = ["member", "foo", "admin"]
+        context.roles = ["member", "foo", "admin", "load-balancer_member"]
 
         app_cred = app_creds._create_app_cred(context, self.cluster_obj)
 

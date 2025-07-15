@@ -1,0 +1,5 @@
+---
+fixes:
+  - |
+    Fail cluster creation if required roles for user are missing
+
