@@ -620,31 +620,42 @@ class Driver(driver.Driver):
 
     def _validate_allowed_flavor(self, context, requested_flavor):
         # Compare requested flavor with allowed for Kubernetes node
-        flavors = (
-            clients.OpenStackClients(context)
-            .nova()
-            .flavors.list(min_ram=CONF.capi_helm.minimum_flavor_ram)
+        flavor = driver_utils.get_flavor_by_uuid_or_name(
+            context, requested_flavor
         )
-        for flavor in flavors:
-            vcpus = flavor.vcpus
-            LOG.debug(
-                f"Checking if {requested_flavor} matches "
-                f"{flavor.id} or {flavor.name}"
+        if not flavor:
+            raise exception.Invalid(
+                message=f"Flavor not found. Flavor {requested_flavor} could"
+                " not be found by either UUID or name."
             )
-            if requested_flavor in [flavor.id, flavor.name]:
-                if vcpus < CONF.capi_helm.minimum_flavor_vcpus:
-                    raise exception.MagnumException(
-                        message=f"Flavor {requested_flavor} does not "
-                        f"have enough CPU to run Kubernetes. "
-                        f"Minimum {CONF.capi_helm.minimum_flavor_vcpus} "
-                        "vcpus required."
-                    )
-                return
-        raise exception.MagnumException(
-            message=f"Flavor {requested_flavor} does not "
-            f"have enough RAM to run Kubernetes. "
-            f"Minimum {CONF.capi_helm.minimum_flavor_ram} MB required."
-        )
+
+        # RAM check (in MiB)
+        ram_invalid = flavor.ram < CONF.capi_helm.minimum_flavor_ram
+        # vCPU check
+        vcpu_invalid = flavor.vcpus < CONF.capi_helm.minimum_flavor_vcpus
+
+        if ram_invalid and vcpu_invalid:
+            raise exception.Invalid(
+                message=f"Flavor does not have enough RAM or enough vCPU to"
+                f" run Kubernetes. Flavor {requested_flavor} needs"
+                f" a minimum of {CONF.capi_helm.minimum_flavor_ram}MiB RAM"
+                f" and {CONF.capi_helm.minimum_flavor_vcpus} vcpus."
+            )
+
+        if ram_invalid:
+            raise exception.Invalid(
+                message=f"Flavor does not have enough RAM to run Kubernetes."
+                f" Flavor {requested_flavor} needs a"
+                f" minimum of {CONF.capi_helm.minimum_flavor_ram}MiB RAM."
+            )
+
+        if vcpu_invalid:
+            raise exception.Invalid(
+                message="Flavor does not have enough vCPU to run "
+                f"Kubernetes. Flavor {requested_flavor} "
+                f"needs a minimum of "
+                f"{CONF.capi_helm.minimum_flavor_vcpus} vcpus."
+            )
 
     def _is_default_worker_nodegroup(self, cluster, nodegroup):
         return cluster.default_ng_worker.id == nodegroup.id

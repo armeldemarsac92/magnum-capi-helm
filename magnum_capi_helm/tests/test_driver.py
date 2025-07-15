@@ -2232,11 +2232,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_versioned_nova_client,
         mock_flavor_manager,
     ):
-        mock_flavor1 = mock.MagicMock(id=1, vcpus=1)
+        mock_flavor1 = mock.MagicMock(id=1, ram=2048, vcpus=1)
         mock_flavor1.name = "flavor_tiny"
-        mock_flavor2 = mock.MagicMock(id=2, vcpus=1)
+        mock_flavor2 = mock.MagicMock(id=2, ram=2048, vcpus=1)
         mock_flavor2.name = "flavor_small"
-        mock_flavor3 = mock.MagicMock(id=3, vcpus=4)
+        mock_flavor3 = mock.MagicMock(id=3, ram=4096, vcpus=4)
         mock_flavor3.name = "flavor_medium"
         # Assumes that the list returned by novaclient.flavors.(min_ram=xxxx)
         # is already filtered so no need to check that.
@@ -2245,7 +2245,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             mock_flavor2,
             mock_flavor3,
         ]
-        mock_flavor_manager.list.return_value = filtered_flavors
+        mock_flavor_manager.list.side_effect = [filtered_flavors, None]
         mock_versioned_nova_client.flavors = mock_flavor_manager
         mock_osc_nova.return_value = mock_versioned_nova_client
         self.assertRaises(
@@ -2266,11 +2266,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_versioned_nova_client,
         mock_flavor_manager,
     ):
-        mock_flavor1 = mock.MagicMock(id=1, vcpus=1)
+        mock_flavor1 = mock.MagicMock(id=1, ram=2048, vcpus=1)
         mock_flavor1.name = "flavor_tiny"
-        mock_flavor2 = mock.MagicMock(id=2, vcpus=1)
+        mock_flavor2 = mock.MagicMock(id=2, ram=2048, vcpus=1)
         mock_flavor2.name = "flavor_small"
-        mock_flavor3 = mock.MagicMock(id=3, vcpus=4)
+        mock_flavor3 = mock.MagicMock(id=3, ram=4096, vcpus=4)
         mock_flavor3.name = "flavor_medium"
         # Assumes that the list returned by novaclient.flavors.(min_ram=xxxx)
         # is already filtered so no need to check that.
@@ -2279,7 +2279,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             mock_flavor2,
             mock_flavor3,
         ]
-        mock_flavor_manager.list.return_value = filtered_flavors
+        mock_flavor_manager.list.side_effect = [filtered_flavors, None]
         mock_versioned_nova_client.flavors = mock_flavor_manager
         mock_osc_nova.return_value = mock_versioned_nova_client
         self.assertRaises(
@@ -2288,6 +2288,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             self.context,
             2,
         )
+        mock_flavor_manager.list.side_effect = [filtered_flavors, None]
         self.assertRaises(
             exception.MagnumException,
             self.driver._validate_allowed_flavor,
@@ -2306,24 +2307,26 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_versioned_nova_client,
         mock_flavor_manager,
     ):
-        mock_flavor1 = mock.MagicMock(id=1, vcpus=1)
+        mock_flavor1 = mock.MagicMock(id=1, ram=2048, vcpus=1)
         mock_flavor1.name = "flavor_tiny"
-        mock_flavor2 = mock.MagicMock(id=2, vcpus=1)
+        mock_flavor2 = mock.MagicMock(id=2, ram=2048, vcpus=1)
         mock_flavor2.name = "flavor_small"
-        mock_flavor3 = mock.MagicMock(id=3, vcpus=4)
+        mock_flavor3 = mock.MagicMock(id=3, ram=4096, vcpus=4)
         mock_flavor3.name = "flavor_medium"
         filtered_flavors = [
             mock_flavor1,
             mock_flavor2,
             mock_flavor3,
         ]
-        mock_flavor_manager.list.return_value = filtered_flavors
+        mock_flavor_manager.list.side_effect = [filtered_flavors, None]
         mock_versioned_nova_client.flavors = mock_flavor_manager
         mock_osc_nova.return_value = mock_versioned_nova_client
         try:
             self.driver._validate_allowed_flavor(self.context, 3)
         except Exception as e:
             self.fail("Raised exception %s" % e)
+
+        mock_flavor_manager.list.side_effect = [filtered_flavors, None]
         try:
             self.driver._validate_allowed_flavor(self.context, "flavor_medium")
         except Exception as e:
@@ -2340,18 +2343,18 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_versioned_nova_client,
         mock_flavor_manager,
     ):
-        mock_flavor1 = mock.MagicMock(id=1, vcpus=1)
+        mock_flavor1 = mock.MagicMock(id=1, ram=2048, vcpus=1)
         mock_flavor1.name = "flavor_tiny"
-        mock_flavor2 = mock.MagicMock(id=2, vcpus=1)
+        mock_flavor2 = mock.MagicMock(id=2, ram=2048, vcpus=1)
         mock_flavor2.name = "flavor_small"
-        mock_flavor3 = mock.MagicMock(id=3, vcpus=4)
+        mock_flavor3 = mock.MagicMock(id=3, ram=4096, vcpus=4)
         mock_flavor3.name = "flavor_medium"
         filtered_flavors = [
             mock_flavor1,
             mock_flavor2,
             mock_flavor3,
         ]
-        mock_flavor_manager.list.return_value = filtered_flavors
+        mock_flavor_manager.list.side_effect = [filtered_flavors, None]
         mock_versioned_nova_client.flavors = mock_flavor_manager
         mock_osc_nova.return_value = mock_versioned_nova_client
         node_group = mock.MagicMock()

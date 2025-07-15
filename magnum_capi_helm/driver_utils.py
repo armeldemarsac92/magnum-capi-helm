@@ -14,6 +14,7 @@
 
 import re
 
+from magnum.common import clients
 from magnum_capi_helm import conf
 
 CONF = conf.CONF
@@ -43,3 +44,22 @@ def chart_release_name(cluster):
 
 def get_k8s_resource_name(cluster, name):
     return sanitized_name(chart_release_name(cluster), name)
+
+
+def get_flavor_by_uuid_or_name(context, requested_flavor):
+    nclient = clients.OpenStackClients(context).nova()
+    list_kwargs = {
+        "limit": None,
+        "marker": None,
+        "detailed": True,
+    }
+    # Paginate flavors until they run out.
+    flavors = nclient.flavors.list(**list_kwargs)
+    while flavors:
+        for flavor in flavors:
+            # Match by first found name or uuid
+            if requested_flavor in [flavor.id, flavor.name]:
+                return flavor
+        list_kwargs["marker"] = flavors[-1].id
+        flavors = nclient.flavors.list(**list_kwargs)
+    return None
