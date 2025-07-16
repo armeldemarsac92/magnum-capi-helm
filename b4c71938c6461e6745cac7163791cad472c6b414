@@ -16,6 +16,24 @@
       "message": "Any pointer why this should be configurable?",
       "revId": "b4c71938c6461e6745cac7163791cad472c6b414",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3dfa276_75e0b024",
+        "filename": "magnum_capi_helm/conf.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-07-16T15:14:29Z",
+      "side": 1,
+      "message": "Seems like the safer option in case operators are defining custom roles / policies on their cloud?",
+      "parentUuid": "96e42d65_7b9ef231",
+      "revId": "b4c71938c6461e6745cac7163791cad472c6b414",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
