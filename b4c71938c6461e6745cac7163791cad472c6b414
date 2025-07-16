@@ -34,6 +34,24 @@
       "parentUuid": "96e42d65_7b9ef231",
       "revId": "b4c71938c6461e6745cac7163791cad472c6b414",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6fd73d8_e1f2ce39",
+        "filename": "magnum_capi_helm/conf.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-07-16T17:22:04Z",
+      "side": 1,
+      "message": "Ah, these are keystone roles - so that\u0027s going to break the majority of clouds, which override Octavia policy and don\u0027t use load-balancer_member.\nWouldn\u0027t it be better to fail the cluster creation early when we observe that we can\u0027t create an LB?",
+      "parentUuid": "f3dfa276_75e0b024",
+      "revId": "b4c71938c6461e6745cac7163791cad472c6b414",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
