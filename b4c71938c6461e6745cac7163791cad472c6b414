@@ -52,6 +52,24 @@
       "parentUuid": "f3dfa276_75e0b024",
       "revId": "b4c71938c6461e6745cac7163791cad472c6b414",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "092a87a2_c9368ed2",
+        "filename": "magnum_capi_helm/conf.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-07-17T13:40:54Z",
+      "side": 1,
+      "message": "I guess the default required roles should be whatever the majority of clouds use then, but I don\u0027t know how common is to override these roles so not sure what the safest default is.\n\nThe problem with failing cluster creation any later than this is that once the driver has done a helm install onto the management cluster, CAPI takes over and tries to create the LB so at that point we can\u0027t fail the creation from within Magnum. \n\nWe could try listing LBs during the cluster creation to make sure we have the right permissions, rather than assuming certain keystone policy config, if you think that is a better approach?",
+      "parentUuid": "d6fd73d8_e1f2ce39",
+      "revId": "b4c71938c6461e6745cac7163791cad472c6b414",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
