@@ -88,6 +88,24 @@
       "parentUuid": "092a87a2_c9368ed2",
       "revId": "b4c71938c6461e6745cac7163791cad472c6b414",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "527016b2_67d7351a",
+        "filename": "magnum_capi_helm/conf.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-07-17T15:29:36Z",
+      "side": 1,
+      "message": "Yes I\u0027m also keen to start checking resource status on the CAPI side so that users have more visibility but I think we need [1] to be merged into Magnum core first.\n\nThe problem is that in this particular case, if we don\u0027t block cluster creation before it reaches the CAPI mgmt cluster then cluster deletion also doesn\u0027t work because the cluster create fails due to missing LB permissions then, when the user tries to delete the cluster, that also fails because CAPI tries to list LBs to check if it needs to clean them up and then fails to list due to policy error so cluster gets stuck in DELETE_IN_PROGRESS state instead and the operator needs to do some manual clean up on the management cluster.\n\nPersonally, I think requiring admins to set a capi-helm config option in magnum.cfg if they\u0027re using non-standard role mappings is better than asking them to manually clean up any clusters manually when a user forgets to use the correct permissions...\n\nOther option would be to see if the CAPO folks would be willing to handle HTTP 403 from LB endpoint as unrecoverable error rather than continuing with reconcile loop but that doesn\u0027t seem like an ideal solution either since 403 errors could sometimes be temporary in general.\n\n[1] https://review.opendev.org/c/openstack/magnum/+/948681",
+      "parentUuid": "39c2e64f_6a1c4d6b",
+      "revId": "b4c71938c6461e6745cac7163791cad472c6b414",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
