@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6661f9f7_ac365981",
+        "filename": "magnum_capi_helm/common/app_creds.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 38122
+      },
+      "writtenOn": "2025-07-17T15:09:52Z",
+      "side": 1,
+      "message": "Sure, Added the logic to limit the roles for app cred.",
+      "parentUuid": "6d165504_6c6d4881",
+      "revId": "af23f9515ee0880d15e1c3c009ee9f2862203b25",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b2bc4e90_7c274363",
@@ -31,6 +49,24 @@
       "writtenOn": "2025-07-16T03:57:57Z",
       "side": 1,
       "message": "This doesn\u0027t seem like enough to create a cluster, and doesn\u0027t match keystone default roles[1]. Shouldn\u0027t `member` be included here to allow creation of instances?\n\n\n[1] https://docs.openstack.org/keystone/latest/admin/service-api-protection.html#member",
+      "revId": "af23f9515ee0880d15e1c3c009ee9f2862203b25",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "87c63f3f_68331e0e",
+        "filename": "magnum_capi_helm/conf.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 38122
+      },
+      "writtenOn": "2025-07-17T15:09:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b2bc4e90_7c274363",
       "revId": "af23f9515ee0880d15e1c3c009ee9f2862203b25",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
