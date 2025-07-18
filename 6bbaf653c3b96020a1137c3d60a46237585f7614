@@ -33,6 +33,24 @@
       "message": "There\u0027s an (unlikely) edge case here when only one of `client-key` or `client-certificate` exist then there will be leaking temporary files created by this class.\n\nI think the `ensure_file_cert` function should move inside this class and add the cleanup to `self._tempfiles` instead of returning the \"cleanup please\" boolean. It\u0027s currently more complicated than needed.\n\nHaving said that, the edge case is unlikely to be hit with most common kubeconfig files. I\u0027m happy to approve this patchset and do this small refactor separately.",
       "revId": "6bbaf653c3b96020a1137c3d60a46237585f7614",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e73786d7_d4427c4a",
+        "filename": "magnum_capi_helm/kubernetes.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 38122
+      },
+      "writtenOn": "2025-07-18T14:02:57Z",
+      "side": 1,
+      "message": "Made the required changes to add the `ensure_file_cert` function inside the class. The `self._tempfiles` are now appended in the function itself rather than using a boolean outside the class.",
+      "parentUuid": "4c6fe210_0e0298e0",
+      "revId": "6bbaf653c3b96020a1137c3d60a46237585f7614",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
