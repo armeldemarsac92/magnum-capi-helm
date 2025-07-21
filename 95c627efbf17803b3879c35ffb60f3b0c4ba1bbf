@@ -111,6 +111,30 @@
       },
       "revId": "95c627efbf17803b3879c35ffb60f3b0c4ba1bbf",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9a5f4b42_af5743a2",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 856,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-07-21T21:26:11Z",
+      "side": 1,
+      "message": "Done, default is now `True` which matches the Helm chart.",
+      "parentUuid": "d21bc76d_e810094b",
+      "range": {
+        "startLine": 856,
+        "startChar": 45,
+        "endLine": 856,
+        "endChar": 64
+      },
+      "revId": "95c627efbf17803b3879c35ffb60f3b0c4ba1bbf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
