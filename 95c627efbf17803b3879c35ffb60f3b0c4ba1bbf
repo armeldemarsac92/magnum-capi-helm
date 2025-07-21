@@ -87,6 +87,30 @@
       },
       "revId": "95c627efbf17803b3879c35ffb60f3b0c4ba1bbf",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d21bc76d_e810094b",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 856,
+      "author": {
+        "id": 8064
+      },
+      "writtenOn": "2025-07-21T05:00:47Z",
+      "side": 1,
+      "message": "let\u0027s remove this fallback for now so as not to block the change. I agree with Michal that docs need work, many times we go spelunking for the original meaning.",
+      "parentUuid": "85fe38b1_a2941d95",
+      "range": {
+        "startLine": 856,
+        "startChar": 45,
+        "endLine": 856,
+        "endChar": 64
+      },
+      "revId": "95c627efbf17803b3879c35ffb60f3b0c4ba1bbf",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
