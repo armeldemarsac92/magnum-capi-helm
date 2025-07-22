@@ -106,6 +106,24 @@
       "parentUuid": "39c2e64f_6a1c4d6b",
       "revId": "b4c71938c6461e6745cac7163791cad472c6b414",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9accf903_bbbdebe4",
+        "filename": "magnum_capi_helm/conf.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-07-22T13:09:53Z",
+      "side": 1,
+      "message": "I\u0027ve proposed a couple of alternative patches to add a workaround on the CAPI/CAPO side instead:\n- https://github.com/kubernetes-sigs/cluster-api-provider-openstack/pull/2629\n- https://github.com/azimuth-cloud/cluster-api-janitor-openstack/pull/218\n\nIf they\u0027re both accepted then it will at least allow the user to delete clusters that are missing LB permissions but they still won\u0027t be able to see why the cluster was stuck in a CREATING state because the status_reason field on the Magnum object will remain empty.\n\nHopefully we can improve the error status messages on the Magnum side once CAPO gets better at reporting non-fatal errors: https://github.com/kubernetes-sigs/cluster-api-provider-openstack/issues/2379",
+      "parentUuid": "527016b2_67d7351a",
+      "revId": "b4c71938c6461e6745cac7163791cad472c6b414",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
