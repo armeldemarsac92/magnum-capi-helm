@@ -16,6 +16,7 @@
 # This code is making use of the good work done here:
 # https://github.com/vexxhost/magnum-cluster-api/blob/main/magnum_cluster_api/resources.py
 
+import secrets
 import yaml
 
 import certifi
@@ -47,16 +48,20 @@ def _get_openstack_ca_certificate():
     return ca_certificate
 
 
-def _create_app_cred(context, cluster):
+def create_app_cred(context, cluster):
     osc = clients.OpenStackClients(context)
     # TODO(johngarbutt) be sure not to allow the admin role
     # roles = [role for role in context.roles if role != "admin"]
-    app_cred = osc.keystone().client.application_credentials.create(
-        user=cluster.user_id,
-        name=f"magnum-{cluster.uuid}",
-        description=f"Magnum cluster ({cluster.uuid})",
+    return osc.keystone().client.application_credentials.create(
+        user=context.user_id,
+        name=f"magnum-{cluster.uuid}-{secrets.token_hex(4)}",
+        description=f"Magnum cluster ({cluster.name or cluster.uuid})",
         # roles=roles,
     )
+
+
+def _get_app_cred_clouds_dict(context, app_cred):
+    osc = clients.OpenStackClients(context)
     return {
         "clouds": {
             "openstack": {
@@ -79,26 +84,29 @@ def _create_app_cred(context, cluster):
     }
 
 
-def get_app_cred_string_data(context, cluster):
-    app_cred_dict = _create_app_cred(context, cluster)
-    clouds_yaml_str = yaml.safe_dump(app_cred_dict)
+def get_app_cred_string_data(context, app_cred):
+    clouds_dict = _get_app_cred_clouds_dict(context, app_cred)
     return {
         "cacert": _get_openstack_ca_certificate(),
-        "clouds.yaml": clouds_yaml_str,
+        "clouds.yaml": yaml.safe_dump(clouds_dict),
     }
 
 
-def delete_app_cred(context, cluster):
+def delete_app_cred(context, cluster, ident):
     osc = clients.OpenStackClients(context)
+    LOG.debug(f"Deleting application credential for cluster {cluster.uuid}")
+
     try:
-        appcred = osc.keystone().client.application_credentials.find(
-            name=f"magnum-{cluster.uuid}", user=cluster.user_id
-        )
-    except keystoneauth1.exceptions.http.NotFound:
+        app_cred = osc.keystone().client.application_credentials.get(ident)
+        assert app_cred.name.startswith(f"magnum-{cluster.uuid}")
+    except (AssertionError, keystoneauth1.exceptions.http.NotFound):
         # We don't want this to be a failure condition as it may prevent
         # cleanup of broken clusters, e.g. if cluster creation fails
         # before the appcred is created or cluster deletion fails after
         # the appcred is deleted
-        LOG.warning("Appcred does not exist for %s", cluster.uuid)
+        LOG.warning(
+            "Failed to delete application credential for cluster "
+            f"{cluster.uuid}: ID {ident} does not exist"
+        )
     else:
-        appcred.delete()
+        app_cred.delete()

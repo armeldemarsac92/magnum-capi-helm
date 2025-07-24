@@ -12,6 +12,7 @@
 from unittest import mock
 from uuid import uuid4
 
+import keystoneauth1
 from magnum.common import exception
 from magnum.common import neutron
 from magnum.objects import fields
@@ -592,14 +593,19 @@ class ClusterAPIDriverTest(base.DbTestCase):
 
     @mock.patch.object(app_creds, "delete_app_cred")
     @mock.patch.object(kubernetes.Client, "load")
-    def test_update_status_deleting(self, mock_load, mock_delete):
+    @mock.patch.object(driver.Driver, "_get_app_cred_id")
+    def test_update_status_deleting(self, mock_get, mock_load, mock_delete):
         mock_client = mock.MagicMock(spec=kubernetes.Client)
+        app_cred_id = "abc123"
+        mock_get.return_value = app_cred_id
         mock_load.return_value = mock_client
 
         self.driver._update_status_deleting(self.context, self.cluster_obj)
 
         self.assertEqual("DELETE_COMPLETE", self.cluster_obj.status)
-        mock_delete.assert_called_once_with(self.context, self.cluster_obj)
+        mock_delete.assert_called_once_with(
+            self.context, self.cluster_obj, app_cred_id
+        )
         mock_client.delete_all_secrets_by_label.assert_called_once_with(
             "magnum.openstack.org/cluster-uuid",
             self.cluster_obj.uuid,
@@ -1911,9 +1917,10 @@ class ClusterAPIDriverTest(base.DbTestCase):
             self.driver, self.context, self.cluster_obj
         )
 
+    @mock.patch.object(app_creds, "create_app_cred")
     @mock.patch.object(app_creds, "get_app_cred_string_data")
     @mock.patch.object(kubernetes.Client, "load")
-    def test_create_appcred_secret(self, mock_load, mock_sd):
+    def test_create_appcred_secret(self, mock_load, mock_sd, mock_create):
         mock_client = mock.MagicMock(spec=kubernetes.Client)
         mock_load.return_value = mock_client
         mock_sd.return_value = {"cacert": "ca", "clouds.yaml": "appcred"}
@@ -3295,3 +3302,115 @@ class ClusterAPIDriverTest(base.DbTestCase):
             "loadBalancerProvider": "amphora",
         }
         self.assertEqual(apiserver_expected, helm_install_values["apiServer"])
+
+    @mock.patch.object(app_creds, "delete_app_cred")
+    @mock.patch.object(driver.Driver, "_create_appcred_secret")
+    @mock.patch.object(driver.Driver, "_get_app_cred_id")
+    def test_refresh_application_credential(
+        self, mock_get, mock_create, mock_delete
+    ):
+        app_cred_id_old = "abcde12345"
+        app_cred_id_new = "edcba54321"
+
+        mock_app_cred = mock.MagicMock()
+        mock_app_cred.id = app_cred_id_new
+
+        mock_get.return_value = app_cred_id_old
+        mock_create.return_value = mock_app_cred
+
+        self.driver.refresh_application_credential(
+            self.context, self.cluster_obj
+        )
+
+        mock_get.assert_called_once_with(self.cluster_obj)
+        mock_create.assert_called_once_with(self.context, self.cluster_obj)
+        mock_delete.assert_called_once_with(
+            self.context, self.cluster_obj, app_cred_id_old
+        )
+
+        self.assertEqual(
+            fields.ClusterStatus.UPDATE_COMPLETE, self.cluster_obj.status
+        )
+
+    @mock.patch.object(driver.Driver, "_create_appcred_secret")
+    @mock.patch.object(driver.Driver, "_get_app_cred_id")
+    def test_refresh_application_credential_delete_failed(
+        self, mock_get, mock_create
+    ):
+        app_cred_id = "abcde12345"
+
+        mock_app_cred = mock.MagicMock()
+        mock_app_cred.id = app_cred_id
+
+        mock_get.return_value = None
+        mock_create.return_value = mock_app_cred
+
+        self.driver.refresh_application_credential(
+            self.context, self.cluster_obj
+        )
+
+        mock_get.assert_called_once_with(self.cluster_obj)
+        mock_create.assert_called_once_with(self.context, self.cluster_obj)
+
+        self.assertEqual(
+            fields.ClusterStatus.UPDATE_COMPLETE, self.cluster_obj.status
+        )
+
+    @mock.patch.object(driver.Driver, "_create_appcred_secret")
+    @mock.patch.object(driver.Driver, "_get_app_cred_id")
+    def test_refresh_application_credential_create_failed(
+        self, mock_get, mock_create
+    ):
+        mock_create.side_effect = keystoneauth1.exceptions.http.BadGateway
+
+        self.driver.refresh_application_credential(
+            self.context, self.cluster_obj
+        )
+
+        mock_get.assert_called_once_with(self.cluster_obj)
+        mock_create.assert_called_once_with(self.context, self.cluster_obj)
+
+        self.assertEqual(
+            fields.ClusterStatus.UPDATE_FAILED, self.cluster_obj.status
+        )
+
+    @mock.patch.object(driver.Driver, "_create_appcred_secret")
+    @mock.patch.object(driver.Driver, "_get_app_cred_id")
+    def test_refresh_application_credential_is_none(
+        self, mock_get, mock_create
+    ):
+        mock_create.return_value = None
+
+        self.driver.refresh_application_credential(
+            self.context, self.cluster_obj
+        )
+
+        mock_get.assert_called_once_with(self.cluster_obj)
+        mock_create.assert_called_once_with(self.context, self.cluster_obj)
+
+        self.assertEqual(
+            fields.ClusterStatus.UPDATE_FAILED, self.cluster_obj.status
+        )
+
+    @mock.patch.object(driver.Driver, "_create_appcred_secret")
+    @mock.patch.object(driver.Driver, "_get_app_cred_id")
+    def test_refresh_application_credential_unchanged(
+        self, mock_get, mock_create
+    ):
+        mock_app_cred_id = "abcde12355"
+        mock_app_cred = mock.MagicMock()
+        mock_app_cred.id = mock_app_cred_id
+
+        mock_get.return_value = mock_app_cred_id
+        mock_create.return_value = mock_app_cred
+
+        self.driver.refresh_application_credential(
+            self.context, self.cluster_obj
+        )
+
+        mock_get.assert_called_once_with(self.cluster_obj)
+        mock_create.assert_called_once_with(self.context, self.cluster_obj)
+
+        self.assertEqual(
+            fields.ClusterStatus.UPDATE_FAILED, self.cluster_obj.status
+        )

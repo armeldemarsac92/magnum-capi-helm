@@ -11,6 +11,7 @@
 # under the License.
 import enum
 import re
+import yaml
 
 from magnum.api import utils as api_utils
 from magnum.common import clients
@@ -334,8 +335,11 @@ class Driver(driver.Driver):
             driver_utils.cluster_namespace(cluster),
         )
 
-        # We also need to clean up the appcred that we made
-        app_creds.delete_app_cred(context, cluster)
+        # We also need to clean up the app cred
+        app_cred_id = self._get_app_cred_id(cluster)
+
+        if app_cred_id:
+            app_creds.delete_app_cred(context, cluster, app_cred_id)
 
         cluster.status = fields.ClusterStatus.DELETE_COMPLETE
         cluster.save()
@@ -431,8 +435,9 @@ class Driver(driver.Driver):
         }
 
     def _create_appcred_secret(self, context, cluster):
-        string_data = app_creds.get_app_cred_string_data(context, cluster)
-        name = self._get_app_cred_name(cluster)
+        app_cred = app_creds.create_app_cred(context, cluster)
+        string_data = app_creds.get_app_cred_string_data(context, app_cred)
+        name = self._get_app_cred_secret_name(cluster)
         self._k8s_client.apply_secret(
             name,
             {
@@ -441,6 +446,7 @@ class Driver(driver.Driver):
             },
             driver_utils.cluster_namespace(cluster),
         )
+        return app_cred
 
     def _ensure_certificate_secrets(self, context, cluster):
         # Magnum creates CA certs for each of the Kubernetes components that
@@ -531,8 +537,27 @@ class Driver(driver.Driver):
             self._get_os_distro(image),
         )
 
-    def _get_app_cred_name(self, cluster):
+    def _get_app_cred_secret_name(self, cluster):
         return driver_utils.get_k8s_resource_name(cluster, "cloud-credentials")
+
+    def _get_app_cred_id(self, cluster):
+        # determine the existing application credential secret
+        secret_name = self._get_app_cred_secret_name(cluster)
+        secret_namespace = driver_utils.cluster_namespace(cluster)
+
+        # fetch the existing secret and unpack the application credential ID
+        try:
+            clouds_dict_str = self._k8s_client.get_secret_value(
+                secret_name, secret_namespace, "clouds.yaml"
+            )
+            clouds_dict = yaml.safe_load(clouds_dict_str)
+            auth_dict = clouds_dict["clouds"]["openstack"]["auth"]
+            return auth_dict["application_credential_id"]
+        except (KeyError, yaml.YAMLError) as e:
+            LOG.error(
+                "Failed to fetch application credential for cluster "
+                f"{cluster.uuid}: {e}"
+            )
 
     def _get_etcd_config(self, cluster):
         # Support new-style and legacy labels for volume size and type, with
@@ -847,7 +872,9 @@ class Driver(driver.Driver):
             "kubernetesVersion": kube_version,
             "machineImageId": image_id,
             "machineSSHKeyName": cluster.keypair or None,
-            "cloudCredentialsSecretName": self._get_app_cred_name(cluster),
+            "cloudCredentialsSecretName": self._get_app_cred_secret_name(
+                cluster
+            ),
             "etcd": self._get_etcd_config(cluster),
             "apiServer": {
                 "associateFloatingIP": self._get_label_bool(
@@ -1153,6 +1180,56 @@ class Driver(driver.Driver):
             cluster,
             [ng for ng in cluster.nodegroups if ng.name != nodegroup.name],
         )
+
+    def refresh_application_credential(self, context, cluster):
+        LOG.info(
+            f"Refreshing application credential for cluster {cluster.uuid}"
+        )
+
+        cluster.status = fields.ClusterStatus.UPDATE_IN_PROGRESS
+        cluster.save()
+
+        # fetch the existing application credential ID to check against later
+        old_app_cred_id = self._get_app_cred_id(cluster)
+
+        # create and apply application credential to cluster
+        try:
+            new_app_cred = self._create_appcred_secret(context, cluster)
+        except Exception as e:
+            LOG.warning(
+                "Failed to refresh application credential for cluster "
+                f"{cluster.uuid}: {e}"
+            )
+            cluster.status = fields.ClusterStatus.UPDATE_FAILED
+            cluster.status_reason = str(e)
+            cluster.save()
+            return
+
+        if not new_app_cred:
+            msg = "Application credential secret is unset."
+            LOG.critical(
+                "Failed to refresh application credential for cluster "
+                f"{cluster.uuid}: {msg}"
+            )
+            cluster.status = fields.ClusterStatus.UPDATE_FAILED
+            cluster.status_reason = msg
+        elif new_app_cred.id == old_app_cred_id:
+            msg = "Application credential secret failed to apply."
+            LOG.error(
+                "Failed to refresh application credential for cluster "
+                f"{cluster.uuid}: {msg}"
+            )
+            cluster.status = fields.ClusterStatus.UPDATE_FAILED
+            cluster.status_reason = msg
+        else:
+            if old_app_cred_id:
+                # remove the old credential now that the new one is working
+                app_creds.delete_app_cred(context, cluster, old_app_cred_id)
+
+            cluster.status = fields.ClusterStatus.UPDATE_COMPLETE
+            cluster.status_reason = None
+
+        cluster.save()
 
     def create_federation(self, context, federation):
         raise NotImplementedError("Will not implement 'create_federation'")
