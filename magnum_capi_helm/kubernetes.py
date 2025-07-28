@@ -12,6 +12,7 @@
 
 import base64
 import copy
+import json
 import os
 import pathlib
 import re
@@ -161,8 +162,8 @@ class Client(requests.Session):
     def get_capi_openstackcluster(self, name, namespace):
         return OpenstackCluster(self).fetch(name, namespace)
 
-    def get_kubeadm_control_plane(self, name, namespace):
-        return KubeadmControlPlane(self).fetch(name, namespace)
+    def get_k8s_control_plane(self, name, namespace):
+        return K8sControlPlane(self).fetch(name, namespace)
 
     def get_machine_deployment(self, name, namespace):
         return MachineDeployment(self).fetch(name, namespace)
@@ -173,9 +174,26 @@ class Client(requests.Session):
     def get_helm_releases_by_label(self, labels, namespace):
         return list(HelmRelease(self).fetch_all_by_label(labels, namespace))
 
+    def get_helm_chart_proxies_by_label(self, labels, namespace):
+        return list(HelmChartProxy(self).fetch_all_by_label(labels, namespace))
+
     def get_addons_by_label(self, labels, namespace):
-        addons = list(self.get_manifests_by_label(labels, namespace))
-        addons.extend(self.get_helm_releases_by_label(labels, namespace))
+        addons = []
+        try:
+            addons.extend(self.get_helm_releases_by_label(labels, namespace))
+            addons.extend(self.get_manifests_by_label(labels, namespace))
+        except requests.exceptions.HTTPError as e:
+            if e.response.status_code != 404:
+                raise
+
+        try:
+            addons.extend(
+                self.get_helm_chart_proxies_by_label(labels, namespace)
+            )
+        except requests.exceptions.HTTPError as e:
+            if e.response.status_code != 404:
+                raise
+
         return addons
 
     def get_all_machines_by_label(self, labels, namespace):
@@ -191,6 +209,7 @@ class Resource:
             self, "plural_name", self.kind.lower() + "s"
         )
         self.namespaced = getattr(self, "namespaced", True)
+        self.api_resources = json.loads(CONF.capi_helm.api_resources)
 
     def prepare_path(self, name=None, namespace=None):
         # Begin with either /api or /apis depending whether the api version
@@ -277,29 +296,71 @@ class Secret(Resource):
 
 
 class Cluster(Resource):
-    api_version = "cluster.x-k8s.io/v1beta1"
+    api_version = (
+        json.loads(CONF.capi_helm.api_resources)
+        .get("Cluster", {})
+        .get("api_version", "cluster.x-k8s.io/v1beta1")
+    )
 
 
 class OpenstackCluster(Resource):
-    api_version = "infrastructure.cluster.x-k8s.io/v1alpha6"
+    api_version = (
+        json.loads(CONF.capi_helm.api_resources)
+        .get("OpenstackCluster", {})
+        .get("api_version", "infrastructure.cluster.x-k8s.io/v1alpha6")
+    )
 
 
 class MachineDeployment(Resource):
-    api_version = "cluster.x-k8s.io/v1beta1"
+    api_version = (
+        json.loads(CONF.capi_helm.api_resources)
+        .get("MachineDeployment", {})
+        .get("api_version", "cluster.x-k8s.io/v1beta1")
+    )
 
 
-class KubeadmControlPlane(Resource):
-    api_version = "controlplane.cluster.x-k8s.io/v1beta1"
+class K8sControlPlane(Resource):
+    api_version = (
+        json.loads(CONF.capi_helm.api_resources)
+        .get("K8sControlPlane", {})
+        .get("api_version", "controlplane.cluster.x-k8s.io/v1beta1")
+    )
+    plural_name = (
+        json.loads(CONF.capi_helm.api_resources)
+        .get("K8sControlPlane", {})
+        .get("plural_name", "kubeadmcontrolplanes")
+    )
 
 
 class Machine(Resource):
-    api_version = "cluster.x-k8s.io/v1beta1"
+    api_version = (
+        json.loads(CONF.capi_helm.api_resources)
+        .get("Machine", {})
+        .get("api_version", "cluster.x-k8s.io/v1beta1")
+    )
 
 
 class Manifests(Resource):
-    api_version = "addons.stackhpc.com/v1alpha1"
+    api_version = (
+        json.loads(CONF.capi_helm.api_resources)
+        .get("Manifests", {})
+        .get("api_version", "addons.stackhpc.com/v1alpha1")
+    )
     plural_name = "manifests"
 
 
 class HelmRelease(Resource):
-    api_version = "addons.stackhpc.com/v1alpha1"
+    api_version = (
+        json.loads(CONF.capi_helm.api_resources)
+        .get("HelmRelease", {})
+        .get("api_version", "addons.stackhpc.com/v1alpha1")
+    )
+
+
+class HelmChartProxy(Resource):
+    api_version = (
+        json.loads(CONF.capi_helm.api_resources)
+        .get("HelmChartProxy", {})
+        .get("api_version", "addons.cluster.x-k8s.io/v1alpha1")
+    )
+    plural_name = "helmchartproxies"

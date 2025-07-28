@@ -255,14 +255,14 @@ class TestKubernetesClient(base.TestCase):
         )
 
     @mock.patch.object(requests.Session, "request")
-    def test_get_kubeadm_control_plane_found(self, mock_request):
+    def test_get_k8s_control_plane_found(self, mock_request):
         client = kubernetes.Client(TEST_KUBECONFIG)
         mock_response = mock.MagicMock()
         mock_response.status_code = 200
         mock_response.json.return_value = "mock_json"
         mock_request.return_value = mock_response
 
-        cluster = client.get_kubeadm_control_plane("name", "ns1")
+        cluster = client.get_k8s_control_plane("name", "ns1")
 
         mock_request.assert_called_once_with(
             "GET",
@@ -428,10 +428,14 @@ class TestKubernetesClient(base.TestCase):
         )
         self.assertEqual(items, helm_releases)
 
+    @mock.patch.object(kubernetes.Client, "get_helm_chart_proxies_by_label")
     @mock.patch.object(kubernetes.Client, "get_helm_releases_by_label")
     @mock.patch.object(kubernetes.Client, "get_manifests_by_label")
     def test_get_addons_by_label(
-        self, mock_get_manifests, mock_get_helm_releases
+        self,
+        mock_get_manifests,
+        mock_get_helm_releases,
+        mock_get_helm_chart_proxies,
     ):
         manifests = [
             {
@@ -451,6 +455,11 @@ class TestKubernetesClient(base.TestCase):
         mock_get_manifests.return_value = manifests
         mock_get_helm_releases.return_value = helm_releases
 
+        mock_response = mock.MagicMock()
+        mock_response.status_code = 404
+        mock_response.raise_for_status.side_effect = requests.HTTPError
+        mock_get_helm_chart_proxies.side_effect = mock_response
+
         client = kubernetes.Client(TEST_KUBECONFIG)
         addons = client.get_addons_by_label({"label": "cluster1"}, "ns1")
 
@@ -460,7 +469,7 @@ class TestKubernetesClient(base.TestCase):
         mock_get_helm_releases.assert_called_once_with(
             {"label": "cluster1"}, "ns1"
         )
-        self.assertEqual(manifests + helm_releases, addons)
+        self.assertEqual(helm_releases + manifests, addons)
 
     @mock.patch.object(requests.Session, "request")
     def test_get_all_machines_by_label(self, mock_request):
