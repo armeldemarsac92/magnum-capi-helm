@@ -1,5 +1,23 @@
 {
-  "comments": [],
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fe720cdc_454dff6d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 32657
+      },
+      "writtenOn": "2025-07-28T07:27:21Z",
+      "side": 1,
+      "message": "I\u0027ve proposed a release here: https://review.opendev.org/c/openstack/releases/+/955719",
+      "revId": "7a4a5069b4b62210ed5f5d858b4a5998362576db",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ],
   "submitRequirementResults": [
     {
       "submitRequirement": {
