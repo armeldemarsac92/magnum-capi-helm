@@ -161,8 +161,8 @@ class Client(requests.Session):
     def get_capi_openstackcluster(self, name, namespace):
         return OpenstackCluster(self).fetch(name, namespace)
 
-    def get_kubeadm_control_plane(self, name, namespace):
-        return KubeadmControlPlane(self).fetch(name, namespace)
+    def get_k8s_control_plane(self, name, namespace):
+        return K8sControlPlane(self).fetch(name, namespace)
 
     def get_machine_deployment(self, name, namespace):
         return MachineDeployment(self).fetch(name, namespace)
@@ -277,29 +277,46 @@ class Secret(Resource):
 
 
 class Cluster(Resource):
-    api_version = "cluster.x-k8s.io/v1beta1"
+    api_version = CONF.capi_helm.api_resources.get("Cluster", {}).get(
+        "api_version", "cluster.x-k8s.io/v1beta1"
+    )
 
 
 class OpenstackCluster(Resource):
-    api_version = "infrastructure.cluster.x-k8s.io/v1alpha6"
+    api_version = CONF.capi_helm.api_resources.get("OpenstackCluster", {}).get(
+        "api_version", "infrastructure.cluster.x-k8s.io/v1alpha6"
+    )
 
 
 class MachineDeployment(Resource):
-    api_version = "cluster.x-k8s.io/v1beta1"
+    api_version = CONF.capi_helm.api_resources.get(
+        "MachineDeployment", {}
+    ).get("api_version", "cluster.x-k8s.io/v1beta1")
 
 
-class KubeadmControlPlane(Resource):
-    api_version = "controlplane.cluster.x-k8s.io/v1beta1"
+class K8sControlPlane(Resource):
+    api_version = CONF.capi_helm.api_resources.get("K8sControlPlane", {}).get(
+        "api_version", "controlplane.cluster.x-k8s.io/v1beta1"
+    )
+    plural_name = CONF.capi_helm.api_resources.get("K8sControlPlane", {}).get(
+        "plural_name", "kubeadmcontrolplanes"
+    )
 
 
 class Machine(Resource):
-    api_version = "cluster.x-k8s.io/v1beta1"
+    api_version = CONF.capi_helm.api_resources.get("Machine", {}).get(
+        "api_version", "cluster.x-k8s.io/v1beta1"
+    )
 
 
 class Manifests(Resource):
-    api_version = "addons.stackhpc.com/v1alpha1"
+    api_version = CONF.capi_helm.api_resources.get("Manifests", {}).get(
+        "api_version", "addons.stackhpc.com/v1alpha1"
+    )
     plural_name = "manifests"
 
 
 class HelmRelease(Resource):
-    api_version = "addons.stackhpc.com/v1alpha1"
+    api_version = CONF.capi_helm.api_resources.get("HelmRelease", {}).get(
+        "api_version", "addons.stackhpc.com/v1alpha1"
+    )
