@@ -1,0 +1,11 @@
+Code-Review+2: Jakub Darmach <jakub@stackhpc.com>
+Code-Review+1: Jasleen <jasleen@stackhpc.com>
+Workflow+1: Dale Smith <dale@catalystcloud.nz>
+Verified+2: Zuul
+Code-Review+2: Dale Smith <dale@catalystcloud.nz>
+Submitted-by: Zuul
+Submitted-at: Tue, 29 Jul 2025 21:29:27 +0000
+Reviewed-on: https://review.opendev.org/c/openstack/magnum-capi-helm/+/951940
+Comments-Total: 3
+Project: openstack/magnum-capi-helm
+Branch: refs/heads/master
