@@ -33,6 +33,23 @@
       "message": "Tested this with terraform resize node-count and it works well.",
       "revId": "6b77e1d20f6fdf9e71f1b383c2d6cba3c20eea9f",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d54f6a61_a3e16d45",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 34076
+      },
+      "writtenOn": "2025-07-29T12:19:47Z",
+      "side": 1,
+      "message": "Nice we got this unblocked!",
+      "revId": "6b77e1d20f6fdf9e71f1b383c2d6cba3c20eea9f",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
