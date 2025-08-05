@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "af38347a_5a9ecd7e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-08-05T23:58:32Z",
+      "side": 1,
+      "message": "Some discussion on this in Magnum meeting: https://meetings.opendev.org/meetings/magnum/2025/magnum.2025-08-05-08.00.log.html",
+      "revId": "5155442a64c70f4ada34544ef32b413ccd677914",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
