@@ -1,0 +1,25 @@
+---
+- job:
+    name: magnum-capi-helm-tests-cluster-k8s_capi_v1_v1_33
+    parent: magnum-capi-helm-tests-cluster-k8s_capi_v1
+
+- job:
+    name: magnum-capi-helm-tests-cluster-k8s_capi_v1
+    parent: magnum-capi-helm-tests-cluster
+
+- job:
+    name: magnum-capi-helm-tests-cluster
+    parent: magnum-tempest-plugin-tests-cluster-base
+    nodeset: magnum-ubuntu-noble-32GB
+    vars:
+      devstack_localrc:
+        K8S_VERSION: "1.33.4"
+        CRIO_VERSION: "1.33.3"
+      devstack_plugins:
+        devstack-plugin-container: https://opendev.org/openstack/devstack-plugin-container
+      devstack_services:
+        etcd3: true
+        container: true
+        k8s-master: true
+    required-projects:
+      - opendev.org/openstack/devstack-plugin-container
