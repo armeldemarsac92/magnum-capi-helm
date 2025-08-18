@@ -18,11 +18,10 @@
       but with magnum added as a required-projects. This checks out
       the project code and allows tox_install_siblings to use magnum
       when building the venv.
-      py39 is in Zed/2023.2/2024.1/2024.2/2025.1 PTI
-      py310 is in 2023.1/2023.2/2024.1/2024.2/2025.1/2025.2/2026.1 PTI
-      py311 is in 2024.1/2024.2/2025.1/2025.2/2026.1 PTI
-      py312 is in 2025.1/2025.2/2026.1 PTI
-      py313 is in 2025.2/2026.1 PTI
+      py39 is in Zed/2023.2/2024.1 PTI
+      py310 is in 2023.1/2023.2/2024.1 PTI
+      py311 is in 2024.1/2024.2 PTI
+      py312 is in 2025.1 PTI
     check:
       jobs:
         - openstack-tox-pep8:
@@ -30,10 +29,7 @@
               - openstack/magnum
         - openstack-tox-py39:
             required-projects:
-              - name: openstack/magnum
-                override-checkout: stable/2025.1
-              - name: openstack/requirements
-                override-checkout: stable/2025.1
+              - openstack/magnum
         - openstack-tox-py310:
             required-projects:
               - openstack/magnum
@@ -53,10 +49,7 @@
               - openstack/magnum
         - openstack-tox-py39:
             required-projects:
-              - name: openstack/magnum
-                override-checkout: stable/2025.1
-              - name: openstack/requirements
-                override-checkout: stable/2025.1
+              - openstack/magnum
         - openstack-tox-py310:
             required-projects:
               - openstack/magnum
@@ -73,10 +66,3 @@
       jobs:
         - publish-openstack-python-branch-tarball
 
-- project:
-    queue: magnum
-    templates:
-      - openstack-cover-jobs-magnum
-      - openstack-python3-jobs-magnum
-      - release-notes-jobs-python3
-      - publish-openstack-docs-pti

@@ -1,0 +1,69 @@
+---
+- project-template:
+    name: openstack-cover-jobs-magnum
+    description: |
+      The standard openstack-cover-jobs but with magnum added as a
+      required-projects. This checks out the project code and allows
+      tox_install_siblings to use it when building the venv.
+    check:
+      jobs:
+        - openstack-tox-cover:
+            required-projects:
+              - openstack/magnum
+
+- project-template:
+    name: openstack-python3-jobs-magnum
+    description: |
+      The standard :zuul:project_template:`openstack-python3-jobs`
+      but with magnum added as a required-projects. This checks out
+      the project code and allows tox_install_siblings to use magnum
+      when building the venv.
+      py39 is in Zed/2023.2/2024.1 PTI
+      py310 is in 2023.1/2023.2/2024.1 PTI
+      py311 is in 2024.1/2024.2 PTI
+      py312 is in 2025.1 PTI
+    check:
+      jobs:
+        - openstack-tox-pep8:
+            required-projects:
+              - openstack/magnum
+        - openstack-tox-py39:
+            required-projects:
+              - openstack/magnum
+        - openstack-tox-py310:
+            required-projects:
+              - openstack/magnum
+        - openstack-tox-py311:
+            required-projects:
+              - openstack/magnum
+        - openstack-tox-py312:
+            required-projects:
+              - openstack/magnum
+    gate:
+      jobs:
+        - openstack-tox-pep8:
+            required-projects:
+              - openstack/magnum
+        - openstack-tox-py39:
+            required-projects:
+              - openstack/magnum
+        - openstack-tox-py310:
+            required-projects:
+              - openstack/magnum
+        - openstack-tox-py311:
+            required-projects:
+              - openstack/magnum
+        - openstack-tox-py312:
+            required-projects:
+              - openstack/magnum
+    post:
+      jobs:
+        - publish-openstack-python-branch-tarball
+
+- project:
+    queue: magnum
+    templates:
+      - openstack-cover-jobs-magnum
+      - openstack-python3-jobs-magnum
+      - release-notes-jobs-python3
+      - publish-openstack-docs-pti
