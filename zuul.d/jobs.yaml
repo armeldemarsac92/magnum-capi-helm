@@ -1,0 +1,40 @@
+---
+- job:
+    name: magnum-capi-helm-tests-cluster-k8s_capi_v1_v1_33
+    parent: magnum-capi-helm-tests-cluster-k8s_capi_v1
+
+- job:
+    name: magnum-capi-helm-tests-cluster-k8s_capi_v1
+    parent: magnum-capi-helm-tests-cluster
+
+- job:
+    name: magnum-capi-helm-tests-cluster
+    parent: magnum-tempest-plugin-tests-cluster-base
+    nodeset: magnum-ubuntu-noble-32GB
+    pre-run: playbooks/pre.yaml
+    post-run: playbooks/post.yaml
+    roles:
+      - zuul: openstack/devstack-plugin-container
+    vars:
+      devstack_localrc:
+        CONTAINER_ENGINE: "crio"
+        CRIO_VERSION: "1.32.1"
+        K8S_TOKEN: "0cvq6p.k454yiandj1tjxxv"
+        K8S_VERSION: "1.34.1"
+        K8S_COPY_KUBECONFIG_PATH: "/etc/magnum/kubeconfig"
+        MAGNUM_GUEST_IMAGE_URL: "https://github.com/vexxhost/capo-image-elements/releases/download/2026.04-2/ubuntu-22.04-v1.35.3.qcow2"
+      devstack_local_conf:
+        test-config:
+          $TEMPEST_CONFIG:
+            magnum:
+              image_id: ubuntu-22.04-v1.35.3.qcow2
+      devstack_plugins:
+        devstack-plugin-container: https://opendev.org/openstack/devstack-plugin-container
+        magnum-capi-helm: https://opendev.org/openstack/magnum-capi-helm
+      devstack_services:
+        etcd3: true
+        container: true
+        k8s-master: true
+        k8s-capi: true
+    required-projects:
+      - opendev.org/openstack/devstack-plugin-container
