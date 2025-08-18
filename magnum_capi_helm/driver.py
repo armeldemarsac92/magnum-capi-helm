@@ -962,11 +962,13 @@ class Driver(driver.Driver):
                     "enabled": self._get_monitoring_enabled(cluster)
                 },
                 "kubernetesDashboard": {
-                    "enabled": self._get_kube_dash_enabled(cluster)
+                    "enabled": False
                 },
                 # TODO(mkjpryor): can't enable ingress until code exists to
                 #                 remove the load balancer
                 "ingress": {"enabled": False},
+                "mellanoxNetworkOperator": {"enabled": False},
+                "nvidiaGPUOperator": {"enabled": False}
             },
         }
 
