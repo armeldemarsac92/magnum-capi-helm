@@ -1,0 +1,21 @@
+---
+- job:
+    name: magnum-capi-helm-tests-cluster-k8s_capi_v1_v1_33
+    parent: magnum-capi-helm-tests-cluster-k8s_capi_v1
+
+- job:
+    name: magnum-capi-helm-tests-cluster-k8s_capi_v1
+    parent: magnum-capi-helm-tests-cluster
+
+- job:
+    name: magnum-capi-helm-tests-cluster
+    parent: magnum-tempest-plugin-tests-cluster-base
+    nodeset: magnum-ubuntu-noble-32GB
+    vars:
+      devstack_plugins:
+        devstack-plugin-container: https://opendev.org/openstack/devstack-plugin-container
+      devstack_services:
+        k8s-master: true
+    required-projects:
+      - opendev.org/openstack/devstack-plugin-container
+
