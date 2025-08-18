@@ -67,3 +67,6 @@
       - openstack-python3-jobs-magnum
       - release-notes-jobs-python3
       - publish-openstack-docs-pti
+    check:
+      jobs:
+        - magnum-capi-helm-tests-cluster-k8s_capi_v1_v1_33
