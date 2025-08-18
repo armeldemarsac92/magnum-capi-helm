@@ -1,0 +1,14 @@
+---
+- job:
+    name: magnum-tempest-plugin-tests-cluster-k8s_capi_v1_v1.33.1
+    parent: magnum-tempest-plugin-tests-cluster-k8s_fcos_v1
+
+- job:
+    name: magnum-tempest-plugin-tests-cluster-k8s_capi_v1
+    parent: magnum-tempest-plugin-tests-cluster
+
+- job:
+    name: magnum-tempest-plugin-tests-cluster
+    parent: magnum-tempest-plugin-tests-cluster-base
+    nodeset: magnum-nested-virt-ubuntu-noble-16GB
+
