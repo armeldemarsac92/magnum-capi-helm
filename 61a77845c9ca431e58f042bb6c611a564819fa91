@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "002e2588_17567e5a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-08-19T02:30:33Z",
+      "side": 1,
+      "message": "Tested and this works well to override chart images with our local OCI mirror without forking the entire chart.\n\nOne request for better config docs and I\u0027ll upgrade to +2.",
+      "revId": "61a77845c9ca431e58f042bb6c611a564819fa91",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81b054f2_d4d5106e",
+        "filename": "magnum_capi_helm/conf.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-08-19T02:30:33Z",
+      "side": 1,
+      "message": "The docs in the commit message are helpful, but this config help text is less clear about how to format the configuration option.\n\nCould this be improved? Are there additional docs that need adding to help use of this new config?\n\nSuggest adding something like:\n\"A comma separated key:value list where the key corresponds to the label \u0027helm_value_override_files\u0027 on cluster templates, and the key \u0027all\u0027 is applied to all clusters. The value must be a filename of a yaml values file that is used as overrides to the helm chart.\"\n\"This can be useful to apply operator customisations to helm charts without modifying and publishing the entire chart. Take care to not break existing clusters that may already be using the configured labels.\"",
+      "revId": "61a77845c9ca431e58f042bb6c611a564819fa91",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3ceb8657_52028c52",
+        "filename": "releasenotes/notes/add-helm-value-overrides-file-f82bc177d5672783.yaml",
+        "patchSetId": 4
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-08-19T02:30:33Z",
+      "side": 1,
+      "message": "s/cluster/cluster template/",
+      "revId": "61a77845c9ca431e58f042bb6c611a564819fa91",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
