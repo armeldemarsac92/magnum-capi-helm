@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ad8183eb_c1c47d8e",
+        "filename": "magnum_capi_helm/common/app_creds.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-08-27T04:46:05Z",
+      "side": 1,
+      "message": "```suggestion\n    # NOTE: admin privileges needed to delete app creds outside requestor scope\n```",
+      "revId": "de64a74d0c055fa1265f9e1bb3f87da03b722aa3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "43c879ff_f634d773",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1242,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-08-27T04:46:05Z",
+      "side": 1,
+      "message": "if we fail here, nobody knows something failed, unless they look in the logs - right?",
+      "revId": "de64a74d0c055fa1265f9e1bb3f87da03b722aa3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
