@@ -1,0 +1,8 @@
+---
+features:
+  - |
+    Added support for labels ``kube_pods_cidr`` and ``kube_services_cidr`` on
+    Cluster or Cluster Template that allow operators to override default
+    Kubernetes network CIDR ranges. This resolves IP overlap issues where
+    default pod CIDRs conflict with existing corporate networks, eliminating
+    the need for manual post-deployment Calico configuration changes.
