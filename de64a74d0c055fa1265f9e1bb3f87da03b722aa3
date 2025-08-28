@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "89047f8d_d4011cd1",
+        "filename": "magnum_capi_helm/common/app_creds.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 38227
+      },
+      "writtenOn": "2025-08-28T02:20:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad8183eb_c1c47d8e",
+      "revId": "de64a74d0c055fa1265f9e1bb3f87da03b722aa3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "43c879ff_f634d773",
@@ -31,6 +49,24 @@
       "writtenOn": "2025-08-27T04:46:05Z",
       "side": 1,
       "message": "if we fail here, nobody knows something failed, unless they look in the logs - right?",
+      "revId": "de64a74d0c055fa1265f9e1bb3f87da03b722aa3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fe7b1ebb_48d9df59",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1242,
+      "author": {
+        "id": 38227
+      },
+      "writtenOn": "2025-08-28T02:20:15Z",
+      "side": 1,
+      "message": "This is true as the exception handling in delete_app_cred is functionally unchanged to support cleanup of broken clusters. Though perhaps the try/except should be moved into the driver code so we can report something to the user. Is there a preferred way to do this while still reporting an UPDATE_COMPLETE status? It could be reported in status_reason but the user would still need to check for it.",
+      "parentUuid": "43c879ff_f634d773",
       "revId": "de64a74d0c055fa1265f9e1bb3f87da03b722aa3",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
