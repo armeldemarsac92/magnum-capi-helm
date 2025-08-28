@@ -69,6 +69,24 @@
       "parentUuid": "43c879ff_f634d773",
       "revId": "de64a74d0c055fa1265f9e1bb3f87da03b722aa3",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b1ea17d4_4b5e7ff8",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1242,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-08-28T07:27:15Z",
+      "side": 1,
+      "message": "Let\u0027s just start with status_reason and UPDATE_COMPLETE, we don\u0027t have any other mechanism to inform the user",
+      "parentUuid": "fe7b1ebb_48d9df59",
+      "revId": "de64a74d0c055fa1265f9e1bb3f87da03b722aa3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
