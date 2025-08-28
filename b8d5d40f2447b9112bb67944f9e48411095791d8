@@ -16,6 +16,24 @@
       "message": "I am a bit tempted by dropping the py39 tests instead, or renaming it, but this works, and lets us use this against older magnum more easily, so lets get this in to unblock things.",
       "revId": "b8d5d40f2447b9112bb67944f9e48411095791d8",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5958cdf3_0a511324",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-08-28T07:39:24Z",
+      "side": 1,
+      "message": "py39 EOL is in October, it\u0027s probably better it stays for some time, since cap-helm driver is not tied to any branch",
+      "parentUuid": "d20ad55a_9ca0eaf4",
+      "revId": "b8d5d40f2447b9112bb67944f9e48411095791d8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
