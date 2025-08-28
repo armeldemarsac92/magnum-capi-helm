@@ -976,6 +976,25 @@ class Driver(driver.Driver):
             }
             values = helm.mergeconcat(values, network_details)
 
+        # Check for custom Kubernetes network CIDRs from labels
+        kube_pods_cidr = self._label(cluster, "kube_pods_cidr", None)
+        kube_services_cidr = self._label(cluster, "kube_services_cidr", None)
+
+        if kube_pods_cidr or kube_services_cidr:
+            kube_network_config = {"kubeNetwork": {}}
+
+            if kube_pods_cidr:
+                kube_network_config["kubeNetwork"]["pods"] = {
+                    "cidrBlocks": [kube_pods_cidr]
+                }
+
+            if kube_services_cidr:
+                kube_network_config["kubeNetwork"]["services"] = {
+                    "cidrBlocks": [kube_services_cidr]
+                }
+
+            values = helm.mergeconcat(values, kube_network_config)
+
         if self._get_k8s_keystone_auth_enabled(cluster):
             k8s_keystone_auth_config = {
                 "authWebhook": "k8s-keystone-auth",
