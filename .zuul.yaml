@@ -22,6 +22,7 @@
       py310 is in 2023.1/2023.2/2024.1 PTI
       py311 is in 2024.1/2024.2 PTI
       py312 is in 2025.1 PTI
+      py313 is in 2025.2/2026.1 PTI
     check:
       jobs:
         - openstack-tox-pep8:
@@ -30,6 +31,8 @@
         - openstack-tox-py39:
             required-projects:
               - openstack/magnum
+              - name: openstack/requirements
+                override-checkout: stable/2024.1
         - openstack-tox-py310:
             required-projects:
               - openstack/magnum
@@ -37,6 +40,9 @@
             required-projects:
               - openstack/magnum
         - openstack-tox-py312:
+            required-projects:
+              - openstack/magnum
+       - openstack-tox-py313:
             required-projects:
               - openstack/magnum
     gate:
@@ -44,9 +50,11 @@
         - openstack-tox-pep8:
             required-projects:
               - openstack/magnum
-        - openstack-tox-py39:
+       - openstack-tox-py39:
             required-projects:
               - openstack/magnum
+              - name: openstack/requirements
+                override-checkout: stable/2024.1
         - openstack-tox-py310:
             required-projects:
               - openstack/magnum
@@ -54,6 +62,9 @@
             required-projects:
               - openstack/magnum
         - openstack-tox-py312:
+            required-projects:
+              - openstack/magnum
+       - openstack-tox-py313:
             required-projects:
               - openstack/magnum
     post:
