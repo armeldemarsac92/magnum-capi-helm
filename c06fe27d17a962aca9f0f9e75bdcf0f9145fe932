@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3fff1858_1f8757da",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-08-28T07:25:53Z",
+      "side": 1,
+      "message": "Rebased on the py39 fix",
+      "revId": "c06fe27d17a962aca9f0f9e75bdcf0f9145fe932",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
