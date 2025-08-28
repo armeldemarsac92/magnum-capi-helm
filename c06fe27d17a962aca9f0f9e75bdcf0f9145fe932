@@ -16,6 +16,23 @@
       "message": "Rebased on the py39 fix",
       "revId": "c06fe27d17a962aca9f0f9e75bdcf0f9145fe932",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e0e3ac4_3711ce9e",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1264,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-08-28T21:30:08Z",
+      "side": 1,
+      "message": "is this control path missing a `cluster.save()`, or is it performed elsewhere?",
+      "revId": "c06fe27d17a962aca9f0f9e75bdcf0f9145fe932",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
