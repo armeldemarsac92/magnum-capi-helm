@@ -16,6 +16,24 @@
       "message": "Hi Jason, Could we please have release notes(using `reno`) and test cases?\n\nOtherwise, this change looks good in principle. Thank you for contributing to the CAPI helm driver!\n\nThis change uses labels from the Cluster, which are copied from the Cluster Template on creation. This is good as using Cluster Template labels directly may result in changes to the values during upgrades which Calico won\u0027t like.\n\nNote there is an alternative method proposed of specifying these site wide (or, by cluster template) you may be interested in: https://review.opendev.org/c/openstack/magnum-capi-helm/+/951966",
       "revId": "554b1885a2b9127d17aff1b9c3339afdefb9a89e",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "047a9778_d3739795",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 38333
+      },
+      "writtenOn": "2025-08-29T21:05:04Z",
+      "side": 1,
+      "message": "Hi Dale, happy to be able to contribute!\n\nI\u0027ve added the release notes and test cases in patch set 5.\n\nThanks for pointing out 951966 - that\u0027s a valuable addition for site-wide configuration! This change complements that approach by providing direct label control for individual clusters, which I believe will be useful in self-service environments where users need networking flexibility without requiring administrator file management.",
+      "parentUuid": "0423df98_797d7a23",
+      "revId": "554b1885a2b9127d17aff1b9c3339afdefb9a89e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
