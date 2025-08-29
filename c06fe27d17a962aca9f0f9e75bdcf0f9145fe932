@@ -33,6 +33,24 @@
       "message": "is this control path missing a `cluster.save()`, or is it performed elsewhere?",
       "revId": "c06fe27d17a962aca9f0f9e75bdcf0f9145fe932",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7c84d18_aaec0c00",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1264,
+      "author": {
+        "id": 38227
+      },
+      "writtenOn": "2025-08-29T02:21:43Z",
+      "side": 1,
+      "message": "Good catch - yes it was missing. Fixed now.",
+      "parentUuid": "9e0e3ac4_3711ce9e",
+      "revId": "c06fe27d17a962aca9f0f9e75bdcf0f9145fe932",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }

@@ -87,6 +87,24 @@
       "parentUuid": "fe7b1ebb_48d9df59",
       "revId": "de64a74d0c055fa1265f9e1bb3f87da03b722aa3",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fabe607a_f16c4b12",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1242,
+      "author": {
+        "id": 38227
+      },
+      "writtenOn": "2025-08-29T02:21:43Z",
+      "side": 1,
+      "message": "Thanks. I\u0027ve moved the error handling logic to driver.py to accommodate this.",
+      "parentUuid": "b1ea17d4_4b5e7ff8",
+      "revId": "de64a74d0c055fa1265f9e1bb3f87da03b722aa3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
