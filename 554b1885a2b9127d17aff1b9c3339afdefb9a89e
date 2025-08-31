@@ -34,6 +34,24 @@
       "parentUuid": "0423df98_797d7a23",
       "revId": "554b1885a2b9127d17aff1b9c3339afdefb9a89e",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d3832757_76e65436",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-08-31T23:39:04Z",
+      "side": 1,
+      "message": "Yep, I agree. This patchset solves a different problem to the site-wide configuration and allows Magnum users to specify values in addition to the OpenStack operator.\n\nI can see this being useful for some of my customers.",
+      "parentUuid": "047a9778_d3739795",
+      "revId": "554b1885a2b9127d17aff1b9c3339afdefb9a89e",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
