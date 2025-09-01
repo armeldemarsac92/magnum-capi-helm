@@ -859,7 +859,6 @@ class Driver(driver.Driver):
                 "loadBalancerProvider": self._get_octavia_provider(cluster),
             },
             "clusterNetworking": {
-                "dnsNameservers": self._get_dns_nameservers(cluster),
                 "externalNetworkId": neutron.get_external_network_id(
                     context, cluster.cluster_template.external_network_id
                 ),
@@ -872,6 +871,8 @@ class Driver(driver.Driver):
                     "nodeCidr": self._label(
                         cluster, "fixed_subnet_cidr", "10.0.0.0/24"
                     ),
+                    "dnsNameservers": self._get_dns_nameservers(cluster),
+
                 },
             },
             "osDistro": os_distro,

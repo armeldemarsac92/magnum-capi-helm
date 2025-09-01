@@ -1170,8 +1170,8 @@ class ClusterAPIDriverTest(base.DbTestCase):
                     "networkFilter": None,
                     "subnetFilter": None,
                     "nodeCidr": "10.0.0.0/24",
+                    "dnsNameservers": ["8.8.1.1"],
                 },
-                "dnsNameservers": ["8.8.1.1"],
             },
             "etcd": {},
             "apiServer": {
@@ -1321,7 +1321,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
 
         expected_values = self._get_cluster_helm_standard_values()
-        expected_values["clusterNetworking"]["dnsNameservers"] = None
+        expected_values["clusterNetworking"]["internalNetwork"][
+            "dnsNameservers"
+        ] = None
 
         mock_install.assert_called_once_with(
             self.driver._helm_client,
