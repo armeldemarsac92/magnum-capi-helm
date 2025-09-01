@@ -1,5 +1,23 @@
 {
-  "comments": [],
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c70d6d2_95e7abde",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3031
+      },
+      "writtenOn": "2025-09-01T06:51:54Z",
+      "side": 1,
+      "message": "I realise this is more complicated. I\u0027m just catching up with all the capi/capi/magnum stuff. Doesn\u0027t look like there are any official helm charts to go with this driver so I\u0027m not sure what to do here.\n\nReference to https://github.com/azimuth-cloud/capi-helm-charts/commit/806a68ac5fdb2283b68579bf446b0ad206341a95",
+      "revId": "2f449f1393522848332968f04b3994ab2eebac31",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ],
   "submitRequirementResults": [
     {
       "submitRequirement": {
