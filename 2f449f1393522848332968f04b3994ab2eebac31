@@ -16,6 +16,23 @@
       "message": "I realise this is more complicated. I\u0027m just catching up with all the capi/capi/magnum stuff. Doesn\u0027t look like there are any official helm charts to go with this driver so I\u0027m not sure what to do here.\n\nReference to https://github.com/azimuth-cloud/capi-helm-charts/commit/806a68ac5fdb2283b68579bf446b0ad206341a95",
       "revId": "2f449f1393522848332968f04b3994ab2eebac31",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ebda3c28_f793c576",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-09-01T22:02:44Z",
+      "side": 1,
+      "message": "Hi Sam, thanks for noticing the deprecated value!\n\nHowever, merging this will prevent the use of chart versions older than 0.16.0 as the values would become incompatible. As it stands, the value is deprecated but backwards compatible (until removed by the chart, which it seems we should delay!).\n\nIf we merge this, all operators need to ensure older clusters are upgraded off these older charts so we\u0027ll need to draw a line in the sand with a compatibility table.\n\nCurrently, we\u0027re planning on using 0.16.0 for K8s 1.34.0, and leaving all older versions on older charts. So it\u0027ll be a while before merging this change is easy.",
+      "revId": "2f449f1393522848332968f04b3994ab2eebac31",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ],
   "submitRequirementResults": [
