@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7247f619_07b86ecf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-09-02T22:10:40Z",
+      "side": 1,
+      "message": "I\u0027m keen to see the `HelmChartProxies` addition included and thanks for your work on this to support CAAPH.\n\nCould you split this work out into a separate changeset on top of this one to make it easy to identify and in case we need to revert part of this commit.",
+      "revId": "df85bd5ab5c2f0435ee0932b1795c4a23bffef28",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
