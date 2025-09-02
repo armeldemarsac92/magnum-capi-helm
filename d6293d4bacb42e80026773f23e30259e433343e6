@@ -16,6 +16,24 @@
       "message": "Looks like this field is deprecated in favour of `UpToDateReplicas` in the newer v1beta2 API [1, 2] - is it worth being defensive against this now to save us coming back to it later?\n\n[1] https://github.com/kubernetes-sigs/cluster-api/blob/2179443e7621cf077db77f047e8b4feac3bd48ef/api/core/v1beta2/machinedeployment_types.go#L466\n[2] https://github.com/kubernetes-sigs/cluster-api/blob/2179443e7621cf077db77f047e8b4feac3bd48ef/api/core/v1beta2/machinedeployment_types.go#L488",
       "revId": "d6293d4bacb42e80026773f23e30259e433343e6",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5dcfa8ba_041a73f5",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-09-02T22:13:33Z",
+      "side": 1,
+      "message": "absolutely, thank you for noting this. I\u0027ll update this.",
+      "parentUuid": "12aa76eb_2377b391",
+      "revId": "d6293d4bacb42e80026773f23e30259e433343e6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
