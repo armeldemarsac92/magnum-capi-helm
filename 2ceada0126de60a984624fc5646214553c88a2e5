@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "682f5a5a_c4ade43c",
+        "filename": "magnum_capi_helm/tests/test_driver.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 2164,
+      "author": {
+        "id": 38333
+      },
+      "writtenOn": "2025-09-02T17:29:33Z",
+      "side": 1,
+      "message": "That makes sense! I updated `test_create_cluster` and removed my redundant test.",
+      "parentUuid": "87488b9e_042686a2",
+      "revId": "2ceada0126de60a984624fc5646214553c88a2e5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6d699635_1e982f92",
@@ -31,6 +49,24 @@
       "writtenOn": "2025-08-31T23:39:04Z",
       "side": 1,
       "message": "Could we change this `cluster template` wording to be clear it includes Cluster labels also?\n\nWith the change as proposed you can use an existing Cluster Template and add these labels in at cluster create time (using`--merge-labels`).\n\nPerhaps something like: \"Added support for labels ``kube_pods_cidr`` and ``kube_services_cidr`` on Cluster or Cluster Template that allow ...\"",
+      "revId": "2ceada0126de60a984624fc5646214553c88a2e5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8bcd0c69_74b45b80",
+        "filename": "releasenotes/notes/add-pod-cidr-labels-ef8e9e16a48d65b4.yaml",
+        "patchSetId": 8
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 38333
+      },
+      "writtenOn": "2025-09-02T17:29:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d699635_1e982f92",
       "revId": "2ceada0126de60a984624fc5646214553c88a2e5",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
