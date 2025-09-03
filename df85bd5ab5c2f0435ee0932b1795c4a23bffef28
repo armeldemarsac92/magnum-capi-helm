@@ -16,6 +16,24 @@
       "message": "I\u0027m keen to see the `HelmChartProxies` addition included and thanks for your work on this to support CAAPH.\n\nCould you split this work out into a separate changeset on top of this one to make it easy to identify and in case we need to revert part of this commit.",
       "revId": "df85bd5ab5c2f0435ee0932b1795c4a23bffef28",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "601bdf46_77c2eb92",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 10366
+      },
+      "writtenOn": "2025-09-03T01:49:43Z",
+      "side": 1,
+      "message": "Raised a new changeset https://review.opendev.org/c/openstack/magnum-capi-helm/+/959263/ for HelmChartProxies.",
+      "parentUuid": "7247f619_07b86ecf",
+      "revId": "df85bd5ab5c2f0435ee0932b1795c4a23bffef28",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
