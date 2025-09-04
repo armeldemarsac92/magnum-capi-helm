@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f8ee93db_c9def25b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-09-04T02:05:49Z",
+      "side": 1,
+      "message": "LGTM. I need to check with other Core reviewers when we can merge this with respect to Flamingo milestones.",
+      "revId": "d35c5b3bbdca4d07da6394d1b7685e4ed59d02ba",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
