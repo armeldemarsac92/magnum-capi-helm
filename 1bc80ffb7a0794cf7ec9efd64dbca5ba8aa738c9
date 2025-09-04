@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1fe7dfa3_0ef480f1",
+        "filename": "magnum_capi_helm/kubernetes.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-09-04T07:26:42Z",
+      "side": 1,
+      "message": "just thinking - should we make that configurable in magnum.conf?",
+      "revId": "1bc80ffb7a0794cf7ec9efd64dbca5ba8aa738c9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
