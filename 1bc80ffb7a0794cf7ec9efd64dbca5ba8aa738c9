@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c5cfe7b6_f1651b0e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-09-04T07:27:41Z",
+      "side": 1,
+      "message": "merging given other previous +2s",
+      "revId": "1bc80ffb7a0794cf7ec9efd64dbca5ba8aa738c9",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1fe7dfa3_0ef480f1",
