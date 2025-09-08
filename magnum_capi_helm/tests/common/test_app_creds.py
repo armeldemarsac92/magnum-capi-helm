@@ -84,7 +84,7 @@ class TestAppCreds(base.DbTestCase):
         }
         self.assertEqual(expected, app_cred_string_data)
         mock_client().url_for.assert_called_once_with(
-            service_type="identity", interface="public"
+            service_type="identity", interface="public", region_name="cinder"
         )
         mock_app_cred.create.assert_called_once_with(
             user=context.user_id,
@@ -149,6 +149,8 @@ clouds:
         mock_app_cred_client = (
             mock_client().keystone().client.application_credentials
         )
+<<<<<<< PATCH SET (92ab30 Ensure correct region_name is used to support multi-region K)
+<<<<<<< PATCH SET (557874 Ensure correct region_name is used to support multi-region K)
         mock_app_cred_client.get.side_effect = (
             keystoneauth1.exceptions.http.NotFound
         )
@@ -189,3 +191,92 @@ clouds:
             f"magnum-{self.cluster_obj.uuid}"
         )
         mock_app_cred_client.get.assert_called_once_with(app_cred_id)
+
+
+@mock.patch.object(clients, "OpenStackClients")
+def test_get_app_cred_clouds_dict_multi_region(self, mock_clients):
+    mock_osc = mock.Mock()
+    mock_clients.return_value = mock_osc
+
+    app_cred = collections.namedtuple("AppCred", ["id", "secret"])(
+        "id123", "secret456"
+    )
+
+    with mock.patch("magnum_capi_helm.common.app_creds.CONF") as mock_conf:
+        mock_conf.magnum_client.region_name = "region_from_conf"
+        mock_conf.capi_helm.app_cred_interface_type = "public"
+        mock_conf.drivers.verify_ca = True
+
+        result = app_creds._get_app_cred_clouds_dict("context", app_cred)
+
+        # Assert
+        self.assertEqual(
+            result["clouds"]["openstack"]["region_name"], "region_from_conf"
+        )
+        mock_osc.url_for.assert_called_once_with(
+            service_type="identity",
+            interface="public",
+            region_name="region_from_conf",
+        )
+
+    mock_osc.reset_mock()
+    mock_osc.cinder_region_name.return_value = "region_from_osc"
+    with mock.patch("magnum_capi_helm.common.app_creds.CONF") as mock_conf:
+        mock_conf.magnum_client.region_name = None
+        mock_conf.capi_helm.app_cred_interface_type = "public"
+        mock_conf.drivers.verify_ca = True
+
+        result = app_creds._get_app_cred_clouds_dict("context", app_cred)
+
+        self.assertEqual(
+            result["clouds"]["openstack"]["region_name"], "region_from_osc"
+        )
+        mock_osc.url_for.assert_called_once_with(
+            service_type="identity",
+            interface="public",
+            region_name="region_from_osc",
+        )
+=======
+>>>>>>> BASE      (a134c6 Fail cluster creation if required user roles are missing)
+=======
+        mock_app_cred_client.get.side_effect = (
+            keystoneauth1.exceptions.http.NotFound
+        )
+
+        app_cred_id = "abcdef12345"
+
+        self.assertRaises(
+            app_creds.ApplicationCredentialError,
+            app_creds.delete_app_cred,
+            self.cluster_obj,
+            app_cred_id,
+        )
+
+        mock_app_cred_client.get.assert_called_once_with(app_cred_id)
+
+    @mock.patch.object(clients, "OpenStackClients")
+    def test_delete_app_cred_invalid_name(self, mock_client):
+        mock_app_cred_client = (
+            mock_client().keystone().client.application_credentials
+        )
+        mock_app_cred = mock.MagicMock()
+        mock_app_cred_name = mock.MagicMock()
+        mock_app_cred_name.startswith.return_value = False
+        mock_app_cred.name = mock_app_cred_name
+        mock_app_cred_client.get.return_value = mock_app_cred
+
+        app_cred_id = "abcdef12345"
+
+        self.assertRaises(
+            app_creds.ApplicationCredentialError,
+            app_creds.delete_app_cred,
+            self.cluster_obj,
+            app_cred_id,
+        )
+
+        mock_app_cred.delete.assert_not_called()
+        mock_app_cred.name.startswith.assert_called_once_with(
+            f"magnum-{self.cluster_obj.uuid}"
+        )
+        mock_app_cred_client.get.assert_called_once_with(app_cred_id)
+>>>>>>> BASE      (d60ae3 Start using csi_cinder_volume_binding_mode config)

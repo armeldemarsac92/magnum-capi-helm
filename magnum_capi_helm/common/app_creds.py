@@ -70,22 +70,36 @@ def create_app_cred(context, cluster):
         description=f"Magnum cluster ({cluster.name or cluster.uuid})",
         # roles=roles,
     )
+<<<<<<< PATCH SET (92ab30 Ensure correct region_name is used to support multi-region K)
+<<<<<<< PATCH SET (557874 Ensure correct region_name is used to support multi-region K)
 
 
 def _get_app_cred_clouds_dict(context, app_cred):
     osc = clients.OpenStackClients(context)
+    # ensure correct region_name for multi-region Keystone
+    region_name = CONF.magnum_client.region_name or osc.cinder_region_name()
+=======
+>>>>>>> BASE      (a134c6 Fail cluster creation if required user roles are missing)
+=======
+
+
+def _get_app_cred_clouds_dict(context, app_cred):
+    osc = clients.OpenStackClients(context)
+>>>>>>> BASE      (d60ae3 Start using csi_cinder_volume_binding_mode config)
     return {
         "clouds": {
             "openstack": {
                 "identity_api_version": 3,
-                "region_name": osc.cinder_region_name(),
+                "region_name": region_name,
                 "interface": CONF.capi_helm.app_cred_interface_type,
                 # This config item indicates whether TLS should be
                 # verified when connecting to the OpenStack API
                 "verify": CONF.drivers.verify_ca,
                 "auth": {
                     "auth_url": osc.url_for(
-                        service_type="identity", interface="public"
+                        service_type="identity",
+                        interface="public",
+                        region_name=region_name,
                     ),
                     "application_credential_id": app_cred.id,
                     "application_credential_secret": app_cred.secret,
