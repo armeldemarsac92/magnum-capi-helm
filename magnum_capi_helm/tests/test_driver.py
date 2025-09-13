@@ -1162,6 +1162,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         """
         app_cred_name = "cluster-example-a-111111111111-cloud-credentials"
         ext_net_id = self.cluster_obj.cluster_template.external_network_id
+        nodeCidr = "10.0.0.0/24"
 
         return {
             "kubernetesVersion": "1.27.4",
@@ -1172,7 +1173,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
                 "internalNetwork": {
                     "networkFilter": None,
                     "subnetFilter": None,
-                    "nodeCidr": "10.0.0.0/24",
+                    "nodeCidr": nodeCidr,
                 },
                 "dnsNameservers": ["8.8.1.1"],
             },
@@ -1210,6 +1211,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
                 },
             ],
             "osDistro": "ubuntu",
+            "proxy": {
+                "httpProxy": "fake_http_proxy",
+                "httpsProxy": "fake_https_proxy",
+                "noProxy": "fake_no_proxy," + nodeCidr,
+            },
             "nodeGroupDefaults": {
                 "healthCheck": {"enabled": True},
             },
@@ -3158,6 +3164,162 @@ class ClusterAPIDriverTest(base.DbTestCase):
             ],
             disk_size_configuration_value,
         )
+
+    @mock.patch.object(driver.Driver, "_get_allowed_cidrs")
+    @mock.patch.object(
+        driver.Driver, "_get_k8s_keystone_auth_enabled", return_value=False
+    )
+    @mock.patch.object(
+        driver.Driver,
+        "_storageclass_definitions",
+        return_value=mock.ANY,
+    )
+    @mock.patch.object(driver.Driver, "_validate_allowed_flavor")
+    @mock.patch.object(neutron, "get_network", autospec=True)
+    @mock.patch.object(
+        driver.Driver, "_ensure_certificate_secrets", autospec=True
+    )
+    @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(kubernetes.Client, "load", autospec=True)
+    @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
+    def test_create_cluster_no_proxy(
+        self,
+        mock_install,
+        mock_image,
+        mock_load,
+        mock_appcred,
+        mock_certs,
+        mock_get_net,
+        mock_validate_allowed_flavor,
+        mock_storageclasses,
+        mock_get_keystone_auth_enabled,
+        mock_get_allowed_cidrs,
+    ):
+        mock_image.return_value = (
+            "imageid1",
+            "1.27.4",
+            "ubuntu",
+        )
+        mock_client = mock.MagicMock(spec=kubernetes.Client)
+        mock_load.return_value = mock_client
+        mock_get_net.side_effect = (
+            lambda c, net, source, target, external: f"{net}-{external}"
+        )
+        self.cluster_obj.cluster_template.http_proxy = None
+        self.cluster_obj.cluster_template.https_proxy = None
+        self.cluster_obj.cluster_template.no_proxy = None
+
+        self.driver.create_cluster(self.context, self.cluster_obj, 10)
+
+        expected_values = self._get_cluster_helm_standard_values()
+        expected_values["proxy"] = {}
+
+        mock_install.assert_called_once_with(
+            self.driver._helm_client,
+            "cluster-example-a-111111111111",
+            "openstack-cluster",
+            mock.ANY,  # NOTE(dalees): Compared separately for improved diff
+            repo=CONF.capi_helm.helm_chart_repo,
+            version=CONF.capi_helm.default_helm_chart_version,
+            namespace="magnum-fakeproject",
+        )
+
+        helm_install_values = mock_install.call_args[0][3]
+        self.assertDictEqual(helm_install_values, expected_values)
+
+    @mock.patch("magnum.common.clients.OpenStackClients.neutron")
+    @mock.patch.object(driver.Driver, "_get_allowed_cidrs")
+    @mock.patch.object(
+        driver.Driver, "_get_k8s_keystone_auth_enabled", return_value=False
+    )
+    @mock.patch.object(
+        driver.Driver,
+        "_storageclass_definitions",
+        return_value=mock.ANY,
+    )
+    @mock.patch.object(driver.Driver, "_validate_allowed_flavor")
+    @mock.patch.object(neutron, "get_network", autospec=True)
+    @mock.patch.object(
+        driver.Driver, "_ensure_certificate_secrets", autospec=True
+    )
+    @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(kubernetes.Client, "load", autospec=True)
+    @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
+    def test_create_cluster_fixed_network(
+        self,
+        mock_install,
+        mock_image,
+        mock_load,
+        mock_appcred,
+        mock_certs,
+        mock_get_net,
+        mock_validate_allowed_flavor,
+        mock_storageclasses,
+        mock_get_keystone_auth_enabled,
+        mock_get_allowed_cidrs,
+        mock_neutron,
+    ):
+        mock_image.return_value = (
+            "imageid1",
+            "1.27.4",
+            "ubuntu",
+        )
+        mock_client = mock.MagicMock(spec=kubernetes.Client)
+        mock_load.return_value = mock_client
+        mock_get_net.side_effect = (
+            lambda c, net, source, target, external: f"{net}-{external}"
+        )
+        mock_neutron().list_subnets.return_value = {
+            "subnets": [
+                {"id": "subnet-1", "cidr": "10.1.1.0/24"},
+                {"id": "subnet-1", "cidr": "10.2.2.0/24"},
+            ]
+        }
+
+        fixed_network_id = "c316c7ae-905a-11f0-aca7-23096dd67800"
+        self.cluster_obj.fixed_network = fixed_network_id
+
+        self.driver.create_cluster(self.context, self.cluster_obj, 10)
+
+        expected_values = self._get_cluster_helm_standard_values()
+
+        # Updated expected_values internalNetwork and noProxy
+        expected_values["clusterNetworking"]["internalNetwork"][
+            "networkFilter"
+        ] = {"id": fixed_network_id}
+        # remove nodeCidr from expected noProxy and
+        # add subnets from fixed_network
+        no_proxy = expected_values["proxy"]["noProxy"]
+        no_proxy = no_proxy.removesuffix("10.0.0.0/24")
+        expected_values["proxy"]["noProxy"] = (
+            no_proxy + "10.1.1.0/24,10.2.2.0/24"
+        )
+
+        mock_install.assert_called_once_with(
+            self.driver._helm_client,
+            "cluster-example-a-111111111111",
+            "openstack-cluster",
+            mock.ANY,  # NOTE(dalees): Compared separately for improved diff
+            repo=CONF.capi_helm.helm_chart_repo,
+            version=CONF.capi_helm.default_helm_chart_version,
+            namespace="magnum-fakeproject",
+        )
+
+        helm_install_values = mock_install.call_args[0][3]
+        self.assertDictEqual(helm_install_values, expected_values)
+
+        mock_client.ensure_namespace.assert_called_once_with(
+            "magnum-fakeproject"
+        )
+        mock_appcred.assert_called_once_with(
+            self.driver, self.context, self.cluster_obj
+        )
+        mock_certs.assert_called_once_with(
+            self.driver, self.context, self.cluster_obj
+        )
+        self.assertEqual([], mock_get_net.call_args_list)
 
     @mock.patch.object(
         driver.Driver,

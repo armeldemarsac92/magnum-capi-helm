@@ -879,6 +879,58 @@ class Driver(driver.Driver):
                 nodegroup_set.append(nodegroup_item)
         return nodegroup_set
 
+    def _get_network_cidrs(
+        self, context, network_id, subnet_id, fixed_subnet_cidr
+    ):
+        """Return CIDRs from fixed_network or fixed_subnet.
+
+        If fixed_network and fixed_subnet are not provided by user,
+        return fixed_subnet_cidr
+        """
+        filters = {}
+        if network_id:
+            filters["network_id"] = network_id
+        if subnet_id:
+            filters["id"] = subnet_id
+
+        cidrs = []
+        if filters:
+            n_client = clients.OpenStackClients(context).neutron()
+            subnets = n_client.list_subnets(**filters).get("subnets", [])
+            cidrs = [
+                subnet.get("cidr")
+                for subnet in subnets
+                if subnet.get("cidr") is not None
+            ]
+
+        if not cidrs:
+            cidrs = [fixed_subnet_cidr]
+
+        return cidrs
+
+    def _get_proxy_settings(
+        self, context, cluster, network_id, subnet_id, fixed_subnet_cidr
+    ):
+        proxy = {}
+
+        if cluster.cluster_template.http_proxy:
+            proxy["httpProxy"] = cluster.cluster_template.http_proxy
+
+        if cluster.cluster_template.https_proxy:
+            proxy["httpsProxy"] = cluster.cluster_template.https_proxy
+
+        if cluster.cluster_template.no_proxy:
+            no_proxy = cluster.cluster_template.no_proxy
+            # Update noProxy with fixed networks or subnets
+            cidrs = self._get_network_cidrs(
+                context, network_id, subnet_id, fixed_subnet_cidr
+            )
+            no_proxy_to_add = [cidr for cidr in cidrs if cidr not in no_proxy]
+            separator = "," if no_proxy_to_add else ""
+            proxy["noProxy"] = no_proxy + separator + ",".join(no_proxy_to_add)
+
+        return proxy
+
     def _update_helm_release(self, context, cluster, nodegroups=None):
         if nodegroups is None:
             nodegroups = cluster.nodegroups
@@ -889,6 +941,9 @@ class Driver(driver.Driver):
 
         network_id = self._get_fixed_network_id(context, cluster)
         subnet_id = neutron.get_fixed_subnet_id(context, cluster.fixed_subnet)
+        fixed_subnet_cidr = self._label(
+            cluster, "fixed_subnet_cidr", "10.0.0.0/24"
+        )
 
         values = {
             "kubernetesVersion": kube_version,
@@ -918,9 +973,7 @@ class Driver(driver.Driver):
                     ),
                     "subnetFilter": ({"id": subnet_id} if subnet_id else None),
                     # This is only used if a fixed network is not specified
-                    "nodeCidr": self._label(
-                        cluster, "fixed_subnet_cidr", "10.0.0.0/24"
-                    ),
+                    "nodeCidr": fixed_subnet_cidr,
                 },
             },
             "osDistro": os_distro,
@@ -964,6 +1017,9 @@ class Driver(driver.Driver):
                 #                 remove the load balancer
                 "ingress": {"enabled": False},
             },
+            "proxy": self._get_proxy_settings(
+                context, cluster, network_id, subnet_id, fixed_subnet_cidr
+            ),
         }
 
         # Add boot disk details, if defined in config file.
