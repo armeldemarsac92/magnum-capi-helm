@@ -1,0 +1,10 @@
+---
+features:
+  - |
+    Add support for passing proxy settings.
+
+    CAPI helm charts can make use of proxy settings passed
+    by magnum-capi-helm driver and configure kubernetes to
+    use the proxy settings in the workload deployment.
+    For example like adding proxy to containerd to download
+    OCI images.
