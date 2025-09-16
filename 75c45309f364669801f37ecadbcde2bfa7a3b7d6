@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "12301c3c_2b9f17b4",
+        "filename": "releasenotes/notes/add-helmchartproxy-resource-ad5dab507b219dfa.yaml",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-09-16T16:57:32Z",
+      "side": 1,
+      "message": "That needs more details - how a user can use it?",
+      "revId": "75c45309f364669801f37ecadbcde2bfa7a3b7d6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
