@@ -18,6 +18,23 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "46a5ed05_1b98b142",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-09-16T16:56:16Z",
+      "side": 1,
+      "message": "Accounting for previous +2 from Dale - please remember about docs",
+      "revId": "ccf4ebbb48b9b5f9568a37ce73977eaa63873421",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d87c1724_dee7a3a4",
