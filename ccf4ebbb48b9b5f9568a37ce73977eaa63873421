@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "91b5547c_3392a14d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-09-16T16:55:19Z",
+      "side": 1,
+      "message": "otherwise LGTM",
+      "revId": "ccf4ebbb48b9b5f9568a37ce73977eaa63873421",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d87c1724_dee7a3a4",
+        "filename": "releasenotes/notes/generalize-api-resources-e3b9f1606a51fb6f.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-09-16T16:55:19Z",
+      "side": 1,
+      "message": "I\u0027d say the reno is nice, but this deserves a doc section how to override these new configuration variables",
+      "revId": "ccf4ebbb48b9b5f9568a37ce73977eaa63873421",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
