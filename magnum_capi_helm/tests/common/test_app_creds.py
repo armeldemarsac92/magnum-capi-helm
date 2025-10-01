@@ -50,7 +50,7 @@ class TestAppCreds(base.DbTestCase):
     @mock.patch("secrets.token_hex")
     @mock.patch.object(clients, "OpenStackClients")
     def test_create_app_cred(self, mock_client, mock_token):
-        mock_client().cinder_region_name.return_value = "cinder"
+        mock_client().cinder_region_name.return_value = "test-region-name"
         mock_client().url_for.return_value = "http://keystone"
         mock_app_cred = mock_client().keystone().client.application_credentials
         app_cred = collections.namedtuple("appcred", ["id", "secret"])
@@ -77,14 +77,15 @@ class TestAppCreds(base.DbTestCase):
                     "auth_type": "v3applicationcredential",
                     "identity_api_version": 3,
                     "interface": "public",
-                    "region_name": "cinder",
+                    "region_name": "test-region-name",
                     "verify": True,
                 }
             }
         }
         self.assertEqual(expected, app_cred_string_data)
         mock_client().url_for.assert_called_once_with(
-            service_type="identity", interface="public"
+            service_type="identity", interface="public",
+            region_name="test-region-name"
         )
         mock_app_cred.create.assert_called_once_with(
             user=context.user_id,
