@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "013cc003_14460246",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-10-01T01:40:33Z",
+      "side": 1,
+      "message": "Thank you for the contribution! Looks good.\n\n(I briefly opened https://review.opendev.org/c/openstack/magnum-capi-helm/+/962634 - but this covers that and a concern I had using `osc.cinder_region_name()` in more places.)",
+      "revId": "557874729c5e20389b2a11efcc888651ddb01ed4",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
