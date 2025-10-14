@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4066edc0_299cf38c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-10-14T07:36:46Z",
+      "side": 1,
+      "message": "This looks functional and my comments are largely cosmetic code style.\n\nWe should consider how magnum-capi-helm approaches the release notes for this, given it\u0027s not implemented in the capo helm charts.",
+      "revId": "81b6d7b53024c46099a861ba795f30bda5016df0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9557a11f_1c67aee5",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 902,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-10-14T07:36:46Z",
+      "side": 1,
+      "message": "This should probably be an early return if `network_id` or `subnet_id` are None, rather than if the subnet lookup gave no results.",
+      "revId": "81b6d7b53024c46099a861ba795f30bda5016df0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "52e87266_0c24ba80",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 907,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-10-14T07:36:46Z",
+      "side": 1,
+      "message": "Could we simplify the responsibility and improve readability of this function by removing `network_id`, `subnet_id` and `fixed_subnet_cidr` parameters and replacing them with already calculated `subnet_cidrs`?",
+      "revId": "81b6d7b53024c46099a861ba795f30bda5016df0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b8984d9_154b523a",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 918,
+      "author": {
+        "id": 14394
+      },
+      "writtenOn": "2025-10-14T07:36:46Z",
+      "side": 1,
+      "message": "Would it be reasonable to just split this by `,` and then you are only manipulating a list (or set), then use a single `join` at the end?",
+      "revId": "81b6d7b53024c46099a861ba795f30bda5016df0",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
