@@ -106,6 +106,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8ef8e79a_6232dd92",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2025-11-03T10:36:01Z",
+      "side": 1,
+      "message": "@dale@catalystcloud.nz I have added check for status of node group, this seems to improve this behaviour. I couldn’t fully replicate full re-installation of chart In what test scenario did it happened? How many clusters/node groups did you spawned and encountered that ?\nHowever I could replicate behaviour that Scott is mentioning here https://review.opendev.org/c/openstack/magnum-capi-helm/+/946055/comments/42e7b893_efb0e766 and this seems to fix it.",
+      "parentUuid": "1c1bbb7e_5f3f791a",
+      "revId": "e818aa503546fb43b9149c26f3e05e4ad646d486",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d42e445a_13c06a0e",
         "filename": "magnum_capi_helm/driver.py",
         "patchSetId": 3
