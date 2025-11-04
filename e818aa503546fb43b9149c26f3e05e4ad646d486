@@ -154,6 +154,24 @@
       "message": "When I run this, the value for chart_name is `oci://example.com/capi-helm-charts/openstack-cluster`, and the chart_meta[\"chart\"] value is `openstack-cluster`.\n\nThis causes repeated `helm upgrade` every update loop, while the cluster is creating which doesn\u0027t seem ideal.\n\nDo I have an \u0027odd\u0027 config compared to what you use, or could this check be improved to a more accurate one?",
       "revId": "e818aa503546fb43b9149c26f3e05e4ad646d486",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0fa36769_3c31471d",
+        "filename": "magnum_capi_helm/helm.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2025-11-04T12:46:02Z",
+      "side": 1,
+      "message": "Hi! How is your config different from standard one? How did you triggered this?  I can’t reproduce this. I have addd some additional logging and it always give me this: \n2025-11-04 12:37:44.483 7 DEBUG magnum_capi_helm.helm [-] whitey1-wu2bvasx5p2m: whitey_debug name: openstack-cluster-\u003eopenstack-cluster status deployedversion: 0.10.1-\u003e0.10.1",
+      "parentUuid": "cc1dec0e_74178f5a",
+      "revId": "e818aa503546fb43b9149c26f3e05e4ad646d486",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
