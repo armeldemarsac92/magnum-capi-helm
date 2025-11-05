@@ -141,6 +141,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e4f69b0c_92746bdd",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1044,
+      "author": {
+        "id": 10910
+      },
+      "writtenOn": "2025-11-05T08:41:30Z",
+      "side": 1,
+      "message": "Thanks for checking Dale, but this change fixes an issue found by the unit tests relating to the decoupling of helm release update from cluster creation. IIRC validation of autoscaling parameters was not happening in the context of the cluster creation request.",
+      "parentUuid": "d42e445a_13c06a0e",
+      "revId": "e818aa503546fb43b9149c26f3e05e4ad646d486",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cc1dec0e_74178f5a",
         "filename": "magnum_capi_helm/helm.py",
         "patchSetId": 3
