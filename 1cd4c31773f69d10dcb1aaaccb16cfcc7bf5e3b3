@@ -1,0 +1,259 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3165c2a5_9f0a1d72",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-11-05T10:02:24Z",
+      "side": 1,
+      "message": "I think we should have a tempest test that really tests this",
+      "revId": "1cd4c31773f69d10dcb1aaaccb16cfcc7bf5e3b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aac2ad9f_ce9fb1bd",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-11-05T10:02:24Z",
+      "side": 1,
+      "message": "So, first of all the format is # NOTE: or # NOTE(nick):\nI don\u0027t think in is needed, cluster.status \u003d\u003d $state is enough",
+      "revId": "1cd4c31773f69d10dcb1aaaccb16cfcc7bf5e3b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d977742_1f57cd24",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-11-05T10:02:24Z",
+      "side": 1,
+      "message": "This is very ambiguous message - it\u0027s being deleted and what will not happen? What is the process that is reporting this? If we\u0027re logging this - it should be useful",
+      "revId": "1cd4c31773f69d10dcb1aaaccb16cfcc7bf5e3b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c971a21f_670405bc",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 823,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-11-05T10:02:24Z",
+      "side": 1,
+      "message": "I\u0027d say commit message needs an explanation why are we not passing nodegroups now to that function",
+      "revId": "1cd4c31773f69d10dcb1aaaccb16cfcc7bf5e3b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4db1d646_769d9c1f",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 828,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-11-05T10:02:24Z",
+      "side": 1,
+      "message": "Just add that to next if statement instead of creating one that does continue?",
+      "revId": "1cd4c31773f69d10dcb1aaaccb16cfcc7bf5e3b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d0ad75c9_ab8d2dc2",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 842,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-11-05T10:02:24Z",
+      "side": 1,
+      "message": "uppercase NOTE",
+      "revId": "1cd4c31773f69d10dcb1aaaccb16cfcc7bf5e3b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e12567da_b76bde58",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 891,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-11-05T10:02:24Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "1cd4c31773f69d10dcb1aaaccb16cfcc7bf5e3b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0366945_b6f6ec21",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1065,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-11-05T10:02:24Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "1cd4c31773f69d10dcb1aaaccb16cfcc7bf5e3b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1be8299e_b4235acd",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1114,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-11-05T10:02:24Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "1cd4c31773f69d10dcb1aaaccb16cfcc7bf5e3b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de48302d_40a489fe",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1142,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-11-05T10:02:24Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "1cd4c31773f69d10dcb1aaaccb16cfcc7bf5e3b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f7c8462_b77430cd",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1151,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-11-05T10:02:24Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "1cd4c31773f69d10dcb1aaaccb16cfcc7bf5e3b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a5e48ec_8d41fcc6",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1160,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-11-05T10:02:24Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "1cd4c31773f69d10dcb1aaaccb16cfcc7bf5e3b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de200146_c7b2bd66",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1167,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-11-05T10:02:24Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "1cd4c31773f69d10dcb1aaaccb16cfcc7bf5e3b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d310d27_65ed132f",
+        "filename": "magnum_capi_helm/helm.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-11-05T10:02:24Z",
+      "side": 1,
+      "message": "define a list of strings to check and convert that to a loop?",
+      "revId": "1cd4c31773f69d10dcb1aaaccb16cfcc7bf5e3b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "811f382a_7f7c6d08",
+        "filename": "magnum_capi_helm/helm.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-11-05T10:02:24Z",
+      "side": 1,
+      "message": "All these debug logs are nice, but the operator or developer doesn\u0027t really know what do they relate to - should we add a cluster uuid, anything?",
+      "revId": "1cd4c31773f69d10dcb1aaaccb16cfcc7bf5e3b3",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}

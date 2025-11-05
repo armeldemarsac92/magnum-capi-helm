@@ -159,6 +159,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e665cd9f_6f7fea3a",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1044,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-11-05T10:02:24Z",
+      "side": 1,
+      "message": "That still looks like something we\u0027d like to be broken out to a separate patch",
+      "parentUuid": "e4f69b0c_92746bdd",
+      "revId": "e818aa503546fb43b9149c26f3e05e4ad646d486",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cc1dec0e_74178f5a",
         "filename": "magnum_capi_helm/helm.py",
         "patchSetId": 3
