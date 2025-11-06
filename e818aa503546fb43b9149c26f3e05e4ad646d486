@@ -208,6 +208,24 @@
       "parentUuid": "cc1dec0e_74178f5a",
       "revId": "e818aa503546fb43b9149c26f3e05e4ad646d486",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e0d80a7b_92b3200f",
+        "filename": "magnum_capi_helm/helm.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-11-06T10:27:29Z",
+      "side": 1,
+      "message": "This looks like a difference between using a standard Helm chart repository [1] for publishing the charts, which is what we do in azimuth-cloud/capi-helm-charts, and using an OCI registry to publish the Helm charts [2], which I presume is what Dale is using to publish his fork of the charts. Since Helm supports both methods, the driver should probably support both too.\n\n[1] https://helm.sh/docs/topics/chart_repository\n[2] https://helm.sh/docs/topics/registries/",
+      "parentUuid": "0fa36769_3c31471d",
+      "revId": "e818aa503546fb43b9149c26f3e05e4ad646d486",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
