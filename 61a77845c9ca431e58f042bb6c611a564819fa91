@@ -35,6 +35,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a56ebd5_097042b6",
+        "filename": "magnum_capi_helm/conf.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2025-11-12T14:34:38Z",
+      "side": 1,
+      "message": "I have added suggested changes with small alteration.",
+      "parentUuid": "81b054f2_d4d5106e",
+      "revId": "61a77845c9ca431e58f042bb6c611a564819fa91",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3ceb8657_52028c52",
@@ -48,6 +66,24 @@
       "writtenOn": "2025-08-19T02:30:33Z",
       "side": 1,
       "message": "s/cluster/cluster template/",
+      "revId": "61a77845c9ca431e58f042bb6c611a564819fa91",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "089216af_5d4bcb06",
+        "filename": "releasenotes/notes/add-helm-value-overrides-file-f82bc177d5672783.yaml",
+        "patchSetId": 4
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2025-11-12T14:34:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3ceb8657_52028c52",
       "revId": "61a77845c9ca431e58f042bb6c611a564819fa91",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
