@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d55d0921_5d63ab71",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 894,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2025-11-13T06:40:37Z",
+      "side": 1,
+      "message": "With my Kolla hat on - I don’t like the approach of a lot of files that need to be copied in… Any alternative?",
+      "revId": "146fce5b885f2458ad0b8919b36ede5e1f600c5a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
