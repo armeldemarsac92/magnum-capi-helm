@@ -16,6 +16,331 @@
       "message": "recheck",
       "revId": "8eb6c1175cff298cf59f8626f23732484e3be98c",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8016b427_bbcdd17b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-12-09T17:14:19Z",
+      "side": 1,
+      "message": "Great start on these much needed docs. I\u0027ve left a bunch of suggestions for improvements, happy to explain any of my comments in more detail if needed.",
+      "revId": "8eb6c1175cff298cf59f8626f23732484e3be98c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "49fcef48_881564a1",
+        "filename": "doc/source/configuration/config-reference.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-12-09T17:14:19Z",
+      "side": 1,
+      "message": "```suggestion\n     the CAPI Helm driver.\n```",
+      "revId": "8eb6c1175cff298cf59f8626f23732484e3be98c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "29d276e8_039afdb3",
+        "filename": "doc/source/configuration/config-reference.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-12-09T17:14:19Z",
+      "side": 1,
+      "message": "Should we be more direct here?\n```suggestion\n     this must be the empty string.\n```\nDo things break if it\u0027s not set to an empty string?",
+      "revId": "8eb6c1175cff298cf59f8626f23732484e3be98c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf0617bd_93a498e0",
+        "filename": "doc/source/configuration/config-reference.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-12-09T17:14:19Z",
+      "side": 1,
+      "message": "```suggestion\n    Minimum RAM (in MB units) for flavor used to create a Kubernetes node.\n```",
+      "revId": "8eb6c1175cff298cf59f8626f23732484e3be98c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "21523879_f30d6464",
+        "filename": "doc/source/configuration/config-reference.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-12-09T17:14:19Z",
+      "side": 1,
+      "message": "```suggestion\n    **Default**: Cinder volume type for default StorageClass.\n```",
+      "revId": "8eb6c1175cff298cf59f8626f23732484e3be98c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b25d1b2c_8d155528",
+        "filename": "doc/source/configuration/config-reference.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-12-09T17:14:19Z",
+      "side": 1,
+      "message": "Some config options use `default\u003d` others use `**default**:` - we should choose 1 and stick to it for consistency.",
+      "revId": "8eb6c1175cff298cf59f8626f23732484e3be98c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1cfe33db_e0943f0e",
+        "filename": "doc/source/configuration/config-reference.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-12-09T17:14:19Z",
+      "side": 1,
+      "message": "This config option won\u0027t actually do anything without https://review.opendev.org/c/openstack/magnum-capi-helm/+/970106",
+      "revId": "8eb6c1175cff298cf59f8626f23732484e3be98c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb8df8e6_f0259178",
+        "filename": "doc/source/configuration/config-reference.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-12-09T17:14:19Z",
+      "side": 1,
+      "message": "```suggestion\n    **default**:\n```",
+      "revId": "8eb6c1175cff298cf59f8626f23732484e3be98c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "93cad3e9_20e96403",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-12-09T17:14:19Z",
+      "side": 1,
+      "message": "The driver now supports a bunch more labels than the ones in this table. If you search for `self._label` in `magnum_capi_helm/driver.py` you should find all the other labels that are supported so that we can add them here.",
+      "revId": "8eb6c1175cff298cf59f8626f23732484e3be98c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7db78f7d_fb9b5eee",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-12-09T17:14:19Z",
+      "side": 1,
+      "message": "Unless I\u0027m misunderstanding the linked patch, I don\u0027t think the user-facing label is a filepath. In your Zabbix example below, the user facing label on the cluster template (but not on the cluster) would just be `zabbix` and then the mapping of that label to a filepath for a values override file exists in magnum.conf (and is therefore not user-visible).",
+      "range": {
+        "startLine": 44,
+        "startChar": 1,
+        "endLine": 46,
+        "endChar": 2
+      },
+      "revId": "8eb6c1175cff298cf59f8626f23732484e3be98c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9a492dc_c7fc8e44",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-12-09T17:14:19Z",
+      "side": 1,
+      "message": "The default is specified in the config file and now also in config-reference.rst above, maybe we should remove this line to give us one less place to update when the version get\u0027s bumped?",
+      "revId": "8eb6c1175cff298cf59f8626f23732484e3be98c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fde4c655_29dabcdf",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-12-09T17:14:19Z",
+      "side": 1,
+      "message": "Suggested rewording for clarity plus we should add John\u0027s warning\nfrom his patch description to Magnum operators about being careful\nto avoid breaking changes in the Helm values overrides which have\nalready been used on existing clusters.\n\n```suggestion\n* helm_extra_values: Allows operators to map arbitrary cluster \ntemplate labels to snippets of Helm value overrides. See example\nbelow for more details.\n\nAs an operator, you **must** be careful to not make changes\nto existing clusters that are not backwards compatible.\nAnd you must not remove any configuration that applies to\nexisting templates, unless that is backwards compatible.\n```",
+      "range": {
+        "startLine": 57,
+        "startChar": 24,
+        "endLine": 58,
+        "endChar": 24
+      },
+      "revId": "8eb6c1175cff298cf59f8626f23732484e3be98c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b509d6d4_81a2d938",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-12-09T17:14:19Z",
+      "side": 1,
+      "message": "Suggested rewording for clarity plus we should add John\u0027s warning\nfrom his patch description to Magnum operators about being careful\nto avoid breaking changes in the Helm values overrides which have\nalready been used on existing clusters.\n\n```suggestion\n* helm_extra_values: Allows operators to map arbitrary cluster \ntemplate labels to snippets of Helm value overrides. See example\nbelow for more details.\n\nAs an operator, you **must** be careful to not make changes\nto existing clusters that are not backwards compatible.\nAnd you must not remove any configuration that applies to\nexisting templates, unless that is backwards compatible.\n```",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 58,
+        "endChar": 66
+      },
+      "revId": "8eb6c1175cff298cf59f8626f23732484e3be98c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb18be32_782f3981",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-12-09T17:14:19Z",
+      "side": 1,
+      "message": "```suggestion\nWe have cluster template with helm_extra_values \u003d \u0027zabbix\u0027\n```",
+      "revId": "8eb6c1175cff298cf59f8626f23732484e3be98c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e573f186_d09c06bb",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-12-09T17:14:19Z",
+      "side": 1,
+      "message": "```suggestion\nThis should point to a key in the helm_value_override_files list in magnum.conf:\n```",
+      "range": {
+        "startLine": 64,
+        "startChar": 7,
+        "endLine": 65,
+        "endChar": 7
+      },
+      "revId": "8eb6c1175cff298cf59f8626f23732484e3be98c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e61ad1a_7dab263c",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-12-09T17:14:19Z",
+      "side": 1,
+      "message": "We can probably remove this command line and the excessive whitespace I think?\n```suggestion\n```",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 76,
+        "endChar": 0
+      },
+      "revId": "8eb6c1175cff298cf59f8626f23732484e3be98c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "11bc0c5e_4ee8c976",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 36412
+      },
+      "writtenOn": "2025-12-09T17:14:19Z",
+      "side": 1,
+      "message": "I don\u0027t think these are valid capi-helm-charts values? Doesn\u0027t the zabbix-helm-release section also need `namespace` and `chart` fields?\n\nIt might also be worth including a simpler example of Helm values overrides too since the \u0027Zabbix agent as a custom Helm release\u0027 example is quite unusual ;)\n\nMaybe something like overriding the pod and service CIDRs on all clusters using this config\n\n```yaml\nhelm_value_override_files \u003d all:/etc/magnum/all.yml\n```\nand this values snippet:\n```yaml\nkubeNetwork:\n  pods:\n    cidrBlocks:\n      - 172.30.0.0/16\n  services:\n    cidrBlocks:\n      - 172.31.0.0/16\n```\n\nOpen to other suggestions, but quite a lot of people are interested in this feature for their own customisations, it\u0027s probably worth taking the time to document it as well as we can :)",
+      "range": {
+        "startLine": 77,
+        "startChar": 9,
+        "endLine": 89,
+        "endChar": 23
+      },
+      "revId": "8eb6c1175cff298cf59f8626f23732484e3be98c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
