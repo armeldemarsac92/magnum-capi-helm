@@ -933,8 +933,8 @@ class Driver(driver.Driver):
                 "machineImageId": image_id,
                 "machineSSHKeyName": cluster.keypair or None,
                 "cloudCredentialsSecretName": self._get_app_cred_secret_name(
-		    cluster
-		),
+                    cluster
+                ),
                 "etcd": self._get_etcd_config(cluster),
                 "apiServer": {
                     "associateFloatingIP": self._get_label_bool(
