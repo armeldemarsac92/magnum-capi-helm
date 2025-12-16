@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f3045bd3_3baebd81",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 36781
+      },
+      "writtenOn": "2025-12-16T16:00:46Z",
+      "side": 1,
+      "message": "I have built an image with this patch and tested it. It successfully creates a cluster which can be upgraded to newer images without the storage class being an issue.",
+      "revId": "d60ae3f89cd925a7097082facfd9c140ea8cf9a2",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
