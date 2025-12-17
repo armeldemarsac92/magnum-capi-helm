@@ -10,9 +10,12 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import datetime
 import functools
 import json
 import pathlib
+import requests
+import time
 import typing as t
 
 from magnum.common import utils
@@ -20,6 +23,7 @@ from oslo_concurrency import processutils
 from oslo_log import log as logging
 
 from magnum_capi_helm import conf
+from magnum_capi_helm import kubernetes
 
 LOG = logging.getLogger(__name__)
 CONF = conf.CONF
@@ -133,3 +137,120 @@ class Client:
             # Swallow release not found errors, as that is our desired state
             if not exc.stderr or "release: not found" not in exc.stderr:
                 raise
+
+
+class HelmLockException(Exception):
+    pass
+
+
+class HelmLock:
+    """Context manager to provide locking semantics for Helm commands.
+
+    Uses the Kubernetes leases.coordination.k8s.io/v1 API.
+    """
+
+    def __init__(
+        self, release_name: str, namespace: str, timeout_seconds: int = 300
+    ):
+        self._lease_duration_seconds = 300
+        self._wait_timeout_seconds = timeout_seconds
+        self._k8s_client = kubernetes.Client.load()
+        self.namespace = namespace
+        self.release_name = release_name
+        self.lease_name = f"capi-helm-{release_name}"
+
+    def __enter__(self):
+        for i in range(self._wait_timeout_seconds):
+            if self._acquire_lock():
+                return
+            LOG.debug(
+                "Waiting for lock on Helm release "
+                f"{self.namespace}/{self.release_name}"
+            )
+            time.sleep(1)
+        raise HelmLockException(
+            f"Timed out waiting {self._wait_timeout_seconds} for Helm lock"
+        )
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self._k8s_client.delete_lease(self.release_name, self.namespace)
+
+    def _acquire_lock(self) -> bool:
+        """Attempts to acquire a lease for the given Helm release.
+
+        Returns True when lease is successfully acquired or False otherwise.
+        The caller is responsible for retrying acquisition if False.
+        """
+
+        lease = self._k8s_client.get_lease(self.lease_name, self.namespace)
+        LOG.debug(
+            f"Lease for Helm release {self.namespace}/{self.release_name}: "
+            f"{lease}"
+        )
+
+        now = datetime.datetime.now(tz=datetime.timezone.utc)
+        now_str = now.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+        lease_data = {
+            "metadata": {"resourceVersion": None},
+            "spec": {
+                "acquireTime": now_str,
+                "renewTime": now_str,
+                "holderIdentity": "TODO",
+                "leaseDurationSeconds": self._lease_duration_seconds,
+            },
+        }
+
+        # If lease doesn't exist, we're free to create one and acquire the lock
+        if lease is None:
+            LOG.debug(
+                "Creating new lease for Helm release "
+                f"{self.namespace}/{self.release_name}"
+            )
+            self._k8s_client.apply_lease(
+                self.lease_name, lease_data, self.namespace
+            )
+            return True
+
+        # If lease exists, we need to use the existing resourceVersion
+        # to allow k8s to coordinate lease updates correctly
+        if lease.get("metadata", {}).get("resourceVersion"):
+            lease_data["metadata"] = {
+                "resourceVersion": lease["metadata"]["resourceVersion"]
+            }
+
+        renew_time = lease.get("spec", {}).get("renewTime")
+        if renew_time is None:
+            raise HelmLockException("renewTime should not be None")
+        print("Renew time:", renew_time)
+        renew_time = datetime.datetime.fromisoformat(
+            renew_time.replace("Z", "+00:00")
+        )
+
+        ttl = lease.get("spec", {}).get("leaseDurationSeconds")
+        if ttl is None:
+            raise HelmLockException("leaseDurationSections should not be None")
+        lease_duration = datetime.timedelta(seconds=ttl)
+
+        # If the lease has expired then previous holder must have failed
+        # to delete it when finished so we can acquire it anyway
+        if renew_time + lease_duration < now:
+            LOG.debug(
+                "Found expired lease for Helm release "
+                f"{self.namespace}/{self.release_name}"
+            )
+            try:
+                self._k8s_client.apply_lease(
+                    self.lease_name, lease_data, self.namespace
+                )
+            except requests.exceptions.HTTPError as exc:
+                # If we try to apply a lease with an older version
+                # (e.g. because another conductor updated the lease
+                # after we fetched it) k8s will return an HTTP 409 response.
+                # This is equivalent to failing to acquire the lock.
+                if exc.response.status_code == 409:
+                    return False
+                raise exc
+            return True
+
+        return False
