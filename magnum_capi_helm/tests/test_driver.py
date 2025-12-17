@@ -47,6 +47,14 @@ class ClusterAPIDriverTest(base.DbTestCase):
                 ng.flavor_id = "flavor_medium"
                 ng.save()
 
+    # NOTE(scott): Since the driver's _update_helm_release
+    # method calls cluster.refresh() we need to call save
+    # after assigning test cluster labels
+    def _set_cluster_test_labels(self, labels: dict):
+        """Helper function to set labels on test cluster obj"""
+        self.cluster_obj.labels = labels
+        self.cluster_obj.save()
+
     def test_provides(self):
         self.assertEqual(
             [
@@ -1231,6 +1239,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         driver.Driver, "_ensure_certificate_secrets", autospec=True
     )
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
@@ -1239,6 +1248,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_install,
         mock_image,
         mock_load,
+        mock_helm_lock,
         mock_appcred,
         mock_certs,
         mock_get_net,
@@ -1300,6 +1310,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         driver.Driver, "_ensure_certificate_secrets", autospec=True
     )
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
@@ -1308,6 +1319,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_install,
         mock_image,
         mock_load,
+        mock_helm_lock,
         mock_appcred,
         mock_certs,
         mock_validate_allowed_flavor,
@@ -1319,7 +1331,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_client = mock.MagicMock(spec=kubernetes.Client)
         mock_load.return_value = mock_client
 
-        self.cluster_obj.cluster_template.dns_nameserver = ""
+        cluster_template = obj_utils.create_test_cluster_template(
+            self.context, dns_nameserver="", uuid=str(uuid4())
+        )
+        self.cluster_obj.cluster_template_id = cluster_template.uuid
+        self.cluster_obj.save()
 
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
 
@@ -1363,6 +1379,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         driver.Driver, "_ensure_certificate_secrets", autospec=True
     )
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
@@ -1371,6 +1388,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_install,
         mock_image,
         mock_load,
+        mock_helm_lock,
         mock_appcred,
         mock_certs,
         mock_validate_allowed_flavor,
@@ -1435,6 +1453,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         driver.Driver, "_ensure_certificate_secrets", autospec=True
     )
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
@@ -1443,6 +1462,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_install,
         mock_image,
         mock_load,
+        mock_helm_lock,
         mock_appcred,
         mock_certs,
         mock_validate_allowed_flavor,
@@ -1461,7 +1481,13 @@ class ClusterAPIDriverTest(base.DbTestCase):
         CONF.cinder.default_boot_volume_type = "nvme"
         CONF.cinder.default_boot_volume_size = 12
         # Driver should combine boot volume with extra network.
-        self.cluster_obj.cluster_template.labels["extra_network_name"] = "foo"
+        cluster_template = obj_utils.create_test_cluster_template(
+            self.context,
+            uuid="e74c40e0-d825-11e2-a28f-0800200c9a67",
+            labels={"extra_network_name": "foo"},
+        )
+        self.cluster_obj.cluster_template_id = cluster_template.uuid
+        self.cluster_obj.save()
 
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
 
@@ -1521,6 +1547,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_validate_allowed_flavor")
     @mock.patch.object(driver.Driver, "_ensure_certificate_secrets")
     @mock.patch.object(driver.Driver, "_create_appcred_secret")
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
     @mock.patch.object(kubernetes.Client, "load")
     @mock.patch.object(driver.Driver, "_get_image_details")
     @mock.patch.object(helm.Client, "install_or_upgrade")
@@ -1529,6 +1556,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_install,
         mock_image,
         mock_load,
+        mock_helm_lock,
         mock_appcred,
         mock_certs,
         mock_validate_allowed_flavor,
@@ -1545,6 +1573,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_load.return_value = mock_client
 
         self.cluster_obj.keypair = "kp1"
+        self.cluster_obj.save()
 
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
 
@@ -1580,6 +1609,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_validate_allowed_flavor")
     @mock.patch.object(driver.Driver, "_ensure_certificate_secrets")
     @mock.patch.object(driver.Driver, "_create_appcred_secret")
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
     @mock.patch.object(kubernetes.Client, "load")
     @mock.patch.object(driver.Driver, "_get_image_details")
     @mock.patch.object(helm.Client, "install_or_upgrade")
@@ -1588,6 +1618,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_install,
         mock_image,
         mock_load,
+        mock_helm_lock,
         mock_appcred,
         mock_certs,
         mock_validate_allowed_flavor,
@@ -1637,6 +1668,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         driver.Driver, "_ensure_certificate_secrets", autospec=True
     )
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
@@ -1645,6 +1677,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_install,
         mock_image,
         mock_load,
+        mock_helm_lock,
         mock_appcred,
         mock_certs,
         mock_validate_allowed_flavor,
@@ -1656,9 +1689,13 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_client = mock.MagicMock(spec=kubernetes.Client)
         mock_load.return_value = mock_client
 
-        self.cluster_obj.cluster_template.labels["auto_healing_enabled"] = (
-            "false"
+        cluster_template = obj_utils.create_test_cluster_template(
+            self.context,
+            uuid="e74c40e0-d825-11e2-a28f-0800200c9a67",
+            labels={"auto_healing_enabled": "false"},
         )
+        self.cluster_obj.cluster_template_id = cluster_template.uuid
+        self.cluster_obj.save()
 
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
 
@@ -1703,6 +1740,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         driver.Driver, "_ensure_certificate_secrets", autospec=True
     )
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
@@ -1711,6 +1749,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_install,
         mock_image,
         mock_load,
+        mock_helm_lock,
         mock_appcred,
         mock_certs,
         mock_validate_allowed_flavor,
@@ -1722,12 +1761,16 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_client = mock.MagicMock(spec=kubernetes.Client)
         mock_load.return_value = mock_client
 
-        self.cluster_obj.cluster_template.labels.update(
-            {
+        cluster_template = obj_utils.create_test_cluster_template(
+            self.context,
+            uuid="e74c40e0-d825-11e2-a28f-0800200c9a67",
+            labels={
                 "etcd_blockdevice_size": "10",
                 "etcd_blockdevice_volume_type": "nvme",
-            }
+            },
         )
+        self.cluster_obj.cluster_template_id = cluster_template.uuid
+        self.cluster_obj.save()
 
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
 
@@ -1778,6 +1821,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         driver.Driver, "_ensure_certificate_secrets", autospec=True
     )
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
@@ -1786,6 +1830,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_install,
         mock_image,
         mock_load,
+        mock_helm_lock,
         mock_appcred,
         mock_certs,
         mock_validate_allowed_flavor,
@@ -1797,12 +1842,16 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_client = mock.MagicMock(spec=kubernetes.Client)
         mock_load.return_value = mock_client
 
-        self.cluster_obj.cluster_template.labels.update(
-            {
+        cluster_template = obj_utils.create_test_cluster_template(
+            self.context,
+            uuid="e74c40e0-d825-11e2-a28f-0800200c9a67",
+            labels={
                 "etcd_blockdevice_size": "10",
                 "etcd_blockdevice_type": "local",
-            }
+            },
         )
+        self.cluster_obj.cluster_template_id = cluster_template.uuid
+        self.cluster_obj.save()
 
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
 
@@ -1852,6 +1901,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         driver.Driver, "_ensure_certificate_secrets", autospec=True
     )
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
@@ -1860,6 +1910,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_install,
         mock_image,
         mock_load,
+        mock_helm_lock,
         mock_appcred,
         mock_certs,
         mock_validate_allowed_flavor,
@@ -1872,12 +1923,16 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_load.return_value = mock_client
 
         # Test the legacy labels for etcd volume size
-        self.cluster_obj.cluster_template.labels.update(
-            {
+        cluster_template = obj_utils.create_test_cluster_template(
+            self.context,
+            uuid="e74c40e0-d825-11e2-a28f-0800200c9a67",
+            labels={
                 "etcd_volume_size": "10",
                 "etcd_volume_type": "nvme",
-            }
+            },
         )
+        self.cluster_obj.cluster_template_id = cluster_template.uuid
+        self.cluster_obj.save()
 
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
 
@@ -2174,10 +2229,14 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(
         driver.Driver, "_get_image_details", return_value=3 * [mock.ANY]
     )
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
+    @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(helm.Client, "install_or_upgrade")
     def test_delete_nodegroup(
         self,
         mock_helm_update,
+        mock_load,
+        mock_helm_lock,
         mock_image_details,
         mock_storageclasses,
         mock_get_cidrs,
@@ -2389,6 +2448,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         driver.Driver, "_ensure_certificate_secrets", autospec=True
     )
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
@@ -2397,6 +2457,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_install,
         mock_image,
         mock_load,
+        mock_helm_lock,
         mock_appcred,
         mock_certs,
         mock_get_net,
@@ -2405,7 +2466,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get_keystone_auth_enabled,
     ):
         cidrs = "192.168.0.0/16,10.0.0.0/8,123.123.123.123/32"
-        self.cluster_obj.labels = dict(api_master_lb_allowed_cidrs=cidrs)
+        self._set_cluster_test_labels(dict(api_master_lb_allowed_cidrs=cidrs))
         mock_image.return_value = (
             "imageid1",
             "1.27.4",
@@ -2433,6 +2494,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         driver.Driver, "_ensure_certificate_secrets", autospec=True
     )
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
@@ -2441,6 +2503,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_install,
         mock_image,
         mock_load,
+        mock_helm_lock,
         mock_appcred,
         mock_certs,
         mock_get_net,
@@ -2456,7 +2519,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_client = mock.MagicMock(spec=kubernetes.Client)
         mock_load.return_value = mock_client
         mock_get_keystone_auth_enabled.return_value = True  # Enable webhook
-        self.cluster_obj.labels = {}
+        self._set_cluster_test_labels({})
 
         self.driver.create_cluster(
             self.context, self.cluster_obj, "timeout-not-used"
@@ -2487,6 +2550,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         driver.Driver, "_ensure_certificate_secrets", autospec=True
     )
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
@@ -2495,6 +2559,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_install,
         mock_image,
         mock_load,
+        mock_helm_lock,
         mock_appcred,
         mock_certs,
         mock_get_net,
@@ -2510,7 +2575,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_client = mock.MagicMock(spec=kubernetes.Client)
         mock_load.return_value = mock_client
         mock_get_keystone_auth_enabled.return_value = False  # Disable webhook
-        self.cluster_obj.labels = {}
+        self._set_cluster_test_labels({})
 
         self.driver.create_cluster(
             self.context, self.cluster_obj, "timeout-not-used"
@@ -2538,6 +2603,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         driver.Driver, "_ensure_certificate_secrets", autospec=True
     )
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
@@ -2546,6 +2612,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_install,
         mock_image,
         mock_load,
+        mock_helm_lock,
         mock_appcred,
         mock_certs,
         mock_get_net,
@@ -2561,10 +2628,12 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_load.return_value = mock_client
 
         # Simulate setting provider label
-        self.cluster_obj.labels = {
-            "octavia_provider": "amphora",
-            "octavia_lb_algorithm": "SOURCE_IP_PORT",
-        }
+        self._set_cluster_test_labels(
+            {
+                "octavia_provider": "amphora",
+                "octavia_lb_algorithm": "SOURCE_IP_PORT",
+            }
+        )
 
         self.driver.create_cluster(
             self.context, self.cluster_obj, "timeout-not-used"
@@ -2605,6 +2674,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         driver.Driver, "_ensure_certificate_secrets", autospec=True
     )
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
@@ -2613,6 +2683,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_install,
         mock_image,
         mock_load,
+        mock_helm_lock,
         mock_appcred,
         mock_certs,
         mock_get_net,
@@ -2628,9 +2699,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_load.return_value = mock_client
 
         # Simulate setting provider label
-        self.cluster_obj.labels = {
-            "octavia_provider": "ovn",
-        }
+        self._set_cluster_test_labels(
+            {
+                "octavia_provider": "ovn",
+            }
+        )
 
         self.driver.create_cluster(
             self.context, self.cluster_obj, "timeout-not-used"
@@ -2672,6 +2745,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         driver.Driver, "_ensure_certificate_secrets", autospec=True
     )
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
@@ -2680,6 +2754,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_install,
         mock_image,
         mock_load,
+        mock_helm_lock,
         mock_appcred,
         mock_certs,
         mock_get_net,
@@ -2695,9 +2770,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_load.return_value = mock_client
 
         # Simulate setting provider label
-        self.cluster_obj.labels = {
-            "octavia_lb_healthcheck": False,
-        }
+        self._set_cluster_test_labels(
+            {
+                "octavia_lb_healthcheck": False,
+            }
+        )
 
         self.driver.create_cluster(
             self.context, self.cluster_obj, "timeout-not-used"
@@ -2713,8 +2790,10 @@ class ClusterAPIDriverTest(base.DbTestCase):
         )
 
     def test_validate_auto_scale_max_lt_min(self):
-        self.cluster_obj.labels = dict(
-            auto_scaling_enabled="true", min_node_count=3, max_node_count=0
+        self._set_cluster_test_labels(
+            dict(
+                auto_scaling_enabled="true", min_node_count=3, max_node_count=0
+            )
         )
         self.assertRaises(
             exception.MagnumException,
@@ -2737,6 +2816,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         driver.Driver, "_ensure_certificate_secrets", autospec=True
     )
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
@@ -2745,6 +2825,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_install,
         mock_image,
         mock_load,
+        mock_helm_lock,
         mock_appcred,
         mock_certs,
         mock_get_net,
@@ -2755,7 +2836,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         auto_scale_labels = dict(
             auto_scaling_enabled="true", min_node_count=2, max_node_count=6
         )
-        self.cluster_obj.labels = auto_scale_labels
+        self._set_cluster_test_labels(auto_scale_labels)
 
         mock_image.return_value = (
             "imageid1",
@@ -2794,6 +2875,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         driver.Driver, "_ensure_certificate_secrets", autospec=True
     )
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
@@ -2802,6 +2884,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_install,
         mock_image,
         mock_load,
+        mock_helm_lock,
         mock_appcred,
         mock_certs,
         mock_get_net,
@@ -2812,7 +2895,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         auto_scale_labels = dict(
             auto_scaling_enabled="false", min_node_count=2, max_node_count=6
         )
-        self.cluster_obj.labels = auto_scale_labels
+        self._set_cluster_test_labels(auto_scale_labels)
 
         mock_image.return_value = (
             "imageid1",
@@ -2848,6 +2931,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         driver.Driver, "_ensure_certificate_secrets", autospec=True
     )
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
@@ -2856,6 +2940,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_install,
         mock_image,
         mock_load,
+        mock_helm_lock,
         mock_appcred,
         mock_certs,
         mock_get_net,
@@ -2865,7 +2950,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         auto_scale_labels = dict(
             auto_scaling_enabled="true", min_node_count=2, max_node_count=6
         )
-        self.cluster_obj.labels = auto_scale_labels
+        self._set_cluster_test_labels(auto_scale_labels)
 
         mock_image.return_value = (
             "imageid1",
@@ -2897,6 +2982,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         driver.Driver, "_ensure_certificate_secrets", autospec=True
     )
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
@@ -2905,6 +2991,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_install,
         mock_image,
         mock_load,
+        mock_helm_lock,
         mock_appcred,
         mock_certs,
         mock_get_net,
@@ -2914,7 +3001,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         auto_scale_labels = dict(
             auto_scaling_enabled="true", min_node_count=2, max_node_count=6
         )
-        self.cluster_obj.labels = auto_scale_labels
+        self._set_cluster_test_labels(auto_scale_labels)
 
         mock_image.return_value = (
             "imageid1",
@@ -2942,11 +3029,10 @@ class ClusterAPIDriverTest(base.DbTestCase):
         )
         self.cluster_obj.nodegroups.append(auto_scale_nodegroup)
         self.driver.create_cluster(self.context, self.cluster_obj, 10)
-        for ng in self.cluster_obj.nodegroups:
-            print(ng)
 
         # Unpack some values for asserting against
         helm_install_values = mock_install.call_args[0][3]
+        print(helm_install_values)
         helm_node_groups = helm_install_values["nodeGroups"]
         helm_values_default_nodegroup = [
             ng
@@ -3008,6 +3094,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         driver.Driver, "_ensure_certificate_secrets", autospec=True
     )
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
@@ -3016,6 +3103,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_install,
         mock_image,
         mock_load,
+        mock_helm_lock,
         mock_appcred,
         mock_certs,
         mock_get_net,
@@ -3026,9 +3114,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         disk_size_label_value = 32
 
         CONF.cinder.default_boot_volume_size = disk_size_configuration_value
-        self.cluster_obj.labels = {
-            "boot_volume_size": str(disk_size_label_value)
-        }
+        self._set_cluster_test_labels(
+            {"boot_volume_size": str(disk_size_label_value)}
+        )
 
         mock_image.return_value = (
             "imageid1",
@@ -3064,6 +3152,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         driver.Driver, "_ensure_certificate_secrets", autospec=True
     )
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
@@ -3072,6 +3161,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_install,
         mock_image,
         mock_load,
+        mock_helm_lock,
         mock_appcred,
         mock_certs,
         mock_get_net,
@@ -3081,7 +3171,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         disk_size_configuration_value = 15
 
         CONF.cinder.default_boot_volume_size = disk_size_configuration_value
-        self.cluster_obj.labels = {}
+        self._set_cluster_test_labels({})
 
         mock_image.return_value = (
             "imageid1",
@@ -3117,6 +3207,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         driver.Driver, "_ensure_certificate_secrets", autospec=True
     )
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
@@ -3125,6 +3216,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_install,
         mock_image,
         mock_load,
+        mock_helm_lock,
         mock_appcred,
         mock_certs,
         mock_get_net,
@@ -3134,7 +3226,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         disk_size_configuration_value = 15
 
         CONF.cinder.default_boot_volume_size = disk_size_configuration_value
-        self.cluster_obj.labels = {"boot_volume_size": "NotANumber"}
+        self._set_cluster_test_labels({"boot_volume_size": "NotANumber"})
 
         mock_image.return_value = (
             "imageid1",
@@ -3170,6 +3262,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         driver.Driver, "_ensure_certificate_secrets", autospec=True
     )
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
@@ -3178,6 +3271,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_install,
         mock_image,
         mock_load,
+        mock_helm_lock,
         mock_appcred,
         mock_certs,
         mock_get_net,
@@ -3187,7 +3281,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         # When autoscaling is enabled but no min/max node counts are
         # provided for the default node group, we want autoscaling to
         # be disabled on the default node group.
-        self.cluster_obj.labels = {"auto_scaling_enabled": "true"}
+        self._set_cluster_test_labels({"auto_scaling_enabled": "true"})
         mock_image.return_value = (
             "imageid1",
             "1.27.4",
@@ -3216,6 +3310,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         driver.Driver, "_ensure_certificate_secrets", autospec=True
     )
     @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(helm.HelmLock, "_acquire_lock", return_value=True)
     @mock.patch.object(kubernetes.Client, "load", autospec=True)
     @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
     @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
@@ -3224,6 +3319,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_install,
         mock_image,
         mock_load,
+        mock_helm_lock,
         mock_appcred,
         mock_certs,
         mock_get_net,
@@ -3231,7 +3327,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_storageclasses,
     ):
         # Disabled master LB in labels.
-        self.cluster_obj.labels = {"master_lb_floating_ip_enabled": "false"}
+        self._set_cluster_test_labels(
+            {"master_lb_floating_ip_enabled": "false"}
+        )
         self.cluster_obj.cluster_template.floating_ip_enabled = True
         mock_image.return_value = (
             "imageid1",
@@ -3248,7 +3346,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         self.assertEqual(apiserver_expected, helm_install_values["apiServer"])
 
         # Enabled master LB in labels.
-        self.cluster_obj.labels = {"master_lb_floating_ip_enabled": "true"}
+        self._set_cluster_test_labels(
+            {"master_lb_floating_ip_enabled": "true"}
+        )
         self.cluster_obj.cluster_template.floating_ip_enabled = False
         mock_image.return_value = (
             "imageid1",

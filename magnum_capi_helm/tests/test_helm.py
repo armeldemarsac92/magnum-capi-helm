@@ -10,12 +10,17 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import datetime
 from unittest import mock
+
+import requests
+import yaml
 
 from magnum.common import utils
 from oslo_concurrency import processutils
 
 from magnum_capi_helm import helm
+from magnum_capi_helm import kubernetes
 from magnum_capi_helm.tests import base
 
 
@@ -160,4 +165,196 @@ class TestHelmClient(base.TestCase):
             client.uninstall_release,
             "myfirstcluster",
             namespace="mynamespace",
+        )
+
+
+class TestHelmLock(base.TestCase):
+
+    TEST_SERVER = "https://test:6443"
+    TEST_KUBECONFIG_YAML = f"""\
+    apiVersion: v1
+    clusters:
+    - cluster:
+        certificate-authority: "cafile"
+        server: {TEST_SERVER}
+      name: default
+    contexts:
+    - context:
+        cluster: default
+        user: default
+      name: default
+    current-context: default
+    kind: Config
+    users:
+    - name: default
+      user:
+        client-certificate: "certfile"
+        client-key: "keyfile"
+    """
+    TEST_KUBECONFIG = yaml.safe_load(TEST_KUBECONFIG_YAML)
+
+    @mock.patch(
+        "builtins.open",
+        new_callable=mock.mock_open,
+        read_data=TEST_KUBECONFIG_YAML,
+    )
+    @mock.patch.object(kubernetes.Lease, "delete")
+    @mock.patch.object(kubernetes.Lease, "apply")
+    @mock.patch.object(kubernetes.Lease, "fetch")
+    def test_acquire_new_lock(
+        self, fetch_lease, apply_lease, delete_lease, mock_open
+    ):
+
+        fetch_lease.return_value = None
+        apply_lease.return_value = None
+        delete_lease.return_value = None
+
+        with helm.HelmLock("foo", "bar", 1):
+            return
+        # Unreachable if lock acquisition works
+        self.assertTrue(False)
+
+    @mock.patch(
+        "builtins.open",
+        new_callable=mock.mock_open,
+        read_data=TEST_KUBECONFIG_YAML,
+    )
+    @mock.patch.object(kubernetes.Lease, "delete")
+    @mock.patch.object(kubernetes.Lease, "apply")
+    @mock.patch.object(kubernetes.Lease, "fetch")
+    def test_wait_for_lock(
+        self, fetch_lease, apply_lease, delete_lease, mock_open
+    ):
+
+        now = datetime.datetime.now(tz=datetime.UTC)
+        now_str = now.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        mock_lease = {
+            "spec": {
+                "acquireTime": now_str,
+                "renewTime": now_str,
+                "holderIdentity": "foo",
+                "leaseDurationSeconds": 2,
+            }
+        }
+
+        fetch_lease.return_value = mock_lease
+        apply_lease.return_value = None
+        delete_lease.return_value = None
+
+        with helm.HelmLock("foo", "bar", 3):
+            return
+        # Unreachable if lock acquisition works
+        self.assertTrue(False)
+
+    @mock.patch(
+        "builtins.open",
+        new_callable=mock.mock_open,
+        read_data=TEST_KUBECONFIG_YAML,
+    )
+    @mock.patch.object(kubernetes.Lease, "delete")
+    @mock.patch.object(kubernetes.Lease, "apply")
+    @mock.patch.object(kubernetes.Lease, "fetch")
+    def test_claim_expired_lock(
+        self, fetch_lease, apply_lease, delete_lease, mock_open
+    ):
+        now = datetime.datetime.now(tz=datetime.UTC)
+        now_str = now.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        mock_lease = {
+            "spec": {
+                "acquireTime": now_str,
+                "renewTime": now_str,
+                "holderIdentity": "foo",
+                "leaseDurationSeconds": 2,
+            }
+        }
+
+        fetch_lease.return_value = mock_lease
+        apply_lease.return_value = None
+        delete_lease.return_value = None
+
+        with helm.HelmLock("foo", "bar", timeout_seconds=3):
+            pass
+        apply_lease.assert_called_once()
+
+    @mock.patch(
+        "builtins.open",
+        new_callable=mock.mock_open,
+        read_data=TEST_KUBECONFIG_YAML,
+    )
+    @mock.patch.object(kubernetes.Lease, "delete")
+    @mock.patch.object(kubernetes.Lease, "apply")
+    @mock.patch.object(kubernetes.Lease, "fetch")
+    def test_timeout_waiting_for_lock(
+        self, fetch_lease, apply_lease, delete_lease, mock_open
+    ):
+
+        now = datetime.datetime.now(tz=datetime.UTC)
+        now_str = now.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        mock_lease = {
+            "spec": {
+                "acquireTime": now_str,
+                "renewTime": now_str,
+                "holderIdentity": "foo",
+                "leaseDurationSeconds": 3,
+            }
+        }
+
+        fetch_lease.return_value = mock_lease
+        apply_lease.return_value = None
+        delete_lease.return_value = None
+
+        def get_lock():
+            with helm.HelmLock("foo", "bar", timeout_seconds=2):
+                return
+
+        self.assertRaises(
+            helm.HelmLockException,
+            get_lock,
+        )
+
+    @mock.patch(
+        "builtins.open",
+        new_callable=mock.mock_open,
+        read_data=TEST_KUBECONFIG_YAML,
+    )
+    @mock.patch.object(kubernetes.Lease, "delete")
+    @mock.patch.object(kubernetes.Lease, "apply")
+    @mock.patch.object(kubernetes.Lease, "fetch")
+    def test_lease_update_conflict(
+        self,
+        fetch_lease,
+        apply_lease,
+        delete_lease,
+        mock_open,
+    ):
+
+        now = datetime.datetime.now(tz=datetime.UTC)
+        now_str = now.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        mock_lease = {
+            "metadata": {"resourceVersion": "foo"},
+            "spec": {
+                "acquireTime": now_str,
+                "renewTime": now_str,
+                "holderIdentity": "bar",
+                "leaseDurationSeconds": 3,
+            },
+        }
+
+        fetch_lease.return_value = mock_lease
+        delete_lease.return_value = None
+
+        # Simulate 409 response from k8s API response
+        response = mock.Mock()
+        response.status_code = 409
+        response.reason = "Conflict"
+        conflict_error = requests.exceptions.HTTPError(response=response)
+        apply_lease.side_effect = conflict_error
+
+        def get_lock():
+            with helm.HelmLock("foo", "bar", timeout_seconds=1):
+                return
+
+        self.assertRaises(
+            helm.HelmLockException,
+            get_lock,
         )

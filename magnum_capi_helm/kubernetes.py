@@ -209,6 +209,15 @@ class Client(requests.Session):
     def get_all_machines_by_label(self, labels, namespace):
         return list(Machine(self).fetch_all_by_label(labels, namespace))
 
+    def apply_lease(self, lease_name, data, namespace):
+        Lease(self).apply(lease_name, data, namespace)
+
+    def get_lease(self, name, namespace):
+        return Lease(self).fetch(name, namespace)
+
+    def delete_lease(self, name, namespace):
+        Lease(self).delete(name, namespace)
+
 
 class Resource:
     def __init__(self, client):
@@ -286,6 +295,14 @@ class Resource:
         response.raise_for_status()
         return response.json()
 
+    def delete(self, name, namespace):
+        """Deletes the given object from the target Kubernetes cluster."""
+        assert self.namespaced == bool(namespace)
+        response = self.client.delete(
+            self.prepare_path(namespace=namespace),
+        )
+        response.raise_for_status()
+
     def delete_all_by_label(self, label, value, namespace=None):
         """Deletes all objects with the specified label from cluster."""
         assert self.namespaced == bool(namespace)
@@ -303,6 +320,10 @@ class Namespace(Resource):
 
 class Secret(Resource):
     api_version = "v1"
+
+
+class Lease(Resource):
+    api_version = "coordination.k8s.io/v1"
 
 
 class Cluster(Resource):
