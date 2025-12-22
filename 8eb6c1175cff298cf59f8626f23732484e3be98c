@@ -227,6 +227,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "37627f74_3bddcc06",
+        "filename": "doc/source/configuration/config-reference.rst",
+        "patchSetId": 3
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2025-12-22T10:19:55Z",
+      "side": 1,
+      "message": "Merged on 19 Dec, so now it has more sense.",
+      "parentUuid": "1cfe33db_e0943f0e",
+      "revId": "8eb6c1175cff298cf59f8626f23732484e3be98c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bb8df8e6_f0259178",
