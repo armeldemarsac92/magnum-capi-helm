@@ -17,9 +17,11 @@ import yaml
 
 from magnum.api import utils as api_utils
 from magnum.common import clients
+from magnum.common import context as ctx
 from magnum.common import exception
 from magnum.common import neutron
 from magnum.common import short_id
+from magnum.common import octavia
 from magnum.drivers.common import driver
 from magnum.objects import fields
 from oslo_log import log as logging
@@ -964,9 +966,7 @@ class Driver(driver.Driver):
                 "kubernetesDashboard": {
                     "enabled": self._get_kube_dash_enabled(cluster)
                 },
-                # TODO(mkjpryor): can't enable ingress until code exists to
-                #                 remove the load balancer
-                "ingress": {"enabled": False},
+                "ingress": self._get_ingress_enabled(cluster)
             },
         }
 
@@ -1131,9 +1131,71 @@ class Driver(driver.Driver):
             # Helm release.
             # Note that this just marks the resources for deletion,
             # it does not wait for the resources to be deleted.
+            
+            self.delete_loadbalancers(context, cluster)
+            
             self._helm_client.uninstall_release(
                 release_name,
                 namespace=driver_utils.cluster_namespace(cluster),
+            )
+            
+    def delete_loadbalancers(self, context, cluster):
+        """Delete all Octavia load balancers associated with a cluster."""
+        pattern = r"Kubernetes .+ from cluster %s" % re.escape(cluster.name)
+        admin_ctx = ctx.get_admin_context()
+
+        admin_clients = clients.OpenStackClients(admin_ctx)
+        user_clients = clients.OpenStackClients(context)
+
+        candidates = set()
+
+        try:
+            octavia_admin_client = admin_clients.octavia()
+            octavia_client = user_clients.octavia()
+
+            lbs = octavia_client.load_balancer_list().get("loadbalancers", [])
+            lbs = [
+                lb for lb in lbs
+                if re.match(pattern, lb.get("description", ""))
+            ]
+
+            if not lbs:
+                LOG.debug(
+                    "No load balancers found for cluster %s (%s)",
+                    cluster.name, cluster.uuid
+                )
+                return
+
+            deleted = octavia._delete_loadbalancers(
+                context, lbs, cluster, octavia_admin_client, remove_fip=True
+            )
+            candidates.update(deleted)
+
+            if not candidates:
+                LOG.debug(
+                    "No candidates were marked for deletion for cluster %s (%s)",
+                    cluster.name, cluster.uuid
+                )
+                return
+
+            LOG.info(
+                "Waiting for %d load balancers to be deleted for cluster %s (%s)",
+                len(candidates), cluster.name, cluster.uuid
+            )
+            octavia.wait_for_lb_deleted(octavia_client, candidates)
+            LOG.info(
+                "All load balancers deleted for cluster %s (%s)",
+                cluster.name, cluster.uuid
+            )
+
+        except Exception as e:
+            LOG.exception(
+                "Failed deleting load balancers for cluster %s (%s): %s",
+                cluster.name, cluster.uuid, e
+            )
+            raise exception.PreDeletionFailed(
+                cluster_uuid=cluster.uuid,
+                msg=f"Error while deleting load balancers: {e}"
             )
 
     def resize_cluster(
