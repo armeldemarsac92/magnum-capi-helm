@@ -624,9 +624,39 @@ class Driver(driver.Driver):
         #  as requires cinder and takes a while
         return self._get_label_bool(cluster, "monitoring_enabled", False)
 
+    def _get_cni_type(self, cluster):
+        return cluster.cluster_template.network_driver
+
     def _get_kube_dash_enabled(self, cluster):
         #  NOTE(mkjpryor) default on, like the heat driver
         return self._get_label_bool(cluster, "kube_dashboard_enabled", True)
+
+    def _get_gpu_operator_enabled(self, cluster):
+        return self._get_label_bool(cluster, "gpu_operator_enabled", False)
+
+    def _get_node_feature_discovery_enabled(self, cluster):
+        return self._get_label_bool(cluster, "node_feature_discovery_enabled", False)
+
+    def _get_node_problem_detector_enabled(self, cluster):
+        return self._get_label_bool(cluster, "node_problem_detector_enabled", False)
+
+    def _get_network_operator_enabled(self, cluster):
+        return self._get_label_bool(cluster, "network_operator_enabled", False)
+
+    def _get_cert_manager_enabled(self, cluster):
+        return self._get_label_bool(cluster, "cert_manager_enabled", False)
+
+    def _get_etcd_defrag_enabled(self, cluster):
+        return self._get_label_bool(cluster, "etcd_defrag_enabled", False)
+
+    def _get_ingress_enabled(self, cluster):
+        return self._get_label_bool(cluster, "ingress_enabled", False)
+
+    def _get_reloader_enabled(self, cluster):
+        return self._get_label_bool(cluster, "reloader_enabled", False)
+    
+    def _get_loki_stack_enabled(self, cluster):
+        return self._get_label_bool(cluster, "loki_stack_enabled", False)
 
     def _get_autoheal_enabled(self, cluster):
         return self._get_label_bool(cluster, "auto_healing_enabled", True)
@@ -942,6 +972,9 @@ class Driver(driver.Driver):
             },
             "nodeGroups": self._process_node_groups(cluster, nodegroups),
             "addons": {
+                "cni" : {
+                    "type": self._get_cni_type(cluster)
+                },
                 "openstack": {
                     "csiCinder": self._storageclass_definitions(
                         context, cluster
@@ -964,9 +997,33 @@ class Driver(driver.Driver):
                 "kubernetesDashboard": {
                     "enabled": self._get_kube_dash_enabled(cluster)
                 },
-                # TODO(mkjpryor): can't enable ingress until code exists to
-                #                 remove the load balancer
-                "ingress": {"enabled": False},
+                "nodeFeatureDiscovery": {
+                    "enabled": self._get_node_feature_discovery_enabled(cluster)
+                },
+                "nvidiaGPUOperator": {
+                    "enabled": self._get_gpu_operator_enabled(cluster)
+                },
+                "certManager": {
+                    "enabled": self._get_cert_manager_enabled(cluster)
+                },
+                "mellanoxNetworkOperator": {
+                    "enabled": self._get_network_operator_enabled(cluster)
+                },
+                "nodeProblemDetector": {
+                    "enabled": self._get_node_problem_detector_enabled(cluster)
+                },
+                "etcd_defrag_enabled": {
+                    "enabled": self._get_etcd_defrag_enabled(cluster)
+                },
+                "ingress": {
+                    "enabled": self._get_ingress_enabled(cluster)
+                },
+                "reloader": {
+                    "enabled": self._get_reloader_enabled(cluster)
+                },
+                "lokiStack": {
+                    "enabled": self._get_loki_stack_enabled(cluster)
+                }
             },
         }
 
