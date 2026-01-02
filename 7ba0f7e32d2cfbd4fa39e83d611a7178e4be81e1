@@ -1,0 +1,214 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1af82477_6695a05d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 10910
+      },
+      "writtenOn": "2026-01-02T11:35:29Z",
+      "side": 1,
+      "message": "Looks good thanks!  Some small typos to address.",
+      "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a5dc125b_8d7392f8",
+        "filename": "doc/source/configuration/config-reference.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 10910
+      },
+      "writtenOn": "2026-01-02T11:35:29Z",
+      "side": 1,
+      "message": "typo - capi_helm",
+      "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d81112a6_55691efc",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 10910
+      },
+      "writtenOn": "2026-01-02T11:35:29Z",
+      "side": 1,
+      "message": "This link isn\u0027t working, perhaps add a TOC link instead like this:\n```\n.. toctree::\n  :maxdepth: 1\n\n  Configuration Reference \u003cconfig-reference\u003e\n```",
+      "range": {
+        "startLine": 7,
+        "startChar": 30,
+        "endLine": 7,
+        "endChar": 50
+      },
+      "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ae3aebdc_7b788950",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 10910
+      },
+      "writtenOn": "2026-01-02T11:35:29Z",
+      "side": 1,
+      "message": "typo - testedvcan",
+      "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e4b68f48_06f3da7c",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 10910
+      },
+      "writtenOn": "2026-01-02T11:35:29Z",
+      "side": 1,
+      "message": "Perhaps remove this TODO note now?",
+      "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e19af366_0b87ab79",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 10910
+      },
+      "writtenOn": "2026-01-02T11:35:29Z",
+      "side": 1,
+      "message": "overridden",
+      "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "25a2f74d_5610031b",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 10910
+      },
+      "writtenOn": "2026-01-02T11:35:29Z",
+      "side": 1,
+      "message": "Spelling - functionality",
+      "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2f3297a1_3abc4712",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 10910
+      },
+      "writtenOn": "2026-01-02T11:35:29Z",
+      "side": 1,
+      "message": "Consider adding the examples and tips in the remainder of this document as subheadings, to give the document an outline structure",
+      "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "82e279f4_ff2ff6af",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 10910
+      },
+      "writtenOn": "2026-01-02T11:35:29Z",
+      "side": 1,
+      "message": "typo - need",
+      "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cc4fc398_598eb127",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 10910
+      },
+      "writtenOn": "2026-01-02T11:35:29Z",
+      "side": 1,
+      "message": "Is there some example output missing here?",
+      "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d99380de_586485a4",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 10910
+      },
+      "writtenOn": "2026-01-02T11:35:29Z",
+      "side": 1,
+      "message": "Typo - Zabbix",
+      "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "28c1358b_f26b68fd",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 10910
+      },
+      "writtenOn": "2026-01-02T11:35:29Z",
+      "side": 1,
+      "message": "Would be better as a heading - \u0027Tips and Tricks\u0027",
+      "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
