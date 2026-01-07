@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed3b3682_e7482f9f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2026-01-07T14:44:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1af82477_6695a05d",
+      "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a5dc125b_8d7392f8",
@@ -31,6 +49,24 @@
       "writtenOn": "2026-01-02T11:35:29Z",
       "side": 1,
       "message": "typo - capi_helm",
+      "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "74d4afca_a9f3ec9b",
+        "filename": "doc/source/configuration/config-reference.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2026-01-07T14:44:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a5dc125b_8d7392f8",
       "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -60,6 +96,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "63717c67_955bbbc7",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2026-01-07T14:44:21Z",
+      "side": 1,
+      "message": "My rstviewer didn\u0027t render this properly, so I didn\u0027t catch that. Fixed.",
+      "parentUuid": "d81112a6_55691efc",
+      "range": {
+        "startLine": 7,
+        "startChar": 30,
+        "endLine": 7,
+        "endChar": 50
+      },
+      "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ae3aebdc_7b788950",
         "filename": "doc/source/configuration/index.rst",
         "patchSetId": 5
@@ -71,6 +131,24 @@
       "writtenOn": "2026-01-02T11:35:29Z",
       "side": 1,
       "message": "typo - testedvcan",
+      "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ec7d586_0cf2fd6f",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2026-01-07T14:44:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ae3aebdc_7b788950",
       "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -92,6 +170,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e0949e40_2122626c",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2026-01-07T14:44:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e4b68f48_06f3da7c",
+      "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e19af366_0b87ab79",
@@ -105,6 +201,24 @@
       "writtenOn": "2026-01-02T11:35:29Z",
       "side": 1,
       "message": "overridden",
+      "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "269a321f_5bf83299",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2026-01-07T14:44:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e19af366_0b87ab79",
       "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -126,6 +240,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2759cff1_242071c2",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2026-01-07T14:44:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "25a2f74d_5610031b",
+      "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2f3297a1_3abc4712",
@@ -139,6 +271,24 @@
       "writtenOn": "2026-01-02T11:35:29Z",
       "side": 1,
       "message": "Consider adding the examples and tips in the remainder of this document as subheadings, to give the document an outline structure",
+      "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7aef8c00_91bbfc3c",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2026-01-07T14:44:21Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "2f3297a1_3abc4712",
       "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -160,6 +310,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "44965750_c2f218c0",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2026-01-07T14:44:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "82e279f4_ff2ff6af",
+      "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cc4fc398_598eb127",
@@ -173,6 +341,24 @@
       "writtenOn": "2026-01-02T11:35:29Z",
       "side": 1,
       "message": "Is there some example output missing here?",
+      "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "71fd54ae_d8c1e0cb",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2026-01-07T14:44:21Z",
+      "side": 1,
+      "message": "Yup. I can\u0027t believe I missed that. (re)added.",
+      "parentUuid": "cc4fc398_598eb127",
       "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -194,6 +380,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e550dd1e_c1c8f56a",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2026-01-07T14:44:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d99380de_586485a4",
+      "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "28c1358b_f26b68fd",
@@ -207,6 +411,24 @@
       "writtenOn": "2026-01-02T11:35:29Z",
       "side": 1,
       "message": "Would be better as a heading - \u0027Tips and Tricks\u0027",
+      "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "30acf9ef_19559209",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 5
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2026-01-07T14:44:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "28c1358b_f26b68fd",
       "revId": "7ba0f7e32d2cfbd4fa39e83d611a7178e4be81e1",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
