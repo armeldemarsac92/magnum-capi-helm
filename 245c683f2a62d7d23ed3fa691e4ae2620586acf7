@@ -16,6 +16,23 @@
       "message": "Looks all right, thanks!",
       "revId": "245c683f2a62d7d23ed3fa691e4ae2620586acf7",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "66d832a1_e8594844",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2026-01-08T09:49:31Z",
+      "side": 1,
+      "message": "Can we move this to use oslo.config stanzas like other projects do? e.g. see https://docs.openstack.org/oslo.config/latest/reference/sphinxext.html",
+      "revId": "245c683f2a62d7d23ed3fa691e4ae2620586acf7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
