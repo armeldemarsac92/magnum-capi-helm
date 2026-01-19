@@ -16,6 +16,165 @@
       "message": "recheck",
       "revId": "bac84185a6a65e4de9cb9b804d53b2003c872da6",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1be82027_7ad0ff29",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2026-01-19T14:38:44Z",
+      "side": 1,
+      "message": "tox -e docs fails silently (and generates an empty reference) on my machine with:\n[oslo_config.sphinxconfiggen] reading config generator instructions from /Users/mnasiadka/dev/openstack/magnum-capi-helm/docs/doc/source/../../etc/oslo-config-generator/capi_helm.conf\n[oslo_config.sphinxconfiggen] writing sample configuration to /Users/mnasiadka/dev/openstack/magnum-capi-helm/docs/doc/source/_static/capi_helm.conf.sample\nWARNING:stevedore.named:Could not load capi_helm\nbuilding [mo]: targets for 0 po files that are out of date\nwriting output...\nbuilding [html]: targets for 6 source files that are out of date\nupdating environment: [new config] 6 added, 0 changed, 0 removed\nloading config file etc/oslo-config-generator/capi_helm.conf\nWARNING:stevedore.named:Could not load capi_helm\n\nAfter changing skip_install \u003d False in docs section in tox.ini - this gets rendered correctly",
+      "revId": "bac84185a6a65e4de9cb9b804d53b2003c872da6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a70c0fbc_55e37cf7",
+        "filename": "doc/source/conf.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2026-01-19T14:38:44Z",
+      "side": 1,
+      "message": "extra not needed newline",
+      "revId": "bac84185a6a65e4de9cb9b804d53b2003c872da6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97c0cafc_1cdfe69e",
+        "filename": "doc/source/conf.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2026-01-19T14:38:44Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "bac84185a6a65e4de9cb9b804d53b2003c872da6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ef3ae0b_2c9cb4b4",
+        "filename": "doc/source/configuration/config-reference.rst",
+        "patchSetId": 10
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2026-01-19T14:38:44Z",
+      "side": 1,
+      "message": "extra not needed newline",
+      "revId": "bac84185a6a65e4de9cb9b804d53b2003c872da6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b776a01e_97f7fc96",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 10
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2026-01-19T14:38:44Z",
+      "side": 1,
+      "message": "Can we get labels from code and populate this similar to oslo_config options?",
+      "revId": "bac84185a6a65e4de9cb9b804d53b2003c872da6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee14f533_17c3a67d",
+        "filename": "etc/oslo-config-generator/capi_helm.conf",
+        "patchSetId": 10
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2026-01-19T14:38:44Z",
+      "side": 1,
+      "message": "no newline at the end of file",
+      "revId": "bac84185a6a65e4de9cb9b804d53b2003c872da6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6b2ee54e_adb3901f",
+        "filename": "magnum_capi_helm/conf.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2026-01-19T14:38:44Z",
+      "side": 1,
+      "message": "extra not needed newline",
+      "revId": "bac84185a6a65e4de9cb9b804d53b2003c872da6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "45ac99f8_1199291d",
+        "filename": "magnum_capi_helm/conf.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2026-01-19T14:38:44Z",
+      "side": 1,
+      "message": "do we need the extra colon?",
+      "range": {
+        "startLine": 158,
+        "startChar": 20,
+        "endLine": 158,
+        "endChar": 21
+      },
+      "revId": "bac84185a6a65e4de9cb9b804d53b2003c872da6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c503716d_7a71175c",
+        "filename": "setup.cfg",
+        "patchSetId": 10
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2026-01-19T14:38:44Z",
+      "side": 1,
+      "message": "no newline at the end of the file",
+      "revId": "bac84185a6a65e4de9cb9b804d53b2003c872da6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
