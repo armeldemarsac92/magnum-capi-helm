@@ -105,6 +105,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6383cbc1_e8067b29",
+        "filename": "doc/source/conf.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2026-01-22T15:04:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97c0cafc_1cdfe69e",
+      "revId": "bac84185a6a65e4de9cb9b804d53b2003c872da6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6ef3ae0b_2c9cb4b4",
