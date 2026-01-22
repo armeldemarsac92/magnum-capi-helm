@@ -35,6 +35,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d750066f_63a9d22c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2026-01-22T15:03:58Z",
+      "side": 1,
+      "message": "I removed skip_install \u003d True. Apparently it shouldn\u0027t be here in the first place.",
+      "parentUuid": "1be82027_7ad0ff29",
+      "revId": "bac84185a6a65e4de9cb9b804d53b2003c872da6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a70c0fbc_55e37cf7",
@@ -48,6 +66,24 @@
       "writtenOn": "2026-01-19T14:38:44Z",
       "side": 1,
       "message": "extra not needed newline",
+      "revId": "bac84185a6a65e4de9cb9b804d53b2003c872da6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b74d292c_f429e2a6",
+        "filename": "doc/source/conf.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2026-01-22T15:03:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a70c0fbc_55e37cf7",
       "revId": "bac84185a6a65e4de9cb9b804d53b2003c872da6",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -86,6 +122,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea48a67c_f0a1fb3d",
+        "filename": "doc/source/configuration/config-reference.rst",
+        "patchSetId": 10
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2026-01-22T15:03:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6ef3ae0b_2c9cb4b4",
+      "revId": "bac84185a6a65e4de9cb9b804d53b2003c872da6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b776a01e_97f7fc96",
@@ -99,6 +153,24 @@
       "writtenOn": "2026-01-19T14:38:44Z",
       "side": 1,
       "message": "Can we get labels from code and populate this similar to oslo_config options?",
+      "revId": "bac84185a6a65e4de9cb9b804d53b2003c872da6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "04037171_e1322f31",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 10
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2026-01-22T15:03:58Z",
+      "side": 1,
+      "message": "Good idea. I have explored this approach, unfortunately current implementation of labels in driver won\u0027t allow to do this without either writing our own sphinx extension or reorganising parts of code, which is out of scope of this patch. I propose to do this in follow up patch.",
+      "parentUuid": "b776a01e_97f7fc96",
       "revId": "bac84185a6a65e4de9cb9b804d53b2003c872da6",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -120,6 +192,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "acea774f_9b5faf27",
+        "filename": "etc/oslo-config-generator/capi_helm.conf",
+        "patchSetId": 10
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2026-01-22T15:03:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ee14f533_17c3a67d",
+      "revId": "bac84185a6a65e4de9cb9b804d53b2003c872da6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6b2ee54e_adb3901f",
@@ -133,6 +223,24 @@
       "writtenOn": "2026-01-19T14:38:44Z",
       "side": 1,
       "message": "extra not needed newline",
+      "revId": "bac84185a6a65e4de9cb9b804d53b2003c872da6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ba382982_c5e77faf",
+        "filename": "magnum_capi_helm/conf.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2026-01-22T15:03:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6b2ee54e_adb3901f",
       "revId": "bac84185a6a65e4de9cb9b804d53b2003c872da6",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
@@ -160,6 +268,30 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d938c579_e0c68364",
+        "filename": "magnum_capi_helm/conf.py",
+        "patchSetId": 10
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2026-01-22T15:03:58Z",
+      "side": 1,
+      "message": "Depends. I know it looks weird in context of python code, but it is needed so sphinx can render nice code block in on-line documentation containing json snippet bellow and additonally add linters to the mix. It is rotten compromise between code clarity, linters and on-line documentation aesthetics.",
+      "parentUuid": "45ac99f8_1199291d",
+      "range": {
+        "startLine": 158,
+        "startChar": 20,
+        "endLine": 158,
+        "endChar": 21
+      },
+      "revId": "bac84185a6a65e4de9cb9b804d53b2003c872da6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c503716d_7a71175c",
@@ -173,6 +305,24 @@
       "writtenOn": "2026-01-19T14:38:44Z",
       "side": 1,
       "message": "no newline at the end of the file",
+      "revId": "bac84185a6a65e4de9cb9b804d53b2003c872da6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d86f55bd_ae674c5a",
+        "filename": "setup.cfg",
+        "patchSetId": 10
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 34213
+      },
+      "writtenOn": "2026-01-22T15:03:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c503716d_7a71175c",
       "revId": "bac84185a6a65e4de9cb9b804d53b2003c872da6",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
