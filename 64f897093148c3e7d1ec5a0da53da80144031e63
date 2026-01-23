@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a17b808_35a2ac42",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 10910
+      },
+      "writtenOn": "2026-01-23T08:46:07Z",
+      "side": 1,
+      "message": "I built the documentation locally and the new config reference looks good, thanks.",
+      "revId": "64f897093148c3e7d1ec5a0da53da80144031e63",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
