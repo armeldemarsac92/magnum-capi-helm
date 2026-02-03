@@ -2980,12 +2980,10 @@ class ClusterAPIDriverTest(base.DbTestCase):
         )
 
         # Check extra autoscaling node group values
-        # NOTE: CAPO doesn't support scale to zero so
-        # min node count should be max(1, ng.min_node_count)
         ng = helm_values_autoscale_nodegroup[0]
         self.assertEqual(ng["autoscale"], "true")
         self.assertEqual(
-            ng["machineCountMin"], max(1, auto_scale_nodegroup.min_node_count)
+            ng["machineCountMin"], max(0, auto_scale_nodegroup.min_node_count)
         )
         self.assertEqual(
             ng["machineCountMax"], auto_scale_nodegroup.max_node_count
