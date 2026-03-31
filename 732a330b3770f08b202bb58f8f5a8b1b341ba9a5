@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a2e1720_154b8e55",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 8064
+      },
+      "writtenOn": "2026-03-31T07:41:12Z",
+      "side": 1,
+      "message": "LGTM. Link https://github.com/kubernetes-sigs/cluster-api-provider-openstack/releases/tag/v0.14.0",
+      "revId": "732a330b3770f08b202bb58f8f5a8b1b341ba9a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
