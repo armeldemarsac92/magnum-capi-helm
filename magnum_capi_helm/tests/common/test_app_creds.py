@@ -82,13 +82,39 @@ class TestAppCreds(base.DbTestCase):
         ]
         self.assertEqual(expected, app_cred)
         mock_client().url_for.assert_called_once_with(
-            service_type="identity", interface="public"
+            service_type="identity", interface="public", region_name="cinder"
         )
         mock_app_cred.create.assert_called_once_with(
             user="fake_user",
             name=f"magnum-{self.cluster_obj.uuid}",
             description=f"Magnum cluster ({self.cluster_obj.uuid})",
             roles=expected_roles,
+        )
+
+    @mock.patch.object(clients, "OpenStackClients")
+    def test_create_app_cred_uses_magnum_region_name(self, mock_client):
+        mock_client().cinder_region_name.return_value = "cinder"
+        mock_client().url_for.return_value = "http://keystone"
+        mock_app_cred = mock_client().keystone().client.application_credentials
+        app_cred = collections.namedtuple("appcred", ["id", "secret"])
+        mock_app_cred.create.return_value = app_cred("id", "pass")
+        context = mock.MagicMock()
+        context.roles = CONF.capi_helm.required_user_roles + ["admin", "foo"]
+
+        with mock.patch.object(
+            CONF.magnum_client, "region_name", "keystone-region"
+        ):
+            app_cred = app_creds._create_app_cred(context, self.cluster_obj)
+
+        self.assertEqual(
+            "keystone-region",
+            app_cred["clouds"]["openstack"]["region_name"],
+        )
+        mock_client().cinder_region_name.assert_not_called()
+        mock_client().url_for.assert_called_once_with(
+            service_type="identity",
+            interface="public",
+            region_name="keystone-region",
         )
 
     @mock.patch.object(app_creds, "_get_openstack_ca_certificate")
