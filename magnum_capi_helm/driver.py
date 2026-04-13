@@ -1057,6 +1057,22 @@ class Driver(driver.Driver):
             }
             values = helm.mergeconcat(values, allowed_cidrs_config)
 
+        pods_network_cidr = self._label(cluster, "pods_network_cidr", "")
+        services_network_cidr = self._label(
+            cluster, "services_network_cidr", ""
+        )
+        if pods_network_cidr or services_network_cidr:
+            kube_network = {"kubeNetwork": {}}
+            if pods_network_cidr:
+                kube_network["kubeNetwork"]["pods"] = {
+                    "cidrBlocks": [pods_network_cidr]
+                }
+            if services_network_cidr:
+                kube_network["kubeNetwork"]["services"] = {
+                    "cidrBlocks": [services_network_cidr]
+                }
+            values = helm.mergeconcat(values, kube_network)
+
         self._helm_client.install_or_upgrade(
             driver_utils.chart_release_name(cluster),
             CONF.capi_helm.helm_chart_name,
