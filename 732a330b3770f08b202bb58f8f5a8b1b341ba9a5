@@ -1,6 +1,52 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4fe37b0_917ed28b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 28619
+      },
+      "writtenOn": "2026-04-17T11:57:20Z",
+      "side": 1,
+      "message": "It would be really nice to elaborate more on reasoning, and what it provides. Having bug linked is nice, but it\u0027s not that clear just out of the git history.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 32
+      },
+      "revId": "732a330b3770f08b202bb58f8f5a8b1b341ba9a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a458d3a4_927ef964",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 28619
+      },
+      "writtenOn": "2026-04-17T11:57:20Z",
+      "side": 1,
+      "message": "This specific format should be used for patch to be linked to launchpad\n\n```suggestion\nCloses-Bug: #2098002\n```",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 52
+      },
+      "revId": "732a330b3770f08b202bb58f8f5a8b1b341ba9a5",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "5a2e1720_154b8e55",
