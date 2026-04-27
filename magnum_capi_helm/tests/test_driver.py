@@ -1225,6 +1225,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
                 "ingress": {"enabled": False},
                 "openstack": {
                     "csiCinder": mock.ANY,
+                    "csiManila": mock.ANY,
                     "cloudConfig": {
                         "LoadBalancer": {
                             "lb-provider": "amphora",
@@ -1254,6 +1255,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
     )
     @mock.patch.object(
         driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
+    @mock.patch.object(
+        driver.Driver,
         "_storageclass_definitions",
         return_value=mock.ANY,
     )
@@ -1276,6 +1282,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get_net,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_manila_storageclasses,
         mock_get_keystone_auth_enabled,
         mock_get_allowed_cidrs,
     ):
@@ -1324,6 +1331,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
     )
     @mock.patch.object(
         driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
+    @mock.patch.object(
+        driver.Driver,
         "_storageclass_definitions",
         return_value=mock.ANY,
     )
@@ -1344,6 +1356,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_certs,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_manila_storageclasses,
         mock_get_keystone_auth_enabled,
         mock_get_allowed_cidrs,
     ):
@@ -1387,6 +1400,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
     )
     @mock.patch.object(
         driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
+    @mock.patch.object(
+        driver.Driver,
         "_storageclass_definitions",
         return_value=mock.ANY,
     )
@@ -1407,6 +1425,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_certs,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_manila_storageclasses,
         mock_get_keystone_auth_enabled,
         mock_get_allowed_cidrs,
     ):
@@ -1459,6 +1478,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
     )
     @mock.patch.object(
         driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
+    @mock.patch.object(
+        driver.Driver,
         "_storageclass_definitions",
         return_value=mock.ANY,
     )
@@ -1479,6 +1503,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_certs,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_manila_storageclasses,
         mock_get_keystone_auth_enabled,
         mock_get_allowed_cidrs,
     ):
@@ -1547,6 +1572,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
     )
     @mock.patch.object(
         driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
+    @mock.patch.object(
+        driver.Driver,
         "_storageclass_definitions",
         return_value=mock.ANY,
     )
@@ -1565,6 +1595,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_certs,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_manila_storageclasses,
         mock_get_keystone_auth_enabled,
         mock_get_allowed_cidrs,
     ):
@@ -1606,6 +1637,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
     )
     @mock.patch.object(
         driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
+    @mock.patch.object(
+        driver.Driver,
         "_storageclass_definitions",
         return_value=mock.ANY,
     )
@@ -1624,6 +1660,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_certs,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_manila_storageclasses,
         mock_get_keystone_auth_enabled,
         mock_get_allowed_cidrs,
     ):
@@ -1661,6 +1698,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
     )
     @mock.patch.object(
         driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
+    @mock.patch.object(
+        driver.Driver,
         "_storageclass_definitions",
         return_value=mock.ANY,
     )
@@ -1681,6 +1723,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_certs,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_manila_storageclasses,
         mock_get_keystone_auth_enabled,
         mock_get_allowed_cidrs,
     ):
@@ -1727,6 +1770,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
     )
     @mock.patch.object(
         driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
+    @mock.patch.object(
+        driver.Driver,
         "_storageclass_definitions",
         return_value=mock.ANY,
     )
@@ -1747,6 +1795,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_certs,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_manila_storageclasses,
         mock_get_keystone_auth_enabled,
         mock_get_allowed_cidrs,
     ):
@@ -1802,6 +1851,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
     )
     @mock.patch.object(
         driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
+    @mock.patch.object(
+        driver.Driver,
         "_storageclass_definitions",
         return_value=mock.ANY,
     )
@@ -1822,6 +1876,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_certs,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_manila_storageclasses,
         mock_get_keystone_auth_enabled,
         mock_get_allowed_cidrs,
     ):
@@ -1876,6 +1931,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
     )
     @mock.patch.object(
         driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
+    @mock.patch.object(
+        driver.Driver,
         "_storageclass_definitions",
         return_value=mock.ANY,
     )
@@ -1896,6 +1956,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_certs,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_manila_storageclasses,
         mock_get_keystone_auth_enabled,
         mock_get_allowed_cidrs,
     ):
@@ -2197,6 +2258,168 @@ class ClusterAPIDriverTest(base.DbTestCase):
         volume_type = default_storage_class["name"]
         self.assertEqual("type1", volume_type)
 
+    def test_storageclass_definitions_manila_disabled(self):
+        CONF.capi_helm.csi_manila_enabled = False
+        result = self.driver._storageclass_definitions_manila(
+            self.context, self.cluster_obj
+        )
+        self.assertEqual({"enabled": False}, result)
+
+    @mock.patch.object(driver.Driver, "_get_manila_client")
+    def test_storageclass_definitions_manila(self, mock_manila):
+        CONF.capi_helm.csi_manila_enabled = True
+        CONF.capi_helm.csi_manila_default_share_type = "cephfs_type"
+
+        mock_st1 = mock.Mock()
+        mock_st1.name = "cephfs_type"
+        mock_st2 = mock.Mock()
+        mock_st2.name = "cephfs_type_ssd"
+
+        mock_pool = mock.Mock()
+        mock_pool.capabilities = {"storage_protocol": "CEPHFS"}
+
+        mock_m = mock.Mock()
+        mock_m.share_types.list.return_value = [mock_st1, mock_st2]
+        mock_m.pools.list.return_value = [mock_pool]
+        mock_manila.return_value = mock_m
+
+        result = self.driver._storageclass_definitions_manila(
+            self.context, self.cluster_obj
+        )
+
+        self.assertTrue(result["enabled"])
+        self.assertEqual(
+            "cephfs.manila.csi.openstack.org",
+            result["defaultStorageClass"]["provisioner"],
+        )
+        self.assertEqual(
+            "cephfs_type",
+            result["defaultStorageClass"]["parameters"]["type"],
+        )
+        self.assertEqual(1, len(result["additionalStorageClasses"]))
+        self.assertEqual(
+            "cephfs_type_ssd",
+            result["additionalStorageClasses"][0]["parameters"]["type"],
+        )
+
+    @mock.patch.object(driver.Driver, "_get_manila_client")
+    def test_storageclass_definitions_manila_no_share_types(self, mock_manila):
+        CONF.capi_helm.csi_manila_enabled = True
+
+        mock_m = mock.Mock()
+        mock_m.share_types.list.return_value = []
+        mock_manila.return_value = mock_m
+
+        self.assertRaises(
+            exception.MagnumException,
+            self.driver._storageclass_definitions_manila,
+            self.context,
+            self.cluster_obj,
+        )
+
+    @mock.patch.object(driver.Driver, "_get_manila_client")
+    def test_storageclass_definitions_manila_invalid_default_share_type(
+        self, mock_manila
+    ):
+        CONF.capi_helm.csi_manila_enabled = True
+        CONF.capi_helm.csi_manila_default_share_type = "nonexistent_type"
+
+        mock_st = mock.Mock()
+        mock_st.name = "cephfs_type"
+
+        mock_pool = mock.Mock()
+        mock_pool.capabilities = {"storage_protocol": "CEPHFS"}
+
+        mock_m = mock.Mock()
+        mock_m.share_types.list.return_value = [mock_st]
+        mock_m.pools.list.return_value = [mock_pool]
+        mock_manila.return_value = mock_m
+
+        self.assertRaises(
+            exception.MagnumException,
+            self.driver._storageclass_definitions_manila,
+            self.context,
+            self.cluster_obj,
+        )
+
+    @mock.patch.object(driver.Driver, "_get_manila_client")
+    def test_storageclass_definitions_manila_multi_protocol(self, mock_manila):
+        CONF.capi_helm.csi_manila_enabled = True
+
+        mock_st = mock.Mock()
+        mock_st.name = "cephfs_type"
+
+        mock_pool_cephfs = mock.Mock()
+        mock_pool_cephfs.capabilities = {"storage_protocol": "CEPHFS"}
+        mock_pool_nfs = mock.Mock()
+        mock_pool_nfs.capabilities = {"storage_protocol": "NFS"}
+
+        mock_m = mock.Mock()
+        mock_m.share_types.list.return_value = [mock_st]
+        mock_m.pools.list.return_value = [mock_pool_cephfs, mock_pool_nfs]
+        mock_manila.return_value = mock_m
+
+        self.assertRaises(
+            exception.MagnumException,
+            self.driver._storageclass_definitions_manila,
+            self.context,
+            self.cluster_obj,
+        )
+
+    @mock.patch.object(driver.Driver, "_get_manila_client")
+    def test_storageclass_definitions_manila_explicit_provisioner(
+        self, mock_manila
+    ):
+        CONF.capi_helm.csi_manila_enabled = True
+        CONF.capi_helm.csi_manila_provisioner = "nfs.manila.csi.openstack.org"
+        CONF.capi_helm.csi_manila_default_share_type = "nfs_type"
+
+        mock_st = mock.Mock()
+        mock_st.name = "nfs_type"
+
+        mock_m = mock.Mock()
+        mock_m.share_types.list.return_value = [mock_st]
+        mock_manila.return_value = mock_m
+
+        result = self.driver._storageclass_definitions_manila(
+            self.context, self.cluster_obj
+        )
+
+        self.assertEqual(
+            "nfs.manila.csi.openstack.org",
+            result["defaultStorageClass"]["provisioner"],
+        )
+        mock_m.pools.list.assert_not_called()
+
+    @mock.patch.object(driver.Driver, "_get_manila_client")
+    def test_storageclass_definitions_manila_default_share_type_not_defined(
+        self, mock_manila
+    ):
+        CONF.capi_helm.csi_manila_enabled = True
+        CONF.capi_helm.csi_manila_default_share_type = ""
+
+        mock_st1 = mock.Mock()
+        mock_st1.name = "cephfs_type"
+        mock_st2 = mock.Mock()
+        mock_st2.name = "cephfs_type_ssd"
+
+        mock_pool = mock.Mock()
+        mock_pool.capabilities = {"storage_protocol": "CEPHFS"}
+
+        mock_m = mock.Mock()
+        mock_m.share_types.list.return_value = [mock_st1, mock_st2]
+        mock_m.pools.list.return_value = [mock_pool]
+        mock_manila.return_value = mock_m
+
+        result = self.driver._storageclass_definitions_manila(
+            self.context, self.cluster_obj
+        )
+
+        self.assertEqual(
+            "cephfs_type",
+            result["defaultStorageClass"]["parameters"]["type"],
+        )
+
     @mock.patch.object(helm.Client, "uninstall_release")
     def test_delete_cluster(self, mock_uninstall):
         self.driver.delete_cluster(self.context, self.cluster_obj)
@@ -2293,6 +2516,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
 
     @mock.patch.object(driver.Driver, "_get_allowed_cidrs")
     @mock.patch.object(
+        driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
+    @mock.patch.object(
         driver.Driver, "_storageclass_definitions", return_value=mock.ANY
     )
     @mock.patch.object(
@@ -2304,6 +2532,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_helm_update,
         mock_image_details,
         mock_storageclasses,
+        mock_manila_storageclasses,
         mock_get_cidrs,
     ):
 
@@ -2579,6 +2808,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
     )
     @mock.patch.object(
         driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
+    @mock.patch.object(
+        driver.Driver,
         "_storageclass_definitions",
         return_value=mock.ANY,
     )
@@ -2601,6 +2835,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get_net,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_manila_storageclasses,
         mock_get_keystone_auth_enabled,
     ):
         cidrs = "192.168.0.0/16,10.0.0.0/8,123.123.123.123/32"
@@ -2621,6 +2856,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
         )
 
     @mock.patch.object(driver.Driver, "_get_k8s_keystone_auth_enabled")
+    @mock.patch.object(
+        driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
     @mock.patch.object(
         driver.Driver,
         "_storageclass_definitions",
@@ -2645,6 +2885,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get_net,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_manila_storageclasses,
         mock_get_keystone_auth_enabled,
     ):
         mock_image.return_value = (
@@ -2677,6 +2918,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
     @mock.patch.object(driver.Driver, "_get_k8s_keystone_auth_enabled")
     @mock.patch.object(
         driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
+    @mock.patch.object(
+        driver.Driver,
         "_storageclass_definitions",
         return_value=mock.ANY,
     )
@@ -2699,6 +2945,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get_net,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_manila_storageclasses,
         mock_get_keystone_auth_enabled,
     ):
         mock_image.return_value = (
@@ -2728,6 +2975,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
 
     @mock.patch.object(
         driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
+    @mock.patch.object(
+        driver.Driver,
         "_storageclass_definitions",
         return_value=mock.ANY,
     )
@@ -2750,6 +3002,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get_net,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_manila_storageclasses,
     ):
         mock_image.return_value = (
             "imageid1",
@@ -2795,6 +3048,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
 
     @mock.patch.object(
         driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
+    @mock.patch.object(
+        driver.Driver,
         "_storageclass_definitions",
         return_value=mock.ANY,
     )
@@ -2817,6 +3075,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get_net,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_manila_storageclasses,
     ):
         mock_image.return_value = (
             "imageid1",
@@ -2862,6 +3121,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
 
     @mock.patch.object(
         driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
+    @mock.patch.object(
+        driver.Driver,
         "_storageclass_definitions",
         return_value=mock.ANY,
     )
@@ -2884,6 +3148,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get_net,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_manila_storageclasses,
     ):
         mock_image.return_value = (
             "imageid1",
@@ -2927,6 +3192,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
     )
     @mock.patch.object(
         driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
+    @mock.patch.object(
+        driver.Driver,
         "_storageclass_definitions",
         return_value=mock.ANY,
     )
@@ -2949,6 +3219,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get_net,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_manila_storageclasses,
         mock_get_keystone_auth_enabled,
     ):
         auto_scale_labels = dict(
@@ -2984,6 +3255,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
     )
     @mock.patch.object(
         driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
+    @mock.patch.object(
+        driver.Driver,
         "_storageclass_definitions",
         return_value=mock.ANY,
     )
@@ -3006,6 +3282,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get_net,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_manila_storageclasses,
         mock_get_keystone_auth_enabled,
     ):
         auto_scale_labels = dict(
@@ -3038,6 +3315,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
 
     @mock.patch.object(
         driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
+    @mock.patch.object(
+        driver.Driver,
         "_storageclass_definitions",
         return_value=mock.ANY,
     )
@@ -3060,6 +3342,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get_net,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_manila_storageclasses,
     ):
         auto_scale_labels = dict(
             auto_scaling_enabled="true", min_node_count=2, max_node_count=6
@@ -3087,6 +3370,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
 
     @mock.patch.object(
         driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
+    @mock.patch.object(
+        driver.Driver,
         "_storageclass_definitions",
         return_value=mock.ANY,
     )
@@ -3109,6 +3397,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get_net,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_manila_storageclasses,
     ):
         auto_scale_labels = dict(
             auto_scaling_enabled="true", min_node_count=2, max_node_count=6
@@ -3198,6 +3487,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
 
     @mock.patch.object(
         driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
+    @mock.patch.object(
+        driver.Driver,
         "_storageclass_definitions",
         return_value=mock.ANY,
     )
@@ -3220,6 +3514,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get_net,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_manila_storageclasses,
     ):
         disk_size_configuration_value = 15
         disk_size_label_value = 32
@@ -3254,6 +3549,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
 
     @mock.patch.object(
         driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
+    @mock.patch.object(
+        driver.Driver,
         "_storageclass_definitions",
         return_value=mock.ANY,
     )
@@ -3276,6 +3576,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get_net,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_manila_storageclasses,
     ):
         disk_size_configuration_value = 15
 
@@ -3307,6 +3608,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
 
     @mock.patch.object(
         driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
+    @mock.patch.object(
+        driver.Driver,
         "_storageclass_definitions",
         return_value=mock.ANY,
     )
@@ -3329,6 +3635,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get_net,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_manila_storageclasses,
     ):
         disk_size_configuration_value = 15
 
@@ -3360,6 +3667,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
 
     @mock.patch.object(
         driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
+    @mock.patch.object(
+        driver.Driver,
         "_storageclass_definitions",
         return_value=mock.ANY,
     )
@@ -3382,6 +3694,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get_net,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_manila_storageclasses,
     ):
         # When autoscaling is enabled but no min/max node counts are
         # provided for the default node group, we want autoscaling to
@@ -3406,6 +3719,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
 
     @mock.patch.object(
         driver.Driver,
+        "_storageclass_definitions_manila",
+        return_value={"enabled": False},
+    )
+    @mock.patch.object(
+        driver.Driver,
         "_storageclass_definitions",
         return_value=mock.ANY,
     )
@@ -3428,6 +3746,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get_net,
         mock_validate_allowed_flavor,
         mock_storageclasses,
+        mock_manila_storageclasses,
     ):
         # Disabled master LB in labels.
         self.cluster_obj.labels = {"master_lb_floating_ip_enabled": "false"}
