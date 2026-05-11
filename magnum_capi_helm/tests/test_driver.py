@@ -986,6 +986,152 @@ class ClusterAPIDriverTest(base.DbTestCase):
 
         self.assertEqual("41", result)
 
+    def test_nodegroup_label_return_default(self):
+        self.cluster_obj.labels = dict()
+        self.cluster_obj.cluster_template.labels = dict()
+        nodegroup = self.cluster_obj.nodegroups[0]
+        nodegroup.labels = dict()
+
+        result = self.driver._nodegroup_label(
+            self.cluster_obj, nodegroup, "foo", "bar"
+        )
+
+        self.assertEqual("bar", result)
+
+    def test_nodegroup_label_return_template(self):
+        self.cluster_obj.cluster_template.labels = dict(foo=42)
+        nodegroup = self.cluster_obj.nodegroups[0]
+        nodegroup.labels = dict()
+
+        result = self.driver._nodegroup_label(
+            self.cluster_obj, nodegroup, "foo", "bar"
+        )
+
+        self.assertEqual("42", result)
+
+    def test_nodegroup_label_return_cluster(self):
+        self.cluster_obj.labels = dict(foo=41)
+        self.cluster_obj.cluster_template.labels = dict(foo=42)
+        nodegroup = self.cluster_obj.nodegroups[0]
+        nodegroup.labels = dict()
+
+        result = self.driver._nodegroup_label(
+            self.cluster_obj, nodegroup, "foo", "bar"
+        )
+
+        self.assertEqual("41", result)
+
+    def test_nodegroup_label_return_nodegroup(self):
+        self.cluster_obj.labels = dict(foo=41)
+        self.cluster_obj.cluster_template.labels = dict(foo=42)
+        nodegroup = self.cluster_obj.nodegroups[0]
+        nodegroup.labels = dict(foo=40)
+
+        result = self.driver._nodegroup_label(
+            self.cluster_obj, nodegroup, "foo", "bar"
+        )
+
+        self.assertEqual("40", result)
+
+    def test_get_nodegroup_label_bool(self):
+        self.cluster_obj.labels = dict(foo="false")
+        self.cluster_obj.cluster_template.labels = dict()
+        nodegroup = self.cluster_obj.nodegroups[0]
+        nodegroup.labels = dict(foo="true")
+
+        result = self.driver._get_nodegroup_label_bool(
+            self.cluster_obj, nodegroup, "foo", False
+        )
+
+        self.assertTrue(result)
+
+    def test_get_nodegroup_label_int(self):
+        self.cluster_obj.labels = dict(foo="1")
+        self.cluster_obj.cluster_template.labels = dict()
+        nodegroup = self.cluster_obj.nodegroups[0]
+        nodegroup.labels = dict(foo="7")
+
+        result = self.driver._get_nodegroup_label_int(
+            self.cluster_obj, nodegroup, "foo", 0
+        )
+
+        self.assertEqual(7, result)
+
+    def test_get_nodegroup_label_int_default(self):
+        self.cluster_obj.labels = dict()
+        self.cluster_obj.cluster_template.labels = dict()
+        nodegroup = self.cluster_obj.nodegroups[0]
+        nodegroup.labels = dict()
+
+        result = self.driver._get_nodegroup_label_int(
+            self.cluster_obj, nodegroup, "foo", 5
+        )
+
+        self.assertEqual(5, result)
+
+    def test_nodegroup_boot_volume_not_set(self):
+        nodegroup = self.cluster_obj.nodegroups[-1]
+        nodegroup.labels = dict()
+
+        result = self.driver._get_nodegroup_boot_volume(
+            self.cluster_obj, nodegroup
+        )
+
+        self.assertEqual({}, result)
+
+    def test_nodegroup_boot_volume_cluster_label_only(self):
+        # Cluster-level labels alone must not produce per-NG overrides.
+        self.cluster_obj.labels = {
+            "boot_volume_type": "nvme",
+            "boot_volume_size": "20",
+        }
+        nodegroup = self.cluster_obj.nodegroups[-1]
+        nodegroup.labels = dict()
+
+        result = self.driver._get_nodegroup_boot_volume(
+            self.cluster_obj, nodegroup
+        )
+
+        self.assertEqual({}, result)
+
+    def test_nodegroup_boot_volume_type_only(self):
+        nodegroup = self.cluster_obj.nodegroups[-1]
+        nodegroup.labels = {"boot_volume_type": "nvme"}
+
+        result = self.driver._get_nodegroup_boot_volume(
+            self.cluster_obj, nodegroup
+        )
+
+        self.assertEqual({"volumeType": "nvme"}, result)
+
+    def test_nodegroup_boot_volume_size_only(self):
+        nodegroup = self.cluster_obj.nodegroups[-1]
+        nodegroup.labels = {"boot_volume_size": "40"}
+
+        result = self.driver._get_nodegroup_boot_volume(
+            self.cluster_obj, nodegroup
+        )
+
+        self.assertEqual({"diskSize": 40}, result)
+
+    def test_nodegroup_boot_volume_overrides_cluster(self):
+        # NG label overrides the cluster-level value for that NG.
+        self.cluster_obj.labels = {
+            "boot_volume_type": "nvme",
+            "boot_volume_size": "20",
+        }
+        nodegroup = self.cluster_obj.nodegroups[-1]
+        nodegroup.labels = {
+            "boot_volume_type": "ssd",
+            "boot_volume_size": "50",
+        }
+
+        result = self.driver._get_nodegroup_boot_volume(
+            self.cluster_obj, nodegroup
+        )
+
+        self.assertEqual({"volumeType": "ssd", "diskSize": 50}, result)
+
     def test_sanitized_name_no_suffix(self):
         self.assertEqual(
             "123-456fab", driver_utils.sanitized_name("123-456Fab")
@@ -3357,6 +3503,81 @@ class ClusterAPIDriverTest(base.DbTestCase):
             ],
             disk_size_configuration_value,
         )
+
+    @mock.patch.object(
+        driver.Driver,
+        "_storageclass_definitions",
+        return_value=mock.ANY,
+    )
+    @mock.patch.object(driver.Driver, "_validate_allowed_flavor")
+    @mock.patch.object(neutron, "get_network", autospec=True)
+    @mock.patch.object(
+        driver.Driver, "_ensure_certificate_secrets", autospec=True
+    )
+    @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(kubernetes.Client, "load", autospec=True)
+    @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
+    def test_create_cluster_boot_volume_nodegroup_label(
+        self,
+        mock_install,
+        mock_image,
+        mock_load,
+        mock_appcred,
+        mock_certs,
+        mock_get_net,
+        mock_validate_allowed_flavor,
+        mock_storageclasses,
+    ):
+        # Cluster-wide defaults
+        CONF.cinder.default_boot_volume_type = "nvme"
+        CONF.cinder.default_boot_volume_size = 12
+        self.cluster_obj.labels = {}
+
+        # NG-specific override on the default worker NG.
+        ng = self.cluster_obj.default_ng_worker
+        ng.labels = {
+            "boot_volume_type": "ssd",
+            "boot_volume_size": "50",
+        }
+        ng.save()
+
+        # A second NG with no overrides — should not get machineRootVolume.
+        plain_ng = obj_utils.create_test_nodegroup(
+            self.context,
+            uuid=uuid4(),
+            id=789,
+            name="plain-group",
+            flavor_id="flavor_medium",
+            node_count=1,
+            labels={},
+        )
+        self.cluster_obj.nodegroups.append(plain_ng)
+
+        mock_image.return_value = ("imageid1", "1.27.4", "ubuntu")
+
+        self.driver.create_cluster(self.context, self.cluster_obj, 10)
+        helm_install_values = mock_install.call_args[0][3]
+
+        # nodeGroupDefaults / controlPlane keep the cluster-wide values.
+        self.assertEqual(
+            helm_install_values["controlPlane"]["machineRootVolume"],
+            {"volumeType": "nvme", "diskSize": 12},
+        )
+        self.assertEqual(
+            helm_install_values["nodeGroupDefaults"]["machineRootVolume"],
+            {"volumeType": "nvme", "diskSize": 12},
+        )
+
+        helm_node_groups = {
+            ng_item["name"]: ng_item
+            for ng_item in helm_install_values["nodeGroups"]
+        }
+        self.assertEqual(
+            helm_node_groups[ng.name]["machineRootVolume"],
+            {"volumeType": "ssd", "diskSize": 50},
+        )
+        self.assertNotIn("machineRootVolume", helm_node_groups["plain-group"])
 
     @mock.patch.object(
         driver.Driver,
