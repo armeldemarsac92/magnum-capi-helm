@@ -509,6 +509,31 @@ class Driver(driver.Driver):
         except ValueError:
             return default
 
+    def _nodegroup_label(self, cluster, nodegroup, key, default):
+        all_labels = helm.mergeconcat(
+            cluster.cluster_template.labels,
+            cluster.labels,
+            nodegroup.labels,
+        )
+        if not all_labels:
+            return default
+        raw = all_labels.get(key, default)
+        # NOTE(johngarbutt): filtering untrusted user input
+        return re.sub(r"[^a-zA-Z0-9\.\-\/ _]+", "", raw)
+
+    def _get_nodegroup_label_bool(self, cluster, nodegroup, label, default):
+        ng_label = self._nodegroup_label(cluster, nodegroup, label, "")
+        return strutils.bool_from_string(ng_label, default=default)
+
+    def _get_nodegroup_label_int(self, cluster, nodegroup, label, default):
+        ng_label = self._nodegroup_label(cluster, nodegroup, label, "")
+        if not ng_label:
+            return default
+        try:
+            return int(ng_label)
+        except ValueError:
+            return default
+
     def _get_chart_version(self, cluster):
         version = cluster.cluster_template.labels.get(
             "capi_helm_chart_version",
@@ -868,6 +893,26 @@ class Driver(driver.Driver):
             additionalStorageClasses=additional_storage_classes,
         )
 
+    def _get_nodegroup_boot_volume(self, cluster, nodegroup):
+        # Only apply per-nodegroup boot volume settings when the label is
+        # explicitly set on this nodegroup; otherwise the cluster-wide
+        # values in nodeGroupDefaults apply.
+        ng_labels = nodegroup.labels or {}
+        machine_root_volume = {}
+        if "boot_volume_type" in ng_labels:
+            boot_volume_type = self._nodegroup_label(
+                cluster, nodegroup, "boot_volume_type", ""
+            )
+            if boot_volume_type:
+                machine_root_volume["volumeType"] = boot_volume_type
+        if "boot_volume_size" in ng_labels:
+            boot_volume_size = self._get_nodegroup_label_int(
+                cluster, nodegroup, "boot_volume_size", 0
+            )
+            if boot_volume_size:
+                machine_root_volume["diskSize"] = boot_volume_size
+        return machine_root_volume
+
     def _process_node_groups(self, cluster, nodegroups):
         nodegroup_set = []
         for ng in nodegroups:
@@ -877,6 +922,11 @@ class Driver(driver.Driver):
                     machineFlavor=ng.flavor_id,
                     machineCount=ng.node_count,
                 )
+                machine_root_volume = self._get_nodegroup_boot_volume(
+                    cluster, ng
+                )
+                if machine_root_volume:
+                    nodegroup_item["machineRootVolume"] = machine_root_volume
                 if self._get_autoscale_enabled(cluster):
                     values = self._get_autoscale_values(cluster, ng)
                     nodegroup_item = helm.mergeconcat(nodegroup_item, values)
