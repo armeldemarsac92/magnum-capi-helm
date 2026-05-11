@@ -1,0 +1,22 @@
+---
+features:
+  - |
+    Adds support for setting ``boot_volume_type`` and ``boot_volume_size``
+    labels directly on a worker nodegroup. When either label is present on
+    a nodegroup, it is applied only to that nodegroup's machines. Cluster-
+    or template-level ``boot_volume_*`` labels continue to apply to the
+    control plane and to any nodegroup that does not set its own value, so
+    different worker pools can now use different boot volumes within the
+    same cluster.
+
+    Usage with command line client::
+
+        openstack coe nodegroup create <cluster> high-io \
+            --flavor-id <flavor> \
+            --node-count 3 \
+            --labels boot_volume_type=nvme,boot_volume_size=100 \
+            --merge-labels
+
+    The label is read from the nodegroup at create time and on subsequent
+    nodegroup updates. Existing nodegroups are not affected until their
+    labels are explicitly changed.
