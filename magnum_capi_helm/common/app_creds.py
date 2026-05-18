@@ -134,6 +134,29 @@ def delete_app_cred(cluster, app_cred_id):
             app_cred = kst.client.application_credentials.get(app_cred_id)
         except keystoneauth1.exceptions.http.NotFound:
             raise ApplicationCredentialError(f"{app_cred_id} does not exist.")
+<<<<<<< PATCH SET (6116db WIP: Migrate out from stack_id)
+
+        if not app_cred.name.startswith(f"magnum-{cluster.uuid}"):
+            raise ApplicationCredentialError(
+                f"{app_cred_id} is not managed by Magnum."
+            )
+
+        app_cred.delete()
+    else:
+        # openstacksdk
+        try:
+            app_cred = kst.client.get_application_credential(
+                cluster.user_id, app_cred_id
+            )
+        except Exception:
+            raise ApplicationCredentialError(f"{app_cred_id} does not exist.")
+
+        if not app_cred.name.startswith(f"magnum-{cluster.uuid}"):
+            raise ApplicationCredentialError(
+                f"{app_cred_id} is not managed by Magnum."
+            )
+
+=======
         if not app_cred.name.startswith(f"magnum-{cluster.uuid}"):
             raise ApplicationCredentialError(
                 f"{app_cred_id} is not managed by Magnum."
@@ -151,4 +174,5 @@ def delete_app_cred(cluster, app_cred_id):
             raise ApplicationCredentialError(
                 f"{app_cred_id} is not managed by Magnum."
             )
+>>>>>>> BASE      (e3bbe7 Add support for OpenStackSDK in backwards compatible way)
         kst.client.delete_application_credential(cluster.user_id, app_cred_id)

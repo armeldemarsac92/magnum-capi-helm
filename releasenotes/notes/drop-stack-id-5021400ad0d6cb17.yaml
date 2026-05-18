@@ -1,0 +1,26 @@
+---
+upgrade:
+  - |
+    This release is required for compatibility with Magnum 2026.2 (Hibiscus),
+    which drops the ``stack_id`` field from the Cluster object.
+
+    The Helm release name for each cluster is now stored in the cluster's
+    ``labels`` dict under the key ``magnum_capi_helm_release``, rather than
+    in ``stack_id``.
+
+    Existing clusters are migrated automatically: each call to
+    ``update_cluster_status`` (the periodic status-poll that Magnum conductor
+    runs for every active cluster) will copy the ``stack_id`` value into the
+    new label if it has not been set yet.  No manual intervention is required,
+    provided operators upgrade to this driver release **before** upgrading
+    Magnum to 2026.2 (Hibiscus), so that the migration runs while
+    ``stack_id`` is still present on the Cluster object.
+
+    Clusters that are not polled at least once before the Magnum upgrade
+    (e.g. clusters stuck in a terminal state that are never polled) must be
+    migrated manually:
+
+    .. code-block:: bash
+
+        openstack coe cluster set <cluster> \
+            --label magnum_capi_helm_release=<current-stack-id>
