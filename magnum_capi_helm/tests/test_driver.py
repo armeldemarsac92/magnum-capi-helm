@@ -39,7 +39,11 @@ class ClusterAPIDriverTest(base.DbTestCase):
             name="cluster_example_$A",
             master_flavor_id="flavor_small",
             flavor_id="flavor_medium",
-            stack_id="cluster-example-a-111111111111",
+            labels={
+                driver_utils.RELEASE_NAME_LABEL: (
+                    "cluster-example-a-111111111111"
+                )
+            },
         )
         # add in missing node group flavor
         for ng in self.cluster_obj.nodegroups:
@@ -1081,34 +1085,64 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_get.assert_called_once_with(mock.ANY, "myimagename", "images")
 
     def test_get_chart_release_name_length(self):
-        self.cluster_obj.stack_id = "foo"
+        self.cluster_obj.labels[driver_utils.RELEASE_NAME_LABEL] = "foo"
 
         result = driver_utils.chart_release_name(self.cluster_obj)
 
         self.assertEqual("foo", result)
 
     def test_generate_release_name_skip(self):
-        self.cluster_obj.stack_id = "foo"
+        self.cluster_obj.labels[driver_utils.RELEASE_NAME_LABEL] = "foo"
         self.driver._generate_release_name(self.cluster_obj)
-        self.assertEqual("foo", self.cluster_obj.stack_id)
+        self.assertEqual(
+            "foo",
+            self.cluster_obj.labels[driver_utils.RELEASE_NAME_LABEL],
+        )
 
     def test_generate_release_name_generates(self):
-        self.cluster_obj.stack_id = None
+        del self.cluster_obj.labels[driver_utils.RELEASE_NAME_LABEL]
         self.cluster_obj.name = "a" * 77
 
         self.driver._generate_release_name(self.cluster_obj)
-        first = self.cluster_obj.stack_id
+        first = self.cluster_obj.labels[driver_utils.RELEASE_NAME_LABEL]
 
         self.assertEqual(43, len(first))
         self.assertTrue(self.cluster_obj.name[:30] in first)
 
-        self.cluster_obj.stack_id = None
+        del self.cluster_obj.labels[driver_utils.RELEASE_NAME_LABEL]
         self.driver._generate_release_name(self.cluster_obj)
-        second = self.cluster_obj.stack_id
+        second = self.cluster_obj.labels[driver_utils.RELEASE_NAME_LABEL]
 
         self.assertNotEqual(first, second)
         self.assertEqual(43, len(second))
         self.assertTrue(self.cluster_obj.name[:30] in second)
+
+    def test_migrate_release_name_noop_when_label_set(self):
+        self.cluster_obj.labels[driver_utils.RELEASE_NAME_LABEL] = "existing"
+        driver_utils.migrate_release_name(self.cluster_obj)
+        self.assertEqual(
+            "existing",
+            self.cluster_obj.labels[driver_utils.RELEASE_NAME_LABEL],
+        )
+
+    def test_migrate_release_name_from_stack_id(self):
+        del self.cluster_obj.labels[driver_utils.RELEASE_NAME_LABEL]
+        self.cluster_obj.stack_id = "old-release-name"
+        driver_utils.migrate_release_name(self.cluster_obj)
+        self.assertEqual(
+            "old-release-name",
+            self.cluster_obj.labels[driver_utils.RELEASE_NAME_LABEL],
+        )
+
+    def test_migrate_release_name_noop_without_stack_id(self):
+        del self.cluster_obj.labels[driver_utils.RELEASE_NAME_LABEL]
+        # Simulate stack_id already dropped from the Cluster object
+        if hasattr(self.cluster_obj, "stack_id"):
+            del self.cluster_obj.stack_id
+        driver_utils.migrate_release_name(self.cluster_obj)
+        self.assertNotIn(
+            driver_utils.RELEASE_NAME_LABEL, self.cluster_obj.labels
+        )
 
     def test_get_monitoring_enabled_from_template(self):
 

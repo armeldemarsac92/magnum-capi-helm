@@ -81,6 +81,10 @@ class CAPIMonitor(monitors.MonitorBase):
         The class variable data is updated with current status and reason.
 
         """
+        driver_utils.migrate_release_name(self.cluster)
+        if not driver_utils.chart_release_name(self.cluster):
+            return
+
         # Start with a good state for everything
         status = m_fields.ClusterHealthStatus.HEALTHY
         reason = {}
