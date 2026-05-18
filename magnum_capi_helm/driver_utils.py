@@ -37,8 +37,27 @@ def sanitized_name(name, suffix=None):
     ).strip("-")
 
 
+RELEASE_NAME_LABEL = "magnum_capi_helm_release"
+
+
 def chart_release_name(cluster):
-    return cluster.stack_id
+    return (cluster.labels or {}).get(RELEASE_NAME_LABEL)
+
+
+def migrate_release_name(cluster):
+    """Copy stack_id -> label for Magnum 2026.2 (Hibiscus) compatibility.
+
+    stack_id was dropped from the Cluster object in that release.  Safe to
+    call after the field is gone: getattr returns None silently.
+    """
+    if chart_release_name(cluster):
+        return
+    stack_id = getattr(cluster, "stack_id", None)
+    if stack_id:
+        if cluster.labels is None:
+            cluster.labels = {}
+        cluster.labels[RELEASE_NAME_LABEL] = stack_id
+        cluster.save()
 
 
 def get_k8s_resource_name(cluster, name):
