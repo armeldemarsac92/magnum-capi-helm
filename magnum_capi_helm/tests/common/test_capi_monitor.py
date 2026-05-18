@@ -18,6 +18,7 @@ from magnum.objects import fields as m_fields
 from magnum.tests.unit.db import base
 from magnum.tests.unit.objects import utils as obj_utils
 from magnum_capi_helm.common import capi_monitor
+from magnum_capi_helm import driver_utils
 
 
 class TestCAPIMonitor(base.DbTestCase):
@@ -28,7 +29,9 @@ class TestCAPIMonitor(base.DbTestCase):
             name="cluster_example_$A",
             master_flavor_id="flavor_small",
             flavor_id="flavor_medium",
-            stack_id="cluster-example-a-111111111111",
+            labels={
+                driver_utils.RELEASE_NAME_LABEL: "cluster-example-a-111111111111"
+            },
         )
         # add in missing node group flavor
         for ng in self.cluster_obj.nodegroups:

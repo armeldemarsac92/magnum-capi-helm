@@ -37,8 +37,11 @@ def sanitized_name(name, suffix=None):
     ).strip("-")
 
 
+RELEASE_NAME_LABEL = "magnum_capi_helm_release"
+
+
 def chart_release_name(cluster):
-    return cluster.stack_id
+    return (cluster.labels or {}).get(RELEASE_NAME_LABEL)
 
 
 def get_k8s_resource_name(cluster, name):
