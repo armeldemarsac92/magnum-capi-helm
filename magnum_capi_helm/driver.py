@@ -388,6 +388,8 @@ class Driver(driver.Driver):
         return False
 
     def update_cluster_status(self, context, cluster):
+        driver_utils.migrate_release_name(cluster)
+
         # NOTE(mkjpryor)
         # Because Kubernetes operators are built around reconciliation loops,
         # Cluster API clusters don't really go into an error state
@@ -560,6 +562,8 @@ class Driver(driver.Driver):
     def _get_app_cred_id(self, cluster):
         # determine the existing application credential secret
         secret_name = self._get_app_cred_secret_name(cluster)
+        if not secret_name:
+            return None
         secret_namespace = driver_utils.cluster_namespace(cluster)
 
         # fetch the existing secret and unpack the application credential ID
@@ -670,10 +674,19 @@ class Driver(driver.Driver):
         nova = clients.OpenStackClients(context).nova()
         if hasattr(nova.flavors, "list"):
             # novaclient
+<<<<<<< PATCH SET (447e4a WIP: Migrate out from stack_id)
+            flavors = nova.flavors.list(
+                min_ram=CONF.capi_helm.minimum_flavor_ram
+            )
+        else:
+            # openstacksdk compute proxy
+            flavors = nova.flavors(min_ram=CONF.capi_helm.minimum_flavor_ram)
+=======
             flavors = nova.flavors.list(min_ram=CONF.capi_helm.minimum_flavor_ram)
         else:
             # openstacksdk
             flavors = list(nova.flavors(min_ram=CONF.capi_helm.minimum_flavor_ram))
+>>>>>>> BASE      (21a44f Add support for OpenStackSDK in backwards compatible way)
         for flavor in flavors:
             vcpus = flavor.vcpus
             LOG.debug(
@@ -1078,7 +1091,7 @@ class Driver(driver.Driver):
         )
 
     def _generate_release_name(self, cluster):
-        if cluster.stack_id:
+        if driver_utils.chart_release_name(cluster):
             return
 
         # Make sure no duplicate names
@@ -1086,11 +1099,13 @@ class Driver(driver.Driver):
         random_bit = short_id.generate_id()
         base_name = driver_utils.sanitized_name(cluster.name)
         # valid release names are 53 chars long
-        # and stack_id is 12 characters
         # but we also use this to derive hostnames
         trimmed_name = base_name[:30]
         # Save the full name, so users can rename in the API
-        cluster.stack_id = f"{trimmed_name}-{random_bit}".lower()
+        release_name = f"{trimmed_name}-{random_bit}".lower()
+        if cluster.labels is None:
+            cluster.labels = {}
+        cluster.labels[driver_utils.RELEASE_NAME_LABEL] = release_name
         # be sure to save this before we use it
         cluster.save()
 
