@@ -9,6 +9,7 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
+import types
 from unittest import mock
 from uuid import uuid4
 
@@ -3497,3 +3498,39 @@ class ClusterAPIDriverTest(base.DbTestCase):
             fields.ClusterStatus.UPDATE_FAILED, self.cluster_obj.status
         )
         self.assertIsNotNone(self.cluster_obj.status_reason)
+
+    def test_process_node_groups_emits_labels_and_taints(self):
+        taints = [
+            {"key": "workload", "value": "gpu", "effect": "NoSchedule"},
+            {"key": "dedicated", "value": "", "effect": "NoExecute"},
+        ]
+        ng = types.SimpleNamespace(
+            role="worker",
+            name="worker-gpu",
+            flavor_id="flavor_medium",
+            node_count=2,
+            node_labels={"workload": "gpu"},
+            node_taints=taints,
+        )
+
+        result = self.driver._process_node_groups(self.cluster_obj, [ng])
+
+        self.assertEqual(1, len(result))
+        self.assertEqual({"workload": "gpu"}, result[0]["nodeLabels"])
+        self.assertEqual(taints, result[0]["nodeTaints"])
+
+    def test_process_node_groups_omits_empty_labels_and_taints(self):
+        ng = types.SimpleNamespace(
+            role="worker",
+            name="worker-plain",
+            flavor_id="flavor_medium",
+            node_count=1,
+            node_labels=None,
+            node_taints=None,
+        )
+
+        result = self.driver._process_node_groups(self.cluster_obj, [ng])
+
+        self.assertEqual(1, len(result))
+        self.assertNotIn("nodeLabels", result[0])
+        self.assertNotIn("nodeTaints", result[0])

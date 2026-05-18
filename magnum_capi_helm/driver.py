@@ -877,6 +877,12 @@ class Driver(driver.Driver):
                     machineFlavor=ng.flavor_id,
                     machineCount=ng.node_count,
                 )
+                node_labels = getattr(ng, "node_labels", None)
+                if node_labels:
+                    nodegroup_item["nodeLabels"] = node_labels
+                node_taints = getattr(ng, "node_taints", None)
+                if node_taints:
+                    nodegroup_item["nodeTaints"] = node_taints
                 if self._get_autoscale_enabled(cluster):
                     values = self._get_autoscale_values(cluster, ng)
                     nodegroup_item = helm.mergeconcat(nodegroup_item, values)
