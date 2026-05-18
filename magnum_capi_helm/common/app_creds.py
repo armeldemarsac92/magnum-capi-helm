@@ -128,14 +128,31 @@ def delete_app_cred(cluster, app_cred_id):
         f"for cluster {cluster.uuid}"
     )
 
-    try:
-        app_cred = kst.client.application_credentials.get(app_cred_id)
-    except keystoneauth1.exceptions.http.NotFound:
-        raise ApplicationCredentialError(f"{app_cred_id} does not exist.")
+    if hasattr(kst.client.application_credentials, "get"):
+        # keystoneclient
+        try:
+            app_cred = kst.client.application_credentials.get(app_cred_id)
+        except keystoneauth1.exceptions.http.NotFound:
+            raise ApplicationCredentialError(f"{app_cred_id} does not exist.")
 
-    if not app_cred.name.startswith(f"magnum-{cluster.uuid}"):
-        raise ApplicationCredentialError(
-            f"{app_cred_id} is not managed by Magnum."
-        )
+        if not app_cred.name.startswith(f"magnum-{cluster.uuid}"):
+            raise ApplicationCredentialError(
+                f"{app_cred_id} is not managed by Magnum."
+            )
 
-    app_cred.delete()
+        app_cred.delete()
+    else:
+        # openstacksdk
+        try:
+            app_cred = kst.client.get_application_credential(
+                cluster.user_id, app_cred_id
+            )
+        except Exception:
+            raise ApplicationCredentialError(f"{app_cred_id} does not exist.")
+
+        if not app_cred.name.startswith(f"magnum-{cluster.uuid}"):
+            raise ApplicationCredentialError(
+                f"{app_cred_id} is not managed by Magnum."
+            )
+
+        kst.client.delete_application_credential(cluster.user_id, app_cred_id)
