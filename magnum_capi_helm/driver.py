@@ -539,10 +539,15 @@ class Driver(driver.Driver):
         return re.sub(r"[^a-zA-Z0-9\.\-\/ ]+", "", os_distro)
 
     def _get_image_details(self, context, image_identifier):
-        osc = clients.OpenStackClients(context)
-        image = api_utils.get_openstack_resource(
-            osc.glance().images, image_identifier, "images"
-        )
+        glance = clients.OpenStackClients(context).glance()
+        if hasattr(glance.images, "get"):
+            # glanceclient
+            image = api_utils.get_openstack_resource(
+                glance.images, image_identifier, "images"
+            )
+        else:
+            # openstacksdk
+            image = glance.find_image(image_identifier)
         return (
             image.id,
             self._get_kube_version(image),
@@ -662,11 +667,13 @@ class Driver(driver.Driver):
 
     def _validate_allowed_flavor(self, context, requested_flavor):
         # Compare requested flavor with allowed for Kubernetes node
-        flavors = (
-            clients.OpenStackClients(context)
-            .nova()
-            .flavors.list(min_ram=CONF.capi_helm.minimum_flavor_ram)
-        )
+        nova = clients.OpenStackClients(context).nova()
+        if hasattr(nova.flavors, "list"):
+            # novaclient
+            flavors = nova.flavors.list(min_ram=CONF.capi_helm.minimum_flavor_ram)
+        else:
+            # openstacksdk
+            flavors = list(nova.flavors(min_ram=CONF.capi_helm.minimum_flavor_ram))
         for flavor in flavors:
             vcpus = flavor.vcpus
             LOG.debug(
@@ -816,10 +823,14 @@ class Driver(driver.Driver):
         @return dict(dict,list(dict)) containing storage classes
         """
         LOG.debug("Retrieve volume types from cinder for StorageClasses.")
-        client = clients.OpenStackClients(context)
         availability_zone = self._get_csi_cinder_availability_zone(cluster)
-        c_client = client.cinder()
-        volume_types = [i.name for i in c_client.volume_types.list()]
+        c_client = clients.OpenStackClients(context).cinder()
+        if hasattr(c_client.volume_types, "list"):
+            # cinderclient
+            volume_types = [i.name for i in c_client.volume_types.list()]
+        else:
+            # openstacksdk
+            volume_types = [i.name for i in c_client.volume_types()]
         # Use the default volume type if defined. Otherwise use the first
         # type returned by cinder.
         default_volume_type = CONF.capi_helm.csi_cinder_default_volume_type
