@@ -38,6 +38,13 @@ LOG = logging.getLogger(__name__)
 CONF = conf.CONF
 NODE_GROUP_ROLE_CONTROLLER = "master"
 
+# Cache for _get_image_details. kube_version / os_distro are immutable
+# image properties so a process-lifetime cache keyed by the identifier
+# passed to Glance is safe. Bounded to keep memory predictable across
+# deployments with many images.
+_IMAGE_DETAILS_CACHE: dict = {}
+_IMAGE_DETAILS_CACHE_MAX = 128
+
 
 class NodeGroupState(enum.Enum):
     NOT_PRESENT = 1
@@ -79,7 +86,9 @@ class Driver(driver.Driver):
         # as initial create, so re-use the Base class validation.
         return self.validate_master_size(node_count)
 
-    def _update_control_plane_nodegroup_status(self, cluster, nodegroup):
+    def _update_control_plane_nodegroup_status(
+        self, cluster, nodegroup, expected_kube_version
+    ):
         # The status of the master nodegroup is determined by the Cluster API
         # control plane object
         kcp = self._k8s_client.get_k8s_control_plane(
@@ -91,6 +100,7 @@ class Driver(driver.Driver):
         if kcp:
             ng_state = NodeGroupState.PENDING
 
+        kcp_meta = kcp.get("metadata", {}) if kcp else {}
         kcp_spec = kcp.get("spec", {}) if kcp else {}
         kcp_status = kcp.get("status", {}) if kcp else {}
 
@@ -114,8 +124,19 @@ class Driver(driver.Driver):
         current_replicas = kcp_status.get("replicas")
         updated_replicas = kcp_status.get("updatedReplicas")
         ready_replicas = kcp_status.get("readyReplicas")
+        # Guard against the periodic task racing an upgrade: spec.version may
+        # still be the old version if helm has not yet applied, and
+        # observedGeneration lags metadata.generation while CAPI is
+        # reconciling. Without these checks an upgrade can be marked
+        # UPDATE_COMPLETE before the rollout has started.
+        spec_at_target = kcp_spec.get("version") == expected_kube_version
+        capi_observed_spec = kcp_status.get(
+            "observedGeneration"
+        ) == kcp_meta.get("generation")
         if (
             kcp_ready
+            and spec_at_target
+            and capi_observed_spec
             and target_replicas == current_replicas
             and current_replicas == updated_replicas
             and updated_replicas == ready_replicas
@@ -125,7 +146,9 @@ class Driver(driver.Driver):
         # TODO(mkjpryor) Work out a way to determine FAILED state
         return self._update_nodegroup_status(cluster, nodegroup, ng_state)
 
-    def _update_worker_nodegroup_status(self, cluster, nodegroup):
+    def _update_worker_nodegroup_status(
+        self, cluster, nodegroup, expected_kube_version
+    ):
         # The status of a worker nodegroup is determined by the corresponding
         # Cluster API machine deployment
         md = self._k8s_client.get_machine_deployment(
@@ -154,10 +177,21 @@ class Driver(driver.Driver):
             )
             ng_state = NodeGroupState.PENDING
 
+        md_meta = md.get("metadata", {}) if md else {}
+        md_spec = md.get("spec", {}) if md else {}
         md_status = md.get("status", {}) if md else {}
         md_phase = md_status.get("phase")
+        md_template_version = (
+            md_spec.get("template", {}).get("spec", {}).get("version")
+        )
+        # See _update_control_plane_nodegroup_status: same race guard, but
+        # the worker version lives on the MachineDeployment template spec.
+        spec_at_target = md_template_version == expected_kube_version
+        capi_observed_spec = md_status.get(
+            "observedGeneration"
+        ) == md_meta.get("generation")
         if md_phase:
-            if md_phase == "Running":
+            if md_phase == "Running" and spec_at_target and capi_observed_spec:
                 ng_state = NodeGroupState.READY
             elif md_phase in {"Failed", "Unknown"}:
                 ng_state = NodeGroupState.FAILED
@@ -364,19 +398,25 @@ class Driver(driver.Driver):
                 driver_utils.cluster_namespace(cluster),
             )
 
-    def _update_all_nodegroups_status(self, cluster):
+    def _update_all_nodegroups_status(self, context, cluster):
         """Returns True if any node group still in progress."""
+        _, kube_version, _ = self._get_image_details(
+            context, cluster.cluster_template.image_id
+        )
+        # The helm chart writes "v<version>" into KCP / MachineDeployment
+        # spec.version, but _get_image_details returns the stripped form.
+        expected_spec_version = f"v{kube_version}"
         nodegroups = []
         for nodegroup in cluster.nodegroups:
             if nodegroup.role == NODE_GROUP_ROLE_CONTROLLER:
                 updated_nodegroup = (
                     self._update_control_plane_nodegroup_status(
-                        cluster, nodegroup
+                        cluster, nodegroup, expected_spec_version
                     )
                 )
             else:
                 updated_nodegroup = self._update_worker_nodegroup_status(
-                    cluster, nodegroup
+                    cluster, nodegroup, expected_spec_version
                 )
             if updated_nodegroup:
                 nodegroups.append(updated_nodegroup)
@@ -406,7 +446,7 @@ class Driver(driver.Driver):
             # Update the nodegroups first
             # to ensure API never returns an inconsistent state
             nodegroups_in_progress = self._update_all_nodegroups_status(
-                cluster
+                context, cluster
             )
 
         if cluster.status in {
@@ -547,6 +587,10 @@ class Driver(driver.Driver):
         return re.sub(r"[^a-zA-Z0-9\.\-\/ ]+", "", os_distro)
 
     def _get_image_details(self, context, image_identifier):
+        cached = _IMAGE_DETAILS_CACHE.get(image_identifier)
+        if cached is not None:
+            return cached
+
         glance = clients.OpenStackClients(context).glance()
         if hasattr(glance.images, "get"):
             # glanceclient
@@ -556,11 +600,16 @@ class Driver(driver.Driver):
         else:
             # openstacksdk
             image = glance.find_image(image_identifier)
-        return (
+        result = (
             image.id,
             self._get_kube_version(image),
             self._get_os_distro(image),
         )
+
+        if len(_IMAGE_DETAILS_CACHE) >= _IMAGE_DETAILS_CACHE_MAX:
+            _IMAGE_DETAILS_CACHE.pop(next(iter(_IMAGE_DETAILS_CACHE)))
+        _IMAGE_DETAILS_CACHE[image_identifier] = result
+        return result
 
     def _get_app_cred_secret_name(self, cluster):
         return driver_utils.get_k8s_resource_name(cluster, "cloud-credentials")

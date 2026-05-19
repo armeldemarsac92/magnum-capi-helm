@@ -1,0 +1,14 @@
+---
+fixes:
+  - |
+    Fixes a race condition where the periodic ``sync_cluster_status`` task
+    could mark a cluster upgrade as ``UPDATE_COMPLETE`` before helm had
+    applied the new chart or before the Cluster API controllers had
+    reconciled the new spec. When this happened the upgrade still rolled
+    out, but cluster fields such as ``coe_version`` were never refreshed
+    because the periodic task stops polling once a cluster reaches a
+    terminal state. The nodegroup status check now also requires the
+    KubeadmControlPlane and MachineDeployment ``spec.version`` to match the
+    target Kubernetes version from the cluster template image, and
+    ``status.observedGeneration`` to match ``metadata.generation``, before
+    declaring a nodegroup ready.
