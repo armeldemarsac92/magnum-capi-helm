@@ -62,14 +62,26 @@ def _get_openstack_ca_certificate():
 
 def create_app_cred(context, cluster):
     osc = clients.OpenStackClients(context)
+    kst = osc.keystone()
+    name = f"magnum-{cluster.uuid}-{secrets.token_hex(4)}"
+    description = f"Magnum cluster ({cluster.name or cluster.uuid})"
     # TODO(johngarbutt) be sure not to allow the admin role
     # roles = [role for role in context.roles if role != "admin"]
-    return osc.keystone().client.application_credentials.create(
-        user=context.user_id,
-        name=f"magnum-{cluster.uuid}-{secrets.token_hex(4)}",
-        description=f"Magnum cluster ({cluster.name or cluster.uuid})",
-        # roles=roles,
-    )
+    if hasattr(kst.client.application_credentials, "create"):
+        # keystoneclient
+        return kst.client.application_credentials.create(
+            user=context.user_id,
+            name=name,
+            description=description,
+            # roles=roles,
+        )
+    else:
+        # openstacksdk
+        return kst.client.create_application_credential(
+            context.user_id,
+            name=name,
+            description=description,
+        )
 
 
 def _get_app_cred_clouds_dict(context, app_cred):
