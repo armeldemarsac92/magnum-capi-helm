@@ -33,6 +33,7 @@ CONF = conf.CONF
 class ClusterAPIDriverTest(base.DbTestCase):
     def setUp(self):
         super(ClusterAPIDriverTest, self).setUp()
+        driver._IMAGE_DETAILS_CACHE.clear()
         self.driver = driver.Driver()
         self.cluster_obj = obj_utils.create_test_cluster(
             self.context,
@@ -77,7 +78,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
 
         self.driver.update_cluster_status(self.context, self.cluster_obj)
 
-        mock_ng.assert_called_once_with(self.cluster_obj)
+        mock_ng.assert_called_once_with(self.context, self.cluster_obj)
         mock_update.assert_not_called()
         mock_delete.assert_not_called()
 
@@ -111,7 +112,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
 
         self.driver.update_cluster_status(self.context, self.cluster_obj)
 
-        mock_ng.assert_called_once_with(self.cluster_obj)
+        mock_ng.assert_called_once_with(self.context, self.cluster_obj)
         mock_update.assert_called_once_with(self.cluster_obj, {"spec": {}})
         mock_delete.assert_not_called()
 
@@ -143,7 +144,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
 
         self.driver.update_cluster_status(self.context, self.cluster_obj)
 
-        mock_ng.assert_called_once_with(self.cluster_obj)
+        mock_ng.assert_called_once_with(self.context, self.cluster_obj)
         mock_update.assert_not_called()
         mock_delete.assert_not_called()
 
@@ -159,15 +160,17 @@ class ClusterAPIDriverTest(base.DbTestCase):
 
         self.driver.update_cluster_status(self.context, self.cluster_obj)
 
-        mock_ng.assert_called_once_with(self.cluster_obj)
+        mock_ng.assert_called_once_with(self.context, self.cluster_obj)
         mock_update.assert_not_called()
         mock_delete.assert_not_called()
 
+    @mock.patch.object(driver.Driver, "_get_image_details")
     @mock.patch.object(driver.Driver, "_update_worker_nodegroup_status")
     @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
     def test_update_all_nodegroups_status_not_in_progress(
-        self, mock_cp, mock_w
+        self, mock_cp, mock_w, mock_image
     ):
+        mock_image.return_value = ("image-id", "1.30.1", "ubuntu")
         control_plane = [
             ng
             for ng in self.cluster_obj.nodegroups
@@ -177,7 +180,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_cp.return_value = control_plane
         mock_w.return_value = None
 
-        result = self.driver._update_all_nodegroups_status(self.cluster_obj)
+        result = self.driver._update_all_nodegroups_status(
+            self.context, self.cluster_obj
+        )
 
         self.assertFalse(result)
         control_plane = [
@@ -185,12 +190,12 @@ class ClusterAPIDriverTest(base.DbTestCase):
             for ng in self.cluster_obj.nodegroups
             if ng.role == driver.NODE_GROUP_ROLE_CONTROLLER
         ][0]
-        mock_cp.assert_called_once_with(self.cluster_obj, mock.ANY)
+        mock_cp.assert_called_once_with(self.cluster_obj, mock.ANY, "v1.30.1")
         self.assertEqual(
             control_plane.obj_to_primitive(),
             mock_cp.call_args_list[0][0][1].obj_to_primitive(),
         )
-        mock_w.assert_called_once_with(self.cluster_obj, mock.ANY)
+        mock_w.assert_called_once_with(self.cluster_obj, mock.ANY, "v1.30.1")
         worker = [
             ng
             for ng in self.cluster_obj.nodegroups
@@ -201,9 +206,13 @@ class ClusterAPIDriverTest(base.DbTestCase):
             mock_w.call_args_list[0][0][1].obj_to_primitive(),
         )
 
+    @mock.patch.object(driver.Driver, "_get_image_details")
     @mock.patch.object(driver.Driver, "_update_worker_nodegroup_status")
     @mock.patch.object(driver.Driver, "_update_control_plane_nodegroup_status")
-    def test_update_all_nodegroups_status_in_progress(self, mock_cp, mock_w):
+    def test_update_all_nodegroups_status_in_progress(
+        self, mock_cp, mock_w, mock_image
+    ):
+        mock_image.return_value = ("image-id", "1.30.1", "ubuntu")
         control_plane = [
             ng
             for ng in self.cluster_obj.nodegroups
@@ -213,11 +222,13 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_cp.return_value = control_plane
         mock_w.return_value = None
 
-        result = self.driver._update_all_nodegroups_status(self.cluster_obj)
+        result = self.driver._update_all_nodegroups_status(
+            self.context, self.cluster_obj
+        )
 
         self.assertTrue(result)
-        mock_cp.assert_called_once_with(self.cluster_obj, mock.ANY)
-        mock_w.assert_called_once_with(self.cluster_obj, mock.ANY)
+        mock_cp.assert_called_once_with(self.cluster_obj, mock.ANY, "v1.30.1")
+        mock_w.assert_called_once_with(self.cluster_obj, mock.ANY, "v1.30.1")
 
     @mock.patch.object(driver.Driver, "_update_nodegroup_status")
     @mock.patch.object(kubernetes.Client, "load")
@@ -233,7 +244,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_client.get_machine_deployment.return_value = md
 
         self.driver._update_worker_nodegroup_status(
-            self.cluster_obj, nodegroup
+            self.cluster_obj, nodegroup, "1.30.1"
         )
 
         mock_client.get_machine_deployment.assert_called_once_with(
@@ -256,7 +267,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_client.get_machine_deployment.return_value = md
 
         self.driver._update_worker_nodegroup_status(
-            self.cluster_obj, nodegroup
+            self.cluster_obj, nodegroup, "1.30.1"
         )
 
         mock_client.get_machine_deployment.assert_called_once_with(
@@ -280,7 +291,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_client.get_machine_deployment.return_value = md
 
         self.driver._update_worker_nodegroup_status(
-            self.cluster_obj, nodegroup
+            self.cluster_obj, nodegroup, "1.30.1"
         )
 
         mock_client.get_machine_deployment.assert_called_once_with(
@@ -304,7 +315,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_client.get_all_machines_by_label.return_value = None
 
         self.driver._update_worker_nodegroup_status(
-            self.cluster_obj, nodegroup
+            self.cluster_obj, nodegroup, "1.30.1"
         )
 
         mock_client.get_machine_deployment.assert_called_once_with(
@@ -332,7 +343,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_client.get_all_machines_by_label.return_value = machine
 
         self.driver._update_worker_nodegroup_status(
-            self.cluster_obj, nodegroup
+            self.cluster_obj, nodegroup, "1.30.1"
         )
 
         mock_client.get_machine_deployment.assert_called_once_with(
@@ -364,7 +375,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_client.get_all_machines_by_label.return_value = None
 
         self.driver._update_worker_nodegroup_status(
-            self.cluster_obj, nodegroup
+            self.cluster_obj, nodegroup, "1.30.1"
         )
 
         mock_client.get_machine_deployment.assert_called_once_with(
@@ -390,11 +401,18 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_load.return_value = mock_client
         nodegroup = mock.MagicMock()
         nodegroup.name = "workers"
-        md = {"status": {"phase": "Running"}}
+        md = {
+            "metadata": {"generation": 3},
+            "spec": {"template": {"spec": {"version": "1.30.1"}}},
+            "status": {
+                "phase": "Running",
+                "observedGeneration": 3,
+            },
+        }
         mock_client.get_machine_deployment.return_value = md
 
         self.driver._update_worker_nodegroup_status(
-            self.cluster_obj, nodegroup
+            self.cluster_obj, nodegroup, "1.30.1"
         )
 
         mock_client.get_machine_deployment.assert_called_once_with(
@@ -402,6 +420,60 @@ class ClusterAPIDriverTest(base.DbTestCase):
         )
         mock_update.assert_called_once_with(
             self.cluster_obj, mock.ANY, driver.NodeGroupState.READY
+        )
+
+    @mock.patch.object(driver.Driver, "_update_nodegroup_status")
+    @mock.patch.object(kubernetes.Client, "load")
+    def test_update_worker_nodegroup_status_running_stale_spec(
+        self, mock_load, mock_update
+    ):
+        mock_client = mock.MagicMock(spec=kubernetes.Client)
+        mock_load.return_value = mock_client
+        nodegroup = mock.MagicMock()
+        nodegroup.name = "workers"
+        md = {
+            "metadata": {"generation": 3},
+            "spec": {"template": {"spec": {"version": "1.29.5"}}},
+            "status": {
+                "phase": "Running",
+                "observedGeneration": 3,
+            },
+        }
+        mock_client.get_machine_deployment.return_value = md
+
+        self.driver._update_worker_nodegroup_status(
+            self.cluster_obj, nodegroup, "1.30.1"
+        )
+
+        mock_update.assert_called_once_with(
+            self.cluster_obj, mock.ANY, driver.NodeGroupState.PENDING
+        )
+
+    @mock.patch.object(driver.Driver, "_update_nodegroup_status")
+    @mock.patch.object(kubernetes.Client, "load")
+    def test_update_worker_nodegroup_status_running_unobserved_spec(
+        self, mock_load, mock_update
+    ):
+        mock_client = mock.MagicMock(spec=kubernetes.Client)
+        mock_load.return_value = mock_client
+        nodegroup = mock.MagicMock()
+        nodegroup.name = "workers"
+        md = {
+            "metadata": {"generation": 4},
+            "spec": {"template": {"spec": {"version": "1.30.1"}}},
+            "status": {
+                "phase": "Running",
+                "observedGeneration": 3,
+            },
+        }
+        mock_client.get_machine_deployment.return_value = md
+
+        self.driver._update_worker_nodegroup_status(
+            self.cluster_obj, nodegroup, "1.30.1"
+        )
+
+        mock_update.assert_called_once_with(
+            self.cluster_obj, mock.ANY, driver.NodeGroupState.PENDING
         )
 
     @mock.patch.object(driver.Driver, "_update_nodegroup_status")
@@ -416,7 +488,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_client.get_k8s_control_plane.return_value = None
 
         self.driver._update_control_plane_nodegroup_status(
-            self.cluster_obj, nodegroup
+            self.cluster_obj, nodegroup, "1.30.1"
         )
 
         mock_client.get_k8s_control_plane.assert_called_once_with(
@@ -458,7 +530,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_client.get_k8s_control_plane.return_value = kcp
 
         self.driver._update_control_plane_nodegroup_status(
-            self.cluster_obj, nodegroup
+            self.cluster_obj, nodegroup, "1.30.1"
         )
 
         mock_client.get_k8s_control_plane.assert_called_once_with(
@@ -500,7 +572,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_client.get_k8s_control_plane.return_value = kcp
 
         self.driver._update_control_plane_nodegroup_status(
-            self.cluster_obj, nodegroup
+            self.cluster_obj, nodegroup, "1.30.1"
         )
 
         mock_client.get_k8s_control_plane.assert_called_once_with(
@@ -521,8 +593,10 @@ class ClusterAPIDriverTest(base.DbTestCase):
         nodegroup = mock.MagicMock()
         nodegroup.name = "masters"
         kcp = {
+            "metadata": {"generation": 5},
             "spec": {
                 "replicas": 3,
+                "version": "1.30.1",
             },
             "status": {
                 "conditions": [
@@ -534,6 +608,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
                         "status": "True",
                     },
                 ],
+                "observedGeneration": 5,
                 "replicas": 3,
                 "updatedReplicas": 3,
                 "readyReplicas": 3,
@@ -542,7 +617,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_client.get_k8s_control_plane.return_value = kcp
 
         self.driver._update_control_plane_nodegroup_status(
-            self.cluster_obj, nodegroup
+            self.cluster_obj, nodegroup, "1.30.1"
         )
 
         mock_client.get_k8s_control_plane.assert_called_once_with(
@@ -551,6 +626,88 @@ class ClusterAPIDriverTest(base.DbTestCase):
         )
         mock_update.assert_called_once_with(
             self.cluster_obj, mock.ANY, driver.NodeGroupState.READY
+        )
+
+    @mock.patch.object(driver.Driver, "_update_nodegroup_status")
+    @mock.patch.object(kubernetes.Client, "load")
+    def test_update_control_plane_nodegroup_status_stale_spec(
+        self, mock_load, mock_update
+    ):
+        mock_client = mock.MagicMock(spec=kubernetes.Client)
+        mock_load.return_value = mock_client
+        nodegroup = mock.MagicMock()
+        nodegroup.name = "masters"
+        kcp = {
+            "metadata": {"generation": 5},
+            "spec": {
+                "replicas": 3,
+                "version": "1.29.5",
+            },
+            "status": {
+                "conditions": [
+                    {"type": "MachinesReady", "status": "True"},
+                    {"type": "Ready", "status": "True"},
+                    {"type": "EtcdClusterHealthy", "status": "True"},
+                    {
+                        "type": "ControlPlaneComponentsHealthy",
+                        "status": "True",
+                    },
+                ],
+                "observedGeneration": 5,
+                "replicas": 3,
+                "updatedReplicas": 3,
+                "readyReplicas": 3,
+            },
+        }
+        mock_client.get_k8s_control_plane.return_value = kcp
+
+        self.driver._update_control_plane_nodegroup_status(
+            self.cluster_obj, nodegroup, "1.30.1"
+        )
+
+        mock_update.assert_called_once_with(
+            self.cluster_obj, mock.ANY, driver.NodeGroupState.PENDING
+        )
+
+    @mock.patch.object(driver.Driver, "_update_nodegroup_status")
+    @mock.patch.object(kubernetes.Client, "load")
+    def test_update_control_plane_nodegroup_status_unobserved_spec(
+        self, mock_load, mock_update
+    ):
+        mock_client = mock.MagicMock(spec=kubernetes.Client)
+        mock_load.return_value = mock_client
+        nodegroup = mock.MagicMock()
+        nodegroup.name = "masters"
+        kcp = {
+            "metadata": {"generation": 6},
+            "spec": {
+                "replicas": 3,
+                "version": "1.30.1",
+            },
+            "status": {
+                "conditions": [
+                    {"type": "MachinesReady", "status": "True"},
+                    {"type": "Ready", "status": "True"},
+                    {"type": "EtcdClusterHealthy", "status": "True"},
+                    {
+                        "type": "ControlPlaneComponentsHealthy",
+                        "status": "True",
+                    },
+                ],
+                "observedGeneration": 5,
+                "replicas": 3,
+                "updatedReplicas": 3,
+                "readyReplicas": 3,
+            },
+        }
+        mock_client.get_k8s_control_plane.return_value = kcp
+
+        self.driver._update_control_plane_nodegroup_status(
+            self.cluster_obj, nodegroup, "1.30.1"
+        )
+
+        mock_update.assert_called_once_with(
+            self.cluster_obj, mock.ANY, driver.NodeGroupState.PENDING
         )
 
     @mock.patch.object(kubernetes.Client, "load")
@@ -1106,6 +1263,47 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_image.get.assert_any_call("kube_version")
         mock_image.get.assert_any_call("os_distro")
         mock_get.assert_called_once_with(mock.ANY, "myimagename", "images")
+
+    @mock.patch("magnum.common.clients.OpenStackClients", autospec=True)
+    @mock.patch("magnum.api.utils.get_openstack_resource", autospec=True)
+    def test_get_image_details_cached(self, mock_get, mock_osc):
+        mock_image = mock.Mock()
+        mock_image.get.side_effect = lambda k: {
+            "os_distro": "ubuntu",
+            "kube_version": "1.30.1",
+        }[k]
+        mock_image.id = "img-uuid"
+        mock_get.return_value = mock_image
+
+        first = self.driver._get_image_details(self.context, "an-image")
+        second = self.driver._get_image_details(self.context, "an-image")
+
+        self.assertEqual(("img-uuid", "1.30.1", "ubuntu"), first)
+        self.assertEqual(first, second)
+        mock_get.assert_called_once_with(mock.ANY, "an-image", "images")
+
+    @mock.patch("magnum.common.clients.OpenStackClients", autospec=True)
+    @mock.patch("magnum.api.utils.get_openstack_resource", autospec=True)
+    def test_get_image_details_cache_evicts(self, mock_get, mock_osc):
+        mock_image = mock.Mock()
+        mock_image.get.side_effect = lambda k: {
+            "os_distro": "ubuntu",
+            "kube_version": "1.30.1",
+        }[k]
+        mock_image.id = "img-uuid"
+        mock_get.return_value = mock_image
+
+        # Fill the cache up to its bound.
+        for i in range(driver._IMAGE_DETAILS_CACHE_MAX):
+            self.driver._get_image_details(self.context, f"image-{i}")
+        # Inserting one more should evict the oldest entry (image-0).
+        self.driver._get_image_details(self.context, "image-extra")
+
+        self.assertEqual(
+            driver._IMAGE_DETAILS_CACHE_MAX, len(driver._IMAGE_DETAILS_CACHE)
+        )
+        self.assertNotIn("image-0", driver._IMAGE_DETAILS_CACHE)
+        self.assertIn("image-extra", driver._IMAGE_DETAILS_CACHE)
 
     @mock.patch("magnum.common.clients.OpenStackClients", autospec=True)
     def test_get_image_details_ubuntu_openstacksdk(self, mock_osc):
