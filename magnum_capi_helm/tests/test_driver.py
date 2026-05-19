@@ -1080,35 +1080,119 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_image.get.assert_any_call("os_distro")
         mock_get.assert_called_once_with(mock.ANY, "myimagename", "images")
 
+    @mock.patch("magnum.common.clients.OpenStackClients", autospec=True)
+    def test_get_image_details_ubuntu_openstacksdk(self, mock_osc):
+        mock_image = mock.Mock()
+        image_metadata = {
+            "os_distro": "ubuntu",
+            "kube_version": "1.27.9",
+        }
+
+        def image_side_effect(arg):
+            return image_metadata[arg]
+
+        mock_image.get.side_effect = image_side_effect
+        mock_image.id = "myid"
+        mock_glance = mock.MagicMock()
+        mock_glance.images = mock.Mock(spec=[])  # no 'get' → openstacksdk path
+        mock_glance.find_image.return_value = mock_image
+        mock_osc.return_value.glance.return_value = mock_glance
+
+        id, version, distro = self.driver._get_image_details(
+            self.context, "myimagename"
+        )
+
+        self.assertEqual("1.27.9", version)
+        self.assertEqual("myid", id)
+        self.assertEqual("ubuntu", distro)
+        mock_glance.find_image.assert_called_once_with("myimagename")
+
+    @mock.patch("magnum.common.clients.OpenStackClients", autospec=True)
+    def test_get_image_details_flatcar_openstacksdk(self, mock_osc):
+        mock_image = mock.Mock()
+        image_metadata = {
+            "os_distro": "flatcar",
+            "kube_version": "1.28.2",
+        }
+
+        def image_side_effect(arg):
+            return image_metadata[arg]
+
+        mock_image.get.side_effect = image_side_effect
+        mock_image.id = "myid-flatcar"
+        mock_glance = mock.MagicMock()
+        mock_glance.images = mock.Mock(spec=[])  # no 'get' → openstacksdk path
+        mock_glance.find_image.return_value = mock_image
+        mock_osc.return_value.glance.return_value = mock_glance
+
+        id, version, distro = self.driver._get_image_details(
+            self.context, "myimagename"
+        )
+
+        self.assertEqual("1.28.2", version)
+        self.assertEqual("myid-flatcar", id)
+        self.assertEqual("flatcar", distro)
+        mock_glance.find_image.assert_called_once_with("myimagename")
+
     def test_get_chart_release_name_length(self):
-        self.cluster_obj.stack_id = "foo"
+        self.cluster_obj.labels[driver_utils.RELEASE_NAME_LABEL] = "foo"
 
         result = driver_utils.chart_release_name(self.cluster_obj)
 
         self.assertEqual("foo", result)
 
     def test_generate_release_name_skip(self):
-        self.cluster_obj.stack_id = "foo"
+        self.cluster_obj.labels[driver_utils.RELEASE_NAME_LABEL] = "foo"
         self.driver._generate_release_name(self.cluster_obj)
-        self.assertEqual("foo", self.cluster_obj.stack_id)
+        self.assertEqual(
+            "foo",
+            self.cluster_obj.labels[driver_utils.RELEASE_NAME_LABEL],
+        )
 
     def test_generate_release_name_generates(self):
-        self.cluster_obj.stack_id = None
+        del self.cluster_obj.labels[driver_utils.RELEASE_NAME_LABEL]
         self.cluster_obj.name = "a" * 77
 
         self.driver._generate_release_name(self.cluster_obj)
-        first = self.cluster_obj.stack_id
+        first = self.cluster_obj.labels[driver_utils.RELEASE_NAME_LABEL]
 
         self.assertEqual(43, len(first))
         self.assertTrue(self.cluster_obj.name[:30] in first)
 
-        self.cluster_obj.stack_id = None
+        del self.cluster_obj.labels[driver_utils.RELEASE_NAME_LABEL]
         self.driver._generate_release_name(self.cluster_obj)
-        second = self.cluster_obj.stack_id
+        second = self.cluster_obj.labels[driver_utils.RELEASE_NAME_LABEL]
 
         self.assertNotEqual(first, second)
         self.assertEqual(43, len(second))
         self.assertTrue(self.cluster_obj.name[:30] in second)
+
+    def test_migrate_release_name_noop_when_label_set(self):
+        self.cluster_obj.labels[driver_utils.RELEASE_NAME_LABEL] = "existing"
+        driver_utils.migrate_release_name(self.cluster_obj)
+        self.assertEqual(
+            "existing",
+            self.cluster_obj.labels[driver_utils.RELEASE_NAME_LABEL],
+        )
+
+    def test_migrate_release_name_from_stack_id(self):
+        del self.cluster_obj.labels[driver_utils.RELEASE_NAME_LABEL]
+        self.cluster_obj.stack_id = "old-release-name"
+        driver_utils.migrate_release_name(self.cluster_obj)
+        self.assertEqual(
+            "old-release-name",
+            self.cluster_obj.labels[driver_utils.RELEASE_NAME_LABEL],
+        )
+
+    def test_migrate_release_name_noop_without_stack_id(self):
+        del self.cluster_obj.labels[driver_utils.RELEASE_NAME_LABEL]
+        # Simulate stack_id already dropped from the Cluster object
+        if hasattr(self.cluster_obj, "stack_id"):
+            del self.cluster_obj.stack_id
+        driver_utils.migrate_release_name(self.cluster_obj)
+        self.assertNotIn(
+            driver_utils.RELEASE_NAME_LABEL, self.cluster_obj.labels
+        )
 
     def test_get_monitoring_enabled_from_template(self):
 
@@ -2073,6 +2157,104 @@ class ClusterAPIDriverTest(base.DbTestCase):
         volume_type = default_storage_class["name"]
         self.assertEqual("type1", volume_type)
 
+    @mock.patch("magnum.common.clients.OpenStackClients.cinder")
+    def test_get_storage_classes_openstacksdk(self, mock_cinder):
+        CONF.capi_helm.csi_cinder_default_volume_type = "type3"
+        CONF.capi_helm.csi_cinder_availability_zone = "middle_earth_east"
+        mock_vol_type_1 = mock.MagicMock()
+        mock_vol_type_1.name = "type1"
+        mock_vol_type_2 = mock.MagicMock()
+        mock_vol_type_2.name = "type2"
+        mock_vol_type_3 = mock.MagicMock()
+        mock_vol_type_3.name = "type3"
+        mock_cinder_client = mock.Mock()
+        mock_volume_types_sdk = mock.Mock(
+            spec=[]
+        )  # no 'list' → openstacksdk path
+        mock_volume_types_sdk.return_value = [
+            mock_vol_type_1,
+            mock_vol_type_2,
+            mock_vol_type_3,
+        ]
+        mock_cinder_client.volume_types = mock_volume_types_sdk
+        mock_cinder.return_value = mock_cinder_client
+        storage_classes = self.driver._storageclass_definitions(
+            self.context, self.cluster_obj
+        )
+        self.assertIsInstance(storage_classes, dict)
+        self.assertIsInstance(storage_classes["defaultStorageClass"], dict)
+        self.assertIsInstance(
+            storage_classes["additionalStorageClasses"], list
+        )
+        self.assertEqual(
+            "type3", storage_classes["defaultStorageClass"]["volumeType"]
+        )
+        self.assertEqual(
+            "middle_earth_east",
+            storage_classes["additionalStorageClasses"][0]["availabilityZone"],
+        )
+
+    @mock.patch("magnum.common.clients.OpenStackClients.cinder")
+    def test_get_storage_class_volume_type_not_available_openstacksdk(
+        self, mock_cinder
+    ):
+        CONF.capi_helm.csi_cinder_default_volume_type = "type4"
+        CONF.capi_helm.csi_cinder_availability_zone = "middle_earth_east"
+        mock_vol_type_1 = mock.MagicMock()
+        mock_vol_type_1.name = "type1"
+        mock_vol_type_2 = mock.MagicMock()
+        mock_vol_type_2.name = "type2"
+        mock_vol_type_3 = mock.MagicMock()
+        mock_vol_type_3.name = "type3"
+        mock_cinder_client = mock.Mock()
+        mock_volume_types_sdk = mock.Mock(
+            spec=[]
+        )  # no 'list' → openstacksdk path
+        mock_volume_types_sdk.return_value = [
+            mock_vol_type_1,
+            mock_vol_type_2,
+            mock_vol_type_3,
+        ]
+        mock_cinder_client.volume_types = mock_volume_types_sdk
+        mock_cinder.return_value = mock_cinder_client
+        self.assertRaisesRegex(
+            exception.MagnumException,
+            r"not\sa\svalid\sCinder",
+            self.driver._storageclass_definitions,
+            self.context,
+            self.cluster_obj,
+        )
+
+    @mock.patch("magnum.common.clients.OpenStackClients.cinder")
+    def test_get_storage_class_volume_type_not_defined_openstacksdk(
+        self, mock_cinder
+    ):
+        CONF.capi_helm.csi_cinder_default_volume_type = None
+        CONF.capi_helm.csi_cinder_availability_zone = "middle_earth_east"
+        mock_vol_type_1 = mock.MagicMock()
+        mock_vol_type_1.name = "__TYPE1__"
+        mock_vol_type_2 = mock.MagicMock()
+        mock_vol_type_2.name = "type2"
+        mock_vol_type_3 = mock.MagicMock()
+        mock_vol_type_3.name = "type3"
+        mock_cinder_client = mock.Mock()
+        mock_volume_types_sdk = mock.Mock(
+            spec=[]
+        )  # no 'list' → openstacksdk path
+        mock_volume_types_sdk.return_value = [
+            mock_vol_type_1,
+            mock_vol_type_2,
+            mock_vol_type_3,
+        ]
+        mock_cinder_client.volume_types = mock_volume_types_sdk
+        mock_cinder.return_value = mock_cinder_client
+        storage_classes = self.driver._storageclass_definitions(
+            self.context, self.cluster_obj
+        )
+        default_storage_class = storage_classes["defaultStorageClass"]
+        volume_type = default_storage_class["name"]
+        self.assertEqual("type1", volume_type)
+
     @mock.patch.object(helm.Client, "uninstall_release")
     def test_delete_cluster(self, mock_uninstall):
         self.driver.delete_cluster(self.context, self.cluster_obj)
@@ -2322,6 +2504,81 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_flavor_manager.list.return_value = filtered_flavors
         mock_versioned_nova_client.flavors = mock_flavor_manager
         mock_osc_nova.return_value = mock_versioned_nova_client
+        try:
+            self.driver._validate_allowed_flavor(self.context, 3)
+        except Exception as e:
+            self.fail("Raised exception %s" % e)
+        try:
+            self.driver._validate_allowed_flavor(self.context, "flavor_medium")
+        except Exception as e:
+            self.fail("Raised exception %s" % e)
+
+    @mock.patch("magnum.common.clients.OpenStackClients.nova")
+    def test_validate_allowed_flavors_ram_error_openstacksdk(
+        self, mock_osc_nova
+    ):
+        mock_flavor1 = mock.MagicMock(id=1, vcpus=1)
+        mock_flavor1.name = "flavor_tiny"
+        mock_flavor2 = mock.MagicMock(id=2, vcpus=1)
+        mock_flavor2.name = "flavor_small"
+        mock_flavor3 = mock.MagicMock(id=3, vcpus=4)
+        mock_flavor3.name = "flavor_medium"
+        filtered_flavors = [mock_flavor1, mock_flavor2, mock_flavor3]
+        mock_nova = mock.MagicMock()
+        mock_flavors_sdk = mock.Mock(spec=[])  # no 'list' → openstacksdk path
+        mock_flavors_sdk.return_value = filtered_flavors
+        mock_nova.flavors = mock_flavors_sdk
+        mock_osc_nova.return_value = mock_nova
+        self.assertRaises(
+            exception.MagnumException,
+            self.driver._validate_allowed_flavor,
+            self.context,
+            "DS9",
+        )
+
+    @mock.patch("magnum.common.clients.OpenStackClients.nova")
+    def test_validate_allowed_flavors_vcpu_error_openstacksdk(
+        self, mock_osc_nova
+    ):
+        mock_flavor1 = mock.MagicMock(id=1, vcpus=1)
+        mock_flavor1.name = "flavor_tiny"
+        mock_flavor2 = mock.MagicMock(id=2, vcpus=1)
+        mock_flavor2.name = "flavor_small"
+        mock_flavor3 = mock.MagicMock(id=3, vcpus=4)
+        mock_flavor3.name = "flavor_medium"
+        filtered_flavors = [mock_flavor1, mock_flavor2, mock_flavor3]
+        mock_nova = mock.MagicMock()
+        mock_flavors_sdk = mock.Mock(spec=[])  # no 'list' → openstacksdk path
+        mock_flavors_sdk.return_value = filtered_flavors
+        mock_nova.flavors = mock_flavors_sdk
+        mock_osc_nova.return_value = mock_nova
+        self.assertRaises(
+            exception.MagnumException,
+            self.driver._validate_allowed_flavor,
+            self.context,
+            2,
+        )
+        self.assertRaises(
+            exception.MagnumException,
+            self.driver._validate_allowed_flavor,
+            self.context,
+            "flavor_small",
+        )
+
+    @mock.patch("magnum.common.clients.OpenStackClients.nova")
+    def test_validate_allowed_flavors_ram_ok_openstacksdk(self, mock_osc_nova):
+        mock_flavor1 = mock.MagicMock(id=1, vcpus=1)
+        mock_flavor1.name = "flavor_tiny"
+        mock_flavor2 = mock.MagicMock(id=2, vcpus=1)
+        mock_flavor2.name = "flavor_small"
+        mock_flavor3 = mock.MagicMock(id=3, vcpus=4)
+        mock_flavor3.name = "flavor_medium"
+        filtered_flavors = [mock_flavor1, mock_flavor2, mock_flavor3]
+        mock_nova = mock.MagicMock()
+        mock_flavors_sdk = mock.Mock(spec=[])  # no 'list' → openstacksdk path
+        mock_flavors_sdk.return_value = filtered_flavors
+        mock_nova.flavors = mock_flavors_sdk
+        mock_osc_nova.return_value = mock_nova
         try:
             self.driver._validate_allowed_flavor(self.context, 3)
         except Exception as e:

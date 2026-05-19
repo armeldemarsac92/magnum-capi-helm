@@ -388,6 +388,8 @@ class Driver(driver.Driver):
         return False
 
     def update_cluster_status(self, context, cluster):
+        driver_utils.migrate_release_name(cluster)
+
         # NOTE(mkjpryor)
         # Because Kubernetes operators are built around reconciliation loops,
         # Cluster API clusters don't really go into an error state
@@ -539,10 +541,15 @@ class Driver(driver.Driver):
         return re.sub(r"[^a-zA-Z0-9\.\-\/ ]+", "", os_distro)
 
     def _get_image_details(self, context, image_identifier):
-        osc = clients.OpenStackClients(context)
-        image = api_utils.get_openstack_resource(
-            osc.glance().images, image_identifier, "images"
-        )
+        glance = clients.OpenStackClients(context).glance()
+        if hasattr(glance.images, "get"):
+            # glanceclient
+            image = api_utils.get_openstack_resource(
+                glance.images, image_identifier, "images"
+            )
+        else:
+            # openstacksdk
+            image = glance.find_image(image_identifier)
         return (
             image.id,
             self._get_kube_version(image),
@@ -555,6 +562,8 @@ class Driver(driver.Driver):
     def _get_app_cred_id(self, cluster):
         # determine the existing application credential secret
         secret_name = self._get_app_cred_secret_name(cluster)
+        if not secret_name:
+            return None
         secret_namespace = driver_utils.cluster_namespace(cluster)
 
         # fetch the existing secret and unpack the application credential ID
@@ -662,11 +671,15 @@ class Driver(driver.Driver):
 
     def _validate_allowed_flavor(self, context, requested_flavor):
         # Compare requested flavor with allowed for Kubernetes node
-        flavors = (
-            clients.OpenStackClients(context)
-            .nova()
-            .flavors.list(min_ram=CONF.capi_helm.minimum_flavor_ram)
-        )
+        nova = clients.OpenStackClients(context).nova()
+        if hasattr(nova.flavors, "list"):
+            # novaclient
+            flavors = nova.flavors.list(
+                min_ram=CONF.capi_helm.minimum_flavor_ram
+            )
+        else:
+            # openstacksdk compute proxy
+            flavors = nova.flavors(min_ram=CONF.capi_helm.minimum_flavor_ram)
         for flavor in flavors:
             vcpus = flavor.vcpus
             LOG.debug(
@@ -816,10 +829,14 @@ class Driver(driver.Driver):
         @return dict(dict,list(dict)) containing storage classes
         """
         LOG.debug("Retrieve volume types from cinder for StorageClasses.")
-        client = clients.OpenStackClients(context)
         availability_zone = self._get_csi_cinder_availability_zone(cluster)
-        c_client = client.cinder()
-        volume_types = [i.name for i in c_client.volume_types.list()]
+        c_client = clients.OpenStackClients(context).cinder()
+        if hasattr(c_client.volume_types, "list"):
+            # cinderclient
+            volume_types = [i.name for i in c_client.volume_types.list()]
+        else:
+            # openstacksdk
+            volume_types = [i.name for i in c_client.volume_types()]
         # Use the default volume type if defined. Otherwise use the first
         # type returned by cinder.
         default_volume_type = CONF.capi_helm.csi_cinder_default_volume_type
@@ -1067,7 +1084,7 @@ class Driver(driver.Driver):
         )
 
     def _generate_release_name(self, cluster):
-        if cluster.stack_id:
+        if driver_utils.chart_release_name(cluster):
             return
 
         # Make sure no duplicate names
@@ -1075,11 +1092,13 @@ class Driver(driver.Driver):
         random_bit = short_id.generate_id()
         base_name = driver_utils.sanitized_name(cluster.name)
         # valid release names are 53 chars long
-        # and stack_id is 12 characters
         # but we also use this to derive hostnames
         trimmed_name = base_name[:30]
         # Save the full name, so users can rename in the API
-        cluster.stack_id = f"{trimmed_name}-{random_bit}".lower()
+        release_name = f"{trimmed_name}-{random_bit}".lower()
+        if cluster.labels is None:
+            cluster.labels = {}
+        cluster.labels[driver_utils.RELEASE_NAME_LABEL] = release_name
         # be sure to save this before we use it
         cluster.save()
 
