@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "59ecf8fa_ac834b51",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2026-05-22T15:05:29Z",
+      "side": 1,
+      "message": "How do we make sure we run the required chart version?\nAnd why are we not bumping default chart version?\nWe at least need a reno stating what is the required chart version, but also we should not support scale to/from zero if the required dependencies (CAPO and Helm charts) are not in place.",
+      "range": {
+        "startLine": 23,
+        "startChar": 28,
+        "endLine": 24,
+        "endChar": 27
+      },
+      "revId": "f3f3e59b813e99532ee2d04fe863f8ccdf947853",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fe336c07_df8268d8",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 759,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2026-05-22T15:05:29Z",
+      "side": 1,
+      "message": "How do we make sure CAPO is running at a version that will accept this?",
+      "revId": "f3f3e59b813e99532ee2d04fe863f8ccdf947853",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
