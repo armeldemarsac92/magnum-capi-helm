@@ -7,10 +7,12 @@
       jobs:
         - magnum-capi-helm-tests-cluster-v1_34
         - magnum-capi-helm-tests-cluster-v1_34-2026_1
+        - magnum-capi-helm-tests-cluster-v1_34-cilium
     gate:
       jobs:
         - magnum-capi-helm-tests-cluster-v1_34
         - magnum-capi-helm-tests-cluster-v1_34-2026_1
+        - magnum-capi-helm-tests-cluster-v1_34-cilium
 
 - job:
     name: magnum-capi-helm-tests-cluster-v1_34-2026_1
@@ -24,3 +26,17 @@
     parent: magnum-capi-helm-tests-cluster
     vars:
       kube_version: "v1.34.7"
+
+- job:
+    name: magnum-capi-helm-tests-cluster-v1_34-cilium
+    parent: magnum-capi-helm-tests-cluster-v1_34
+    vars:
+      devstack_local_conf:
+        post-config:
+          $MAGNUM_CONF:
+            cluster_template:
+              kubernetes_allowed_network_drivers: flannel,calico,cilium
+        test-config:
+          $TEMPEST_CONFIG:
+            magnum:
+              network_driver: cilium
