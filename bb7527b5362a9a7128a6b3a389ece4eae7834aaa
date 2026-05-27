@@ -16,6 +16,23 @@
       "message": "We still need to somehow manage py39 and py310",
       "revId": "bb7527b5362a9a7128a6b3a389ece4eae7834aaa",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "46bfd698_e34e2ebc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3031
+      },
+      "writtenOn": "2026-05-27T22:36:11Z",
+      "side": 1,
+      "message": "I\u0027m wondering if we can revisit that support of older python versions? It\u0027s increasing the maintenance load",
+      "revId": "bb7527b5362a9a7128a6b3a389ece4eae7834aaa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
