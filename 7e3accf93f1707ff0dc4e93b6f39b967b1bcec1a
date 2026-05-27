@@ -16,6 +16,109 @@
       "message": "LGTM",
       "revId": "7e3accf93f1707ff0dc4e93b6f39b967b1bcec1a",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8418e23_a21328ee",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3031
+      },
+      "writtenOn": "2026-05-27T09:56:45Z",
+      "side": 1,
+      "message": "Looks good, a few comments on the labels",
+      "revId": "7e3accf93f1707ff0dc4e93b6f39b967b1bcec1a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "adf7c548_448493f3",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 15
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 3031
+      },
+      "writtenOn": "2026-05-27T09:56:45Z",
+      "side": 1,
+      "message": "also missing etcd_volume_type",
+      "revId": "7e3accf93f1707ff0dc4e93b6f39b967b1bcec1a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0248e2ff_44de577d",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 15
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 3031
+      },
+      "writtenOn": "2026-05-27T09:56:45Z",
+      "side": 1,
+      "message": "this is duplicated, see above",
+      "range": {
+        "startLine": 74,
+        "startChar": 2,
+        "endLine": 74,
+        "endChar": 18
+      },
+      "revId": "7e3accf93f1707ff0dc4e93b6f39b967b1bcec1a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dcc6ce90_010ef55b",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 15
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 3031
+      },
+      "writtenOn": "2026-05-27T09:56:45Z",
+      "side": 1,
+      "message": "I think the default here is \"\"",
+      "range": {
+        "startLine": 82,
+        "startChar": 38,
+        "endLine": 82,
+        "endChar": 42
+      },
+      "revId": "7e3accf93f1707ff0dc4e93b6f39b967b1bcec1a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb5e9c1d_09f4533f",
+        "filename": "doc/source/configuration/index.rst",
+        "patchSetId": 15
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 3031
+      },
+      "writtenOn": "2026-05-27T09:56:45Z",
+      "side": 1,
+      "message": "requires",
+      "range": {
+        "startLine": 90,
+        "startChar": 18,
+        "endLine": 90,
+        "endChar": 25
+      },
+      "revId": "7e3accf93f1707ff0dc4e93b6f39b967b1bcec1a",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
