@@ -226,6 +226,7 @@ class TestKubernetesClient(base.TestCase):
             "GET",
             "https://test:6443/api/v1/namespaces"
             f"/{secret_namespace}/secrets/{secret_name}",
+            params=None,
             allow_redirects=True,
         )
 
@@ -254,6 +255,7 @@ class TestKubernetesClient(base.TestCase):
             "GET",
             "https://test:6443/api/v1/namespaces"
             f"/{secret_namespace}/secrets/{secret_name}",
+            params=None,
             allow_redirects=True,
         )
 
@@ -273,6 +275,7 @@ class TestKubernetesClient(base.TestCase):
                 "https://test:6443/apis/cluster.x-k8s.io/"
                 "v1beta1/namespaces/ns1/clusters/name"
             ),
+            params=None,
             allow_redirects=True,
         )
         self.assertEqual("mock_json", cluster)
@@ -316,6 +319,7 @@ class TestKubernetesClient(base.TestCase):
                 "https://test:6443/apis/controlplane.cluster.x-k8s.io/"
                 "v1beta1/namespaces/ns1/kubeadmcontrolplanes/name"
             ),
+            params=None,
             allow_redirects=True,
         )
         self.assertEqual("mock_json", cluster)
@@ -336,6 +340,7 @@ class TestKubernetesClient(base.TestCase):
                 "https://test:6443/apis/cluster.x-k8s.io/"
                 "v1beta1/namespaces/ns1/machinedeployments/name"
             ),
+            params=None,
             allow_redirects=True,
         )
         self.assertEqual("mock_json", cluster)
