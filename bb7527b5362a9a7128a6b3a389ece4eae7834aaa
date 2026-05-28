@@ -51,6 +51,24 @@
       "parentUuid": "46bfd698_e34e2ebc",
       "revId": "bb7527b5362a9a7128a6b3a389ece4eae7834aaa",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0733791d_517a7f4b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3031
+      },
+      "writtenOn": "2026-05-28T09:48:10Z",
+      "side": 1,
+      "message": "Ah yeah ok, fair enough. got any ideas how we handle things like this? Make stable branches?",
+      "parentUuid": "62834c39_a9c59c9a",
+      "revId": "bb7527b5362a9a7128a6b3a389ece4eae7834aaa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
