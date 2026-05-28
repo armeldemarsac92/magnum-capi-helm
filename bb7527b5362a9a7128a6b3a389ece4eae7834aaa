@@ -33,6 +33,24 @@
       "message": "I\u0027m wondering if we can revisit that support of older python versions? It\u0027s increasing the maintenance load",
       "revId": "bb7527b5362a9a7128a6b3a389ece4eae7834aaa",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "62834c39_a9c59c9a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2026-05-28T07:07:12Z",
+      "side": 1,
+      "message": "Epoxy PTI warrants 3.9/3.10 working so until Epoxy is unmaintained - I’d say not really - https://governance.openstack.org/tc/reference/runtimes/2025.1.html",
+      "parentUuid": "46bfd698_e34e2ebc",
+      "revId": "bb7527b5362a9a7128a6b3a389ece4eae7834aaa",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
