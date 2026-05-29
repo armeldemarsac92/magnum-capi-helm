@@ -1,0 +1,52 @@
+---
+- project-template:
+    name: magnum-capi-helm-tests-cluster
+    description: |
+      Runs Magnum CAPI Helm with Magnum master
+    check:
+      jobs:
+        - magnum-capi-helm-tests-cluster-calico-v1_34
+        - magnum-capi-helm-tests-cluster-calico-v1_35
+    gate:
+      jobs:
+        - magnum-capi-helm-tests-cluster-calico-v1_34
+        - magnum-capi-helm-tests-cluster-calico-v1_35
+
+- project-template:
+    name: magnum-capi-helm-tests-cluster-2026-1
+    description: |
+      Runs Magnum CAPI Helm with Magnum master
+    check:
+      jobs:
+        - magnum-capi-helm-tests-cluster-calico-v1_34-2026-1
+        - magnum-capi-helm-tests-cluster-calico-v1_35-2026-1
+    gate:
+      jobs:
+        - magnum-capi-helm-tests-cluster-calico-v1_34-2026-1
+        - magnum-capi-helm-tests-cluster-calico-v1_35-2026-1
+
+- project-template:
+    name: magnum-capi-helm-tests-cluster-2025-2
+    description: |
+      Runs Magnum CAPI Helm with Magnum master
+    check:
+      jobs:
+        - magnum-capi-helm-tests-cluster-calico-v1_34-2025-2
+        - magnum-capi-helm-tests-cluster-calico-v1_35-2025-2
+    gate:
+      jobs:
+        - magnum-capi-helm-tests-cluster-calico-v1_34-2025-2
+        - magnum-capi-helm-tests-cluster-calico-v1_35-2025-2
+
+- project-template:
+    name: magnum-capi-helm-tests-cluster-2025-1
+    description: |
+      Runs Magnum CAPI Helm with Magnum master
+    check:
+      jobs:
+        - magnum-capi-helm-tests-cluster-calico-v1_34-2025-1
+        - magnum-capi-helm-tests-cluster-calico-v1_35-2025-1
+    gate:
+      jobs:
+        - magnum-capi-helm-tests-cluster-calico-v1_34-2025-1
+        - magnum-capi-helm-tests-cluster-calico-v1_35-2025-1
