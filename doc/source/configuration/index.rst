@@ -45,6 +45,10 @@ The driver supports the following labels:
 | fixed_subnet_cidr                 | 10.0.0.0/24         |
 +-----------------------------------+---------------------+
 | extra_network_name                | empty               |
+| (deprecated)                      |                     |
++-----------------------------------+---------------------+
+| extra_network_names               | empty               |
+| (space separated list)            |                     |
 +-----------------------------------+---------------------+
 | capi_helm_chart_version           | 0.10.1              |
 | (see bellow for additional info)  |                     |
@@ -79,9 +83,6 @@ The driver supports the following labels:
 |                                   | set to "ovn".       |
 +-----------------------------------+---------------------+
 | boot_volume_type                  | ""                  |
-+-----------------------------------+---------------------+
-| extra_network_name                | ""                  |
-|                                   |                     |
 +-----------------------------------+---------------------+
 
 
