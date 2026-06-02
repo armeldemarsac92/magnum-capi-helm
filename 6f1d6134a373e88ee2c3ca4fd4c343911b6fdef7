@@ -18,6 +18,24 @@
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b15ba34_d0bee173",
+        "filename": "releasenotes/notes/cluster-label-registry-38de700e433df68a.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2026-06-02T09:19:21Z",
+      "side": 1,
+      "message": "Fix applied.",
+      "parentUuid": "e858556e_72dce6b7",
+      "revId": "6f1d6134a373e88ee2c3ca4fd4c343911b6fdef7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "319daa21_f3e38680",
@@ -31,6 +49,30 @@
       "writtenOn": "2026-06-02T09:07:41Z",
       "side": 1,
       "message": "`releasenotes/notes/cluster-label-registry-38de700e433df68a.yaml:14: D001 Line too long`\n```suggestion\n    The old locations are still accepted but will produce a deprecation\n    warning. Please update your ``magnum.conf`` accordingly.\n\n```",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 1
+      },
+      "revId": "6f1d6134a373e88ee2c3ca4fd4c343911b6fdef7",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "256c6339_f0cb406f",
+        "filename": "releasenotes/notes/cluster-label-registry-38de700e433df68a.yaml",
+        "patchSetId": 5
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2026-06-02T09:19:21Z",
+      "side": 1,
+      "message": "Fix applied.",
+      "parentUuid": "319daa21_f3e38680",
       "range": {
         "startLine": 14,
         "startChar": 0,
