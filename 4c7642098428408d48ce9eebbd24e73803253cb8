@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c02ef833_e8a8d277",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 38510
+      },
+      "writtenOn": "2026-06-02T12:52:36Z",
+      "side": 1,
+      "message": "Sorry to bother you. Is it correct to ask for a review like so?",
+      "revId": "4c7642098428408d48ce9eebbd24e73803253cb8",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
