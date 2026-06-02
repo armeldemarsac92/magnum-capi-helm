@@ -1,0 +1,24 @@
+---
+features:
+  - |
+    Adds support for enabling or disabling autoscaling per worker nodegroup
+    via the ``auto_scaling_enabled`` label. When the label is set on a
+    nodegroup it overrides the cluster- or template-level value for that
+    nodegroup only, so individual worker pools can opt in to (or out of)
+    autoscaling within the same cluster. A nodegroup that does not set its
+    own ``auto_scaling_enabled`` label continues to inherit the cluster-wide
+    value, preserving existing behaviour.
+
+    Usage with command line client::
+
+        openstack coe nodegroup create <cluster> autoscaled \
+            --flavor-id <flavor> \
+            --node-count 1 \
+            --min-nodes 1 \
+            --max-nodes 5 \
+            --labels auto_scaling_enabled=true \
+            --merge-labels
+
+    The label is read from the nodegroup at create time and on subsequent
+    nodegroup updates. Existing nodegroups are not affected until their
+    labels are explicitly changed.

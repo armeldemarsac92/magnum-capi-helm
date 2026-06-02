@@ -2409,6 +2409,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_validate_allowed_flavor,
     ):
         node_group = mock.MagicMock()
+        node_group.labels = {}
 
         self.driver.create_nodegroup(
             self.context, self.cluster_obj, node_group
@@ -2426,6 +2427,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
         mock_validate_allowed_flavor,
     ):
         node_group = mock.MagicMock()
+        node_group.labels = {}
 
         self.driver.update_nodegroup(
             self.context,
@@ -3057,6 +3059,47 @@ class ClusterAPIDriverTest(base.DbTestCase):
             .get("create-monitor")
         )
 
+    def test_get_autoscale_enabled_cluster_default(self):
+        self.cluster_obj.labels = dict(auto_scaling_enabled="true")
+        self.cluster_obj.cluster_template.labels = dict()
+
+        self.assertTrue(self.driver._get_autoscale_enabled(self.cluster_obj))
+
+    def test_get_autoscale_enabled_nodegroup_inherits_cluster(self):
+        # A nodegroup without its own label inherits the cluster value
+        self.cluster_obj.labels = dict(auto_scaling_enabled="true")
+        self.cluster_obj.cluster_template.labels = dict()
+        nodegroup = self.cluster_obj.nodegroups[0]
+        nodegroup.labels = dict()
+
+        self.assertTrue(
+            self.driver._get_autoscale_enabled(self.cluster_obj, nodegroup)
+        )
+
+    def test_get_autoscale_enabled_nodegroup_enables(self):
+        # Cluster-wide autoscaling off, but enabled on this nodegroup
+        self.cluster_obj.labels = dict()
+        self.cluster_obj.cluster_template.labels = dict()
+        nodegroup = self.cluster_obj.nodegroups[0]
+        nodegroup.labels = dict(auto_scaling_enabled="true")
+
+        self.assertFalse(self.driver._get_autoscale_enabled(self.cluster_obj))
+        self.assertTrue(
+            self.driver._get_autoscale_enabled(self.cluster_obj, nodegroup)
+        )
+
+    def test_get_autoscale_enabled_nodegroup_disables(self):
+        # Cluster-wide autoscaling on, but disabled on this nodegroup
+        self.cluster_obj.labels = dict(auto_scaling_enabled="true")
+        self.cluster_obj.cluster_template.labels = dict()
+        nodegroup = self.cluster_obj.nodegroups[0]
+        nodegroup.labels = dict(auto_scaling_enabled="false")
+
+        self.assertTrue(self.driver._get_autoscale_enabled(self.cluster_obj))
+        self.assertFalse(
+            self.driver._get_autoscale_enabled(self.cluster_obj, nodegroup)
+        )
+
     def test_validate_auto_scale_max_lt_min(self):
         self.cluster_obj.labels = dict(
             auto_scaling_enabled="true", min_node_count=3, max_node_count=0
@@ -3341,6 +3384,88 @@ class ClusterAPIDriverTest(base.DbTestCase):
         self.assertEqual(ng.get("autoscale"), None)
         self.assertEqual(ng.get("machineCountMin"), None)
         self.assertEqual(ng.get("machineCountMax"), None)
+
+    @mock.patch.object(
+        driver.Driver,
+        "_storageclass_definitions",
+        return_value=mock.ANY,
+    )
+    @mock.patch.object(driver.Driver, "_validate_allowed_flavor")
+    @mock.patch.object(neutron, "get_network", autospec=True)
+    @mock.patch.object(
+        driver.Driver, "_ensure_certificate_secrets", autospec=True
+    )
+    @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(kubernetes.Client, "load", autospec=True)
+    @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
+    def test_create_extra_nodegroup_auto_scale_per_nodegroup_label(
+        self,
+        mock_install,
+        mock_image,
+        mock_load,
+        mock_appcred,
+        mock_certs,
+        mock_get_net,
+        mock_validate_allowed_flavor,
+        mock_storageclasses,
+    ):
+        # Cluster-wide autoscaling is off; a single nodegroup turns it on
+        # via its own auto_scaling_enabled label.
+        self.cluster_obj.labels = dict()
+
+        mock_image.return_value = (
+            "imageid1",
+            "1.27.4",
+            "ubuntu",
+        )
+
+        # A nodegroup that opts in to autoscaling via its own label
+        auto_scale_nodegroup = obj_utils.create_test_nodegroup(
+            self.context,
+            uuid=uuid4(),
+            id=456,
+            name="autoscale-group",
+            node_count=1,
+            min_node_count=1,
+            max_node_count=3,
+            labels=dict(auto_scaling_enabled="true"),
+        )
+        self.cluster_obj.nodegroups.append(auto_scale_nodegroup)
+
+        self.driver.create_cluster(self.context, self.cluster_obj, 10)
+
+        helm_install_values = mock_install.call_args[0][3]
+        helm_node_groups = helm_install_values["nodeGroups"]
+        helm_values_default_nodegroup = [
+            ng
+            for ng in helm_node_groups
+            if ng["name"] == self.cluster_obj.default_ng_worker.name
+        ]
+        helm_values_autoscale_nodegroup = [
+            ng
+            for ng in helm_node_groups
+            if ng["name"] == auto_scale_nodegroup.name
+        ]
+
+        self.assertEqual(len(helm_values_default_nodegroup), 1)
+        self.assertEqual(len(helm_values_autoscale_nodegroup), 1)
+
+        # The default node group does not enable autoscaling
+        ng = helm_values_default_nodegroup[0]
+        self.assertEqual(ng.get("autoscale"), None)
+        self.assertEqual(ng.get("machineCountMin"), None)
+        self.assertEqual(ng.get("machineCountMax"), None)
+
+        # The opted-in node group has autoscaling enabled
+        ng = helm_values_autoscale_nodegroup[0]
+        self.assertEqual(ng["autoscale"], "true")
+        self.assertEqual(
+            ng["machineCountMin"], max(1, auto_scale_nodegroup.min_node_count)
+        )
+        self.assertEqual(
+            ng["machineCountMax"], auto_scale_nodegroup.max_node_count
+        )
 
     @mock.patch.object(
         driver.Driver,

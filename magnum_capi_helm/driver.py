@@ -671,11 +671,18 @@ class Driver(driver.Driver):
     def _get_autoheal_enabled(self, cluster):
         return self._get_label_bool(cluster, "auto_healing_enabled", True)
 
-    def _get_autoscale_enabled(self, cluster):
+    def _get_autoscale_enabled(self, cluster, nodegroup=None):
+        # When a nodegroup is given, allow it to override the cluster-wide
+        # auto_scaling_enabled label with its own label, falling back to the
+        # cluster_template + cluster value when not set on the nodegroup.
+        if nodegroup is not None:
+            return self._get_nodegroup_label_bool(
+                cluster, nodegroup, "auto_scaling_enabled", False
+            )
         return self._get_label_bool(cluster, "auto_scaling_enabled", False)
 
     def _get_autoscale_values(self, cluster, nodegroup):
-        auto_scale = self._get_autoscale_enabled(cluster)
+        auto_scale = self._get_autoscale_enabled(cluster, nodegroup)
         min_nodes, max_nodes = self._validate_allowed_node_counts(
             cluster, nodegroup
         )
@@ -951,7 +958,7 @@ class Driver(driver.Driver):
                 )
                 if machine_root_volume:
                     nodegroup_item["machineRootVolume"] = machine_root_volume
-                if self._get_autoscale_enabled(cluster):
+                if self._get_autoscale_enabled(cluster, ng):
                     values = self._get_autoscale_values(cluster, ng)
                     nodegroup_item = helm.mergeconcat(nodegroup_item, values)
                 nodegroup_set.append(nodegroup_item)
@@ -1254,7 +1261,7 @@ class Driver(driver.Driver):
     def create_nodegroup(self, context, cluster, nodegroup):
         nodegroup.status = fields.ClusterStatus.CREATE_IN_PROGRESS
         self._validate_allowed_flavor(context, nodegroup.flavor_id)
-        if self._get_autoscale_enabled(cluster):
+        if self._get_autoscale_enabled(cluster, nodegroup):
             self._validate_allowed_node_counts(cluster, nodegroup)
         nodegroup.save()
 
@@ -1263,7 +1270,7 @@ class Driver(driver.Driver):
     def update_nodegroup(self, context, cluster, nodegroup):
         nodegroup.status = fields.ClusterStatus.UPDATE_IN_PROGRESS
         self._validate_allowed_flavor(context, nodegroup.flavor_id)
-        if self._get_autoscale_enabled(cluster):
+        if self._get_autoscale_enabled(cluster, nodegroup):
             self._validate_allowed_node_counts(cluster, nodegroup)
         nodegroup.save()
 
