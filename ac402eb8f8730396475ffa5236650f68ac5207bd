@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "de8a3879_dbb6714f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 35263
+      },
+      "writtenOn": "2026-06-02T12:53:44Z",
+      "side": 1,
+      "message": "I\u0027ve tested this with a few labels, both setting defaults and overriding per cluster, it all works. Thanks!",
+      "revId": "ac402eb8f8730396475ffa5236650f68ac5207bd",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
