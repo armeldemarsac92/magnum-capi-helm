@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "95672565_87bf08c0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 35263
+      },
+      "writtenOn": "2026-06-03T13:44:13Z",
+      "side": 1,
+      "message": "recheck: `Details: [{\u0027request_id\u0027: \u0027\u0027, \u0027code\u0027: \u0027client\u0027, \u0027status\u0027: 400, \u0027title\u0027: \u0027Invalid input for field/attribute master_count\u0027, \u0027detail\u0027: \"Invalid input for field/attribute master_count. Value: \u00270\u0027. Value should be greater or equal to 1\", \u0027links\u0027: []}]`",
+      "revId": "4ada421cd9043ec665d158256ac06f844e99c7d6",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
