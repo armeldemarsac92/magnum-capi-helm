@@ -30,7 +30,7 @@
 # Version of the helm chart specified by the config: capi_driver.helm_chart_repo
 # and capi_driver.helm_chart_name. A cluster label can override this. (string
 # value)
-#default_helm_chart_version = 0.10.1
+#default_helm_chart_version = 0.25.1
 
 # Minimum RAM for flavor used to create a Kubernetes node. (integer value)
 #minimum_flavor_ram = 2048

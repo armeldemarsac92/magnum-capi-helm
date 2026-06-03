@@ -35,7 +35,7 @@
         post-config:
           $MAGNUM_CONF:
             capi_helm:
-              default_helm_chart_version: "0.23.0"
+              default_helm_chart_version: "0.25.1"
         test-config:
           $TEMPEST_CONFIG:
             magnum:
