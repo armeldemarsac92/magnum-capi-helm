@@ -22,6 +22,7 @@
       py311 is in 2024.1/2024.2/2025.1/2025.2/2026.1 PTI
       py312 is in 2025.1/2025.2/2026.1 PTI
       py313 is in 2025.2/2026.1 PTI
+      py314 is in 2026.2 PTI
     check:
       jobs:
         - openstack-tox-pep8:
