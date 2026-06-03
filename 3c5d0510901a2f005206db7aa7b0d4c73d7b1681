@@ -16,6 +16,24 @@
       "message": "I think I\u0027d appreciate some more details here",
       "revId": "3c5d0510901a2f005206db7aa7b0d4c73d7b1681",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f1cec6d5_df952919",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 35263
+      },
+      "writtenOn": "2026-06-03T08:10:37Z",
+      "side": 1,
+      "message": "Fair, I\u0027ve added a description.",
+      "parentUuid": "1d4efb43_2afb59c6",
+      "revId": "3c5d0510901a2f005206db7aa7b0d4c73d7b1681",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
