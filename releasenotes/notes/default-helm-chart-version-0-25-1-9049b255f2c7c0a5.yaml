@@ -1,0 +1,6 @@
+---
+upgrade:
+  - |
+    The default helm chart version has been updated to 0.25.1. Please see the
+    helm chart release notes for more details:
+    https://github.com/azimuth-cloud/capi-helm-charts/releases
