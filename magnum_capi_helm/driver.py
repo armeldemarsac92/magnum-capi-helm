@@ -1024,7 +1024,7 @@ class Driver(driver.Driver):
                     "master_lb_floating_ip_enabled",
                     lconf.master_lb_floating_ip_enabled,
                 ),
-                "enableLoadBalancer": True,
+                "enableLoadBalancer": cluster.master_lb_enabled,
                 "loadBalancerProvider": self._get_octavia_provider(cluster),
             },
             "clusterNetworking": {
