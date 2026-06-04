@@ -43,6 +43,7 @@ class Client(requests.Session):
         if cluster.get("insecure-skip-tls-verify", False):
             self.verify = False
             import urllib3
+
             urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         else:
             ca_file = self.ensure_file_cert(cluster, "certificate-authority")

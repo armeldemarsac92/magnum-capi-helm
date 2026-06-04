@@ -317,6 +317,22 @@ capi_helm_cluster_labels_opts = [
         help="CIDR for the node network when no fixed_subnet is specified.",
     ),
     cfg.StrOpt(
+        "pod_network_cidr",
+        default="10.100.0.0/16",
+        help=(
+            "CIDR for the pod network. Must not overlap with OpenStack "
+            "provider or external network subnets."
+        ),
+    ),
+    cfg.StrOpt(
+        "service_network_cidr",
+        default="10.96.0.0/12",
+        help=(
+            "CIDR for the Kubernetes service network. Must not overlap with "
+            "OpenStack provider or external network subnets."
+        ),
+    ),
+    cfg.StrOpt(
         "api_master_lb_allowed_cidrs",
         default="",
         help=(
