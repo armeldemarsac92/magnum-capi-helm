@@ -46,6 +46,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
             if ng.role != "master":
                 ng.flavor_id = "flavor_medium"
                 ng.save()
+        patcher = mock.patch.object(driver.Driver, "_validate_cidr_no_overlap")
+        self.mock_validate_cidr_no_overlap = patcher.start()
+        self.addCleanup(patcher.stop)
 
     def test_provides(self):
         self.assertEqual(
@@ -1222,6 +1225,10 @@ class ClusterAPIDriverTest(base.DbTestCase):
                     "nodeCidr": "10.0.0.0/24",
                 },
                 "dnsNameservers": ["8.8.1.1"],
+            },
+            "kubeNetwork": {
+                "pods": {"cidrBlocks": ["10.100.0.0/16"]},
+                "services": {"cidrBlocks": ["172.24.0.0/13"]},
             },
             "etcd": {},
             "apiServer": {
