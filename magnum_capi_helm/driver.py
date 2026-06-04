@@ -1024,6 +1024,9 @@ class Driver(driver.Driver):
                     "master_lb_floating_ip_enabled",
                     lconf.master_lb_floating_ip_enabled,
                 ),
+                # Disabling load balancers is not supported
+                # Please have a look at:
+                # https://docs.openstack.org/magnum-capi-helm/latest/configuration/index.html#tip-tricks
                 "enableLoadBalancer": True,
                 "loadBalancerProvider": self._get_octavia_provider(cluster),
             },
