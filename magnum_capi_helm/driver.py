@@ -10,6 +10,7 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 import enum
+import ipaddress
 import re
 
 import requests
@@ -743,6 +744,103 @@ class Driver(driver.Driver):
                 context, network, source="name", target="id", external=False
             )
 
+    def _validate_cidr_no_overlap(self, context, cluster):
+        """Raise MagnumException if pod/service CIDRs overlap."""
+        pod_cidr_str = self._label(
+            cluster, "pod_network_cidr", "10.100.0.0/16"
+        )
+        service_cidr_str = self._label(
+            cluster, "service_network_cidr", "172.24.0.0/13"
+        )
+
+        try:
+            pod_net = ipaddress.ip_network(pod_cidr_str, strict=False)
+        except ValueError:
+            raise exception.MagnumException(
+                message=(
+                    f"pod_network_cidr '{pod_cidr_str}' is not a valid CIDR."
+                )
+            )
+        try:
+            service_net = ipaddress.ip_network(service_cidr_str, strict=False)
+        except ValueError:
+            raise exception.MagnumException(
+                message=(
+                    f"service_network_cidr '{service_cidr_str}'"
+                    " is not a valid CIDR."
+                )
+            )
+
+        if pod_net.overlaps(service_net):
+            raise exception.MagnumException(
+                message=(
+                    f"Pod CIDR {pod_cidr_str} overlaps with service CIDR "
+                    f"{service_cidr_str}. Use the 'pod_network_cidr' and "
+                    "'service_network_cidr' labels to set non-overlapping"
+                    " CIDRs."
+                )
+            )
+
+        nc = clients.OpenStackClients(context).neutron()
+        subnets_to_check = []
+
+        def _iter_subnets(nid):
+            if hasattr(nc, "list_subnets"):
+                # neutronclient (Magnum stable branches)
+                for s in nc.list_subnets(network_id=nid).get("subnets", []):
+                    yield s.get("cidr"), (s.get("name") or s.get("id", "?"))
+            else:
+                # openstacksdk (Magnum master)
+                for s in nc.subnets(network_id=nid):
+                    yield getattr(s, "cidr", None), (
+                        getattr(s, "name", None) or getattr(s, "id", "?")
+                    )
+
+        network_id = self._get_fixed_network_id(context, cluster)
+        if network_id:
+            for cidr, name in _iter_subnets(network_id):
+                if cidr:
+                    subnets_to_check.append(
+                        (cidr, f"fixed network subnet '{name}'")
+                    )
+
+        ext_net_id = neutron.get_external_network_id(
+            context, cluster.cluster_template.external_network_id
+        )
+        if ext_net_id:
+            for cidr, name in _iter_subnets(ext_net_id):
+                if cidr:
+                    subnets_to_check.append(
+                        (cidr, f"external network subnet '{name}'")
+                    )
+
+        for cidr_str, label in subnets_to_check:
+            try:
+                net = ipaddress.ip_network(cidr_str, strict=False)
+            except ValueError:
+                continue
+            if net.version != pod_net.version:
+                continue
+
+            if pod_net.overlaps(net):
+                raise exception.MagnumException(
+                    message=(
+                        f"Pod CIDR {pod_cidr_str} overlaps with {label} "
+                        f"({cidr_str}). Use the 'pod_network_cidr' label "
+                        "to set a non-overlapping CIDR"
+                        " (e.g. '10.100.0.0/16')."
+                    )
+                )
+            if service_net.overlaps(net):
+                raise exception.MagnumException(
+                    message=(
+                        f"Service CIDR {service_cidr_str} overlaps with"
+                        f" {label} ({cidr_str}). Use the"
+                        " 'service_network_cidr' label to set a"
+                        " non-overlapping CIDR (e.g. '10.96.0.0/12')."
+                    )
+                )
+
     def _validate_allowed_flavor(self, context, requested_flavor):
         # Compare requested flavor with allowed for Kubernetes node
         nova = clients.OpenStackClients(context).nova()
@@ -1045,6 +1143,22 @@ class Driver(driver.Driver):
                     ),
                 },
             },
+            "kubeNetwork": {
+                "pods": {
+                    "cidrBlocks": [
+                        self._label(
+                            cluster, "pod_network_cidr", "10.100.0.0/16"
+                        )
+                    ]
+                },
+                "services": {
+                    "cidrBlocks": [
+                        self._label(
+                            cluster, "service_network_cidr", "172.24.0.0/13"
+                        )
+                    ]
+                },
+            },
             "osDistro": os_distro,
             "controlPlane": {
                 "machineFlavor": cluster.master_flavor_id,
@@ -1240,6 +1354,7 @@ class Driver(driver.Driver):
         nodegroups = cluster.nodegroups
         for ng in nodegroups:
             self._validate_allowed_flavor(context, ng.flavor_id)
+        self._validate_cidr_no_overlap(context, cluster)
         # we generate this name (on the initial create call only)
         # so we hit no issues with duplicate cluster names
         # and it makes renaming clusters in the API possible
