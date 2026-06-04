@@ -40,9 +40,14 @@ class Client(requests.Session):
         cluster, user = self._get_cluster_and_user(kubeconfig)
 
         self.server = cluster["server"].rstrip("/")
-        ca_file = self.ensure_file_cert(cluster, "certificate-authority")
-        if ca_file:
-            self.verify = ca_file
+        if cluster.get("insecure-skip-tls-verify", False):
+            self.verify = False
+            import urllib3
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        else:
+            ca_file = self.ensure_file_cert(cluster, "certificate-authority")
+            if ca_file:
+                self.verify = ca_file
 
         # convert certs into files as required by requests
         # https://requests.readthedocs.io/en/latest/api/#requests.Session.cert
