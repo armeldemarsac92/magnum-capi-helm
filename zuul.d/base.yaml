@@ -22,6 +22,8 @@
         ETCD_VERSION: "v3.6.11"
         ETCD_SHA256: "8756f7a4eaf921668a83de0bf13c0f65cae9186a165696e3ae8396afe6f557ed"
         FIXED_RANGE: 10.1.0.0/20
+        FLOATING_RANGE: 192.168.100.0/24
+        PUBLIC_NETWORK_GATEWAY: 192.168.100.1
         K8S_CAPI_VERSION: "v1.10.4"
         K8S_CAPO_VERSION: "v0.11.3"
         # CAPI mgmt cluster kubernetes version
