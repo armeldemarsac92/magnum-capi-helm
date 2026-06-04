@@ -46,6 +46,9 @@ class ClusterAPIDriverTest(base.DbTestCase):
             if ng.role != "master":
                 ng.flavor_id = "flavor_medium"
                 ng.save()
+        patcher = mock.patch.object(driver.Driver, "_validate_cidr_no_overlap")
+        self.mock_validate_cidr_no_overlap = patcher.start()
+        self.addCleanup(patcher.stop)
 
     def test_provides(self):
         self.assertEqual(
@@ -1222,6 +1225,10 @@ class ClusterAPIDriverTest(base.DbTestCase):
                     "nodeCidr": "10.0.0.0/24",
                 },
                 "dnsNameservers": ["8.8.1.1"],
+            },
+            "kubeNetwork": {
+                "pods": {"cidrBlocks": ["10.100.0.0/16"]},
+                "services": {"cidrBlocks": ["172.24.0.0/13"]},
             },
             "etcd": {},
             "apiServer": {
@@ -3829,3 +3836,159 @@ class TestClusterLabelRegistry(base.DbTestCase):
                 "is not registered in capi_helm_cluster_labels_opts. "
                 "Add it to conf.py before using it in the driver.",
             )
+
+
+class TestValidateCidrNoOverlap(base.DbTestCase):
+    def setUp(self):
+        super().setUp()
+        self.driver = driver.Driver()
+        self.cluster_obj = obj_utils.create_test_cluster(
+            self.context,
+            name="cidr-test-cluster",
+            master_flavor_id="flavor_small",
+            flavor_id="flavor_medium",
+        )
+
+        mock_nc = mock.MagicMock()
+        mock_nc.subnets.return_value = []
+        patcher_clients = mock.patch("magnum.common.clients.OpenStackClients")
+        mock_osc = patcher_clients.start()
+        mock_osc.return_value.neutron.return_value = mock_nc
+        self.mock_nc = mock_nc
+        self.addCleanup(patcher_clients.stop)
+
+        patcher_fixed = mock.patch.object(
+            driver.Driver,
+            "_get_fixed_network_id",
+            return_value=None,
+        )
+        self.mock_fixed_net = patcher_fixed.start()
+        self.addCleanup(patcher_fixed.stop)
+
+        patcher_ext = mock.patch(
+            "magnum.common.neutron.get_external_network_id",
+            return_value=None,
+        )
+        self.mock_ext_net = patcher_ext.start()
+        self.addCleanup(patcher_ext.stop)
+
+    def _make_subnet(self, cidr, name="test-subnet"):
+        subnet = mock.MagicMock()
+        subnet.cidr = cidr
+        subnet.name = name
+        return subnet
+
+    def _set_labels(self, pod_cidr, service_cidr):
+        self.cluster_obj.labels = {
+            "pod_network_cidr": pod_cidr,
+            "service_network_cidr": service_cidr,
+        }
+
+    def test_no_overlap_passes(self):
+        self._set_labels("10.100.0.0/16", "10.96.0.0/16")
+        self.driver._validate_cidr_no_overlap(self.context, self.cluster_obj)
+
+    def test_no_fixed_network(self):
+        self._set_labels("10.100.0.0/16", "10.96.0.0/16")
+        self.driver._validate_cidr_no_overlap(self.context, self.cluster_obj)
+        self.mock_nc.subnets.assert_not_called()
+
+    def test_no_external_network(self):
+        self.mock_fixed_net.return_value = "fixed-net-uuid"
+        self._set_labels("10.100.0.0/16", "10.96.0.0/16")
+        self.driver._validate_cidr_no_overlap(self.context, self.cluster_obj)
+
+    def test_invalid_pod_cidr(self):
+        self._set_labels("not-a-cidr", "10.96.0.0/16")
+        self.assertRaises(
+            exception.MagnumException,
+            self.driver._validate_cidr_no_overlap,
+            self.context,
+            self.cluster_obj,
+        )
+
+    def test_invalid_service_cidr(self):
+        self._set_labels("10.100.0.0/16", "not-a-cidr")
+        self.assertRaises(
+            exception.MagnumException,
+            self.driver._validate_cidr_no_overlap,
+            self.context,
+            self.cluster_obj,
+        )
+
+    def test_pod_service_overlap(self):
+        self._set_labels("10.96.0.0/16", "10.96.0.0/16")
+        self.assertRaises(
+            exception.MagnumException,
+            self.driver._validate_cidr_no_overlap,
+            self.context,
+            self.cluster_obj,
+        )
+
+    def test_pod_overlaps_fixed_network_subnet(self):
+        self.mock_fixed_net.return_value = "fixed-net-uuid"
+        self._set_labels("192.168.0.0/16", "10.96.0.0/16")
+        self.mock_nc.subnets.return_value = [
+            self._make_subnet("192.168.1.0/24", "fixed-subnet")
+        ]
+        self.assertRaises(
+            exception.MagnumException,
+            self.driver._validate_cidr_no_overlap,
+            self.context,
+            self.cluster_obj,
+        )
+
+    def test_service_overlaps_fixed_network_subnet(self):
+        self.mock_fixed_net.return_value = "fixed-net-uuid"
+        self._set_labels("10.100.0.0/16", "192.168.0.0/16")
+        self.mock_nc.subnets.return_value = [
+            self._make_subnet("192.168.1.0/24", "fixed-subnet")
+        ]
+        self.assertRaises(
+            exception.MagnumException,
+            self.driver._validate_cidr_no_overlap,
+            self.context,
+            self.cluster_obj,
+        )
+
+    def test_pod_overlaps_external_network_subnet(self):
+        self.mock_ext_net.return_value = "ext-net-uuid"
+        self._set_labels("172.24.0.0/16", "10.96.0.0/16")
+        self.mock_nc.subnets.return_value = [
+            self._make_subnet("172.24.4.0/24", "ext-subnet")
+        ]
+        self.assertRaises(
+            exception.MagnumException,
+            self.driver._validate_cidr_no_overlap,
+            self.context,
+            self.cluster_obj,
+        )
+
+    def test_service_overlaps_external_network_subnet(self):
+        self.mock_ext_net.return_value = "ext-net-uuid"
+        self._set_labels("10.100.0.0/16", "172.24.0.0/16")
+        self.mock_nc.subnets.return_value = [
+            self._make_subnet("172.24.4.0/24", "ext-subnet")
+        ]
+        self.assertRaises(
+            exception.MagnumException,
+            self.driver._validate_cidr_no_overlap,
+            self.context,
+            self.cluster_obj,
+        )
+
+    def test_subnet_invalid_cidr_skipped(self):
+        self.mock_fixed_net.return_value = "fixed-net-uuid"
+        self._set_labels("10.100.0.0/16", "10.96.0.0/16")
+        self.mock_nc.subnets.return_value = [
+            self._make_subnet("not-a-cidr", "bad-subnet")
+        ]
+        self.driver._validate_cidr_no_overlap(self.context, self.cluster_obj)
+
+    def test_subnet_ipv6_skipped_for_ipv4_pods(self):
+        self.mock_fixed_net.return_value = "fixed-net-uuid"
+        self._set_labels("10.100.0.0/16", "10.96.0.0/16")
+        self.mock_nc.subnets.return_value = [
+            self._make_subnet("fd00::/64", "ipv6-subnet")
+        ]
+        self.driver._validate_cidr_no_overlap(self.context, self.cluster_obj)
