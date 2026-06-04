@@ -40,9 +40,21 @@ class Client(requests.Session):
         cluster, user = self._get_cluster_and_user(kubeconfig)
 
         self.server = cluster["server"].rstrip("/")
+<<<<<<< PATCH SET (04501d9880e5a1d4c2629a3a3788aa7e76d24838 Validate pod/service CIDRs and pass kubeNetwork to Helm char)
+        if cluster.get("insecure-skip-tls-verify", False):
+            self.verify = False
+            import urllib3
+
+            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        else:
+            ca_file = self.ensure_file_cert(cluster, "certificate-authority")
+            if ca_file:
+                self.verify = ca_file
+=======
         ca_file = self.ensure_file_cert(cluster, "certificate-authority")
         if ca_file:
             self.verify = ca_file
+>>>>>>> BASE      (a8b82c2480a286a10b60ecc1d94c6cd9f1d01823 Add prelude for 1.4.0 release notes)
 
         # convert certs into files as required by requests
         # https://requests.readthedocs.io/en/latest/api/#requests.Session.cert
