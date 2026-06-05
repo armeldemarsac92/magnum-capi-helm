@@ -750,7 +750,7 @@ class Driver(driver.Driver):
             cluster, "pod_network_cidr", "10.100.0.0/16"
         )
         service_cidr_str = self._label(
-            cluster, "service_network_cidr", "172.24.0.0/13"
+            cluster, "service_network_cidr", "10.96.0.0/12"
         )
 
         try:
@@ -1150,7 +1150,7 @@ class Driver(driver.Driver):
                 "services": {
                     "cidrBlocks": [
                         self._label(
-                            cluster, "service_network_cidr", "172.24.0.0/13"
+                            cluster, "service_network_cidr", "10.96.0.0/12"
                         )
                     ]
                 },
