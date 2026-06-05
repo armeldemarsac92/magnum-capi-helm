@@ -326,7 +326,7 @@ capi_helm_cluster_labels_opts = [
     ),
     cfg.StrOpt(
         "service_network_cidr",
-        default="10.96.0.0/12",
+        default="10.96.0.0/16",
         help=(
             "CIDR for the Kubernetes service network. Must not overlap with "
             "OpenStack provider or external network subnets."
