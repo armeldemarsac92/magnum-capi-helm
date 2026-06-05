@@ -1228,7 +1228,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             },
             "kubeNetwork": {
                 "pods": {"cidrBlocks": ["10.100.0.0/16"]},
-                "services": {"cidrBlocks": ["10.96.0.0/12"]},
+                "services": {"cidrBlocks": ["10.96.0.0/16"]},
             },
             "etcd": {},
             "apiServer": {
