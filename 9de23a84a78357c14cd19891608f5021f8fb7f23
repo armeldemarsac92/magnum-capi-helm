@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bdd0cca2_85cdee42",
+        "filename": "magnum_capi_helm/conf.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2026-06-08T11:10:30Z",
+      "side": 1,
+      "message": "How backwards compatible is that? Will it affect cluster upgrade process?",
+      "revId": "9de23a84a78357c14cd19891608f5021f8fb7f23",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
