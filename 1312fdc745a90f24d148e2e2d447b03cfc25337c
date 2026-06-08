@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a583e5cc_a70b3154",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2026-06-08T11:09:33Z",
+      "side": 1,
+      "message": "Empty line as the only change in the patch? I doubt we can accept that.",
+      "revId": "1312fdc745a90f24d148e2e2d447b03cfc25337c",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
