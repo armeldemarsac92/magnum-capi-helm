@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "523606a8_2905b0c4",
+        "filename": "magnum_capi_helm/driver.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1027,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2026-06-08T11:09:11Z",
+      "side": 1,
+      "message": "Decision to not support master_lb_enabled was made at the beginning of the project - what\u0027s the rationale to changing that? We also have an entry in the docs about it - https://docs.openstack.org/magnum-capi-helm/latest/configuration/index.html#tip-tricks",
+      "revId": "e2732a8a47d7f37add8a9c371bfb19910f31b233",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "034577df_f6fdb8cb",
+        "filename": "magnum_capi_helm/kubernetes.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2026-06-08T11:09:11Z",
+      "side": 1,
+      "message": "How does that relate to the other change? Please break it out to a separate patch.",
+      "revId": "e2732a8a47d7f37add8a9c371bfb19910f31b233",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
