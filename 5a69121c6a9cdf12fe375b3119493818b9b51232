@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5ee3d853_be09ce21",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 22629
+      },
+      "writtenOn": "2026-06-08T11:11:11Z",
+      "side": 1,
+      "message": "This looks like a follow up of the previous patch, I assume it should be squashed to the previous one.",
+      "revId": "5a69121c6a9cdf12fe375b3119493818b9b51232",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
