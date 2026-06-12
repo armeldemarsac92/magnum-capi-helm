@@ -1228,7 +1228,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
             },
             "kubeNetwork": {
                 "pods": {"cidrBlocks": ["10.100.0.0/16"]},
-                "services": {"cidrBlocks": ["172.24.0.0/13"]},
+                "services": {"cidrBlocks": ["10.96.0.0/16"]},
             },
             "etcd": {},
             "apiServer": {
@@ -3850,6 +3850,7 @@ class TestValidateCidrNoOverlap(base.DbTestCase):
         )
 
         mock_nc = mock.MagicMock()
+        del mock_nc.list_subnets
         mock_nc.subnets.return_value = []
         patcher_clients = mock.patch("magnum.common.clients.OpenStackClients")
         mock_osc = patcher_clients.start()

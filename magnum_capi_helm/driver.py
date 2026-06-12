@@ -750,7 +750,7 @@ class Driver(driver.Driver):
             cluster, "pod_network_cidr", "10.100.0.0/16"
         )
         service_cidr_str = self._label(
-            cluster, "service_network_cidr", "172.24.0.0/13"
+            cluster, "service_network_cidr", "10.96.0.0/16"
         )
 
         try:
@@ -842,7 +842,7 @@ class Driver(driver.Driver):
                         f"Service CIDR {service_cidr_str} overlaps with"
                         f" {label} ({cidr_str}). Use the"
                         " 'service_network_cidr' label to set a"
-                        " non-overlapping CIDR (e.g. '10.96.0.0/12')."
+                        " non-overlapping CIDR (e.g. '10.96.0.0/16')."
                     )
                 )
 
@@ -1159,7 +1159,7 @@ class Driver(driver.Driver):
                 "services": {
                     "cidrBlocks": [
                         self._label(
-                            cluster, "service_network_cidr", "172.24.0.0/13"
+                            cluster, "service_network_cidr", "10.96.0.0/16"
                         )
                     ]
                 },
