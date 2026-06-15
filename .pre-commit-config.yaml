@@ -1,0 +1,51 @@
+---
+default_language_version:
+  python: python3
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: ^releasenotes/notes/
+      - id: end-of-file-fixer
+        exclude: ^releasenotes/notes/
+      - id: check-yaml
+        args: [--allow-multiple-documents]
+      - id: check-merge-conflict
+      - id: check-added-large-files
+      - id: debug-statements
+
+  - repo: https://github.com/psf/black
+    rev: 24.10.0
+    hooks:
+      - id: black
+        args: [--line-length=79, --check, --diff]
+
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.1.1
+    hooks:
+      - id: flake8
+        args:
+          - --max-line-length=79
+          - --ignore=W503
+          - --show-source
+        additional_dependencies:
+          - hacking>=7.0.0,<7.1.0
+
+  - repo: local
+    hooks:
+      - id: unit-tests
+        name: Unit tests (tox -e py3)
+        entry: tox -e py3
+        language: system
+        pass_filenames: false
+        stages: [pre-push]
+        always_run: true
+      - id: docs
+        name: Docs build (tox -e docs)
+        entry: tox -e docs
+        language: system
+        pass_filenames: false
+        stages: [pre-push]
+        always_run: true
