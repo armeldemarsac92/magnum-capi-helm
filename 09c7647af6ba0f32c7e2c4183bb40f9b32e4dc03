@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "302563e2_50f3e0b5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 35263
+      },
+      "writtenOn": "2026-06-15T12:18:24Z",
+      "side": 1,
+      "message": "recheck: `test_create_list_sign_delete_clusters` timed out",
+      "revId": "09c7647af6ba0f32c7e2c4183bb40f9b32e4dc03",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    }
+  ]
+}
