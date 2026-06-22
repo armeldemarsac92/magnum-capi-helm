@@ -33,6 +33,23 @@
       "message": "recheck: post failures",
       "revId": "09c7647af6ba0f32c7e2c4183bb40f9b32e4dc03",
       "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a276c8c_d25d74a4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 35263
+      },
+      "writtenOn": "2026-06-22T09:42:03Z",
+      "side": 1,
+      "message": "Looks sensible to me, thanks.",
+      "revId": "09c7647af6ba0f32c7e2c4183bb40f9b32e4dc03",
+      "serverId": "4a232e18-c5a9-48ee-94c0-e04e7cca6543"
     }
   ]
 }
