@@ -1,0 +1,5 @@
+---
+features:
+  - |
+    Script adding the Devstack components by enabling services and plugins
+    and installing Magnum, cluster templates and images
