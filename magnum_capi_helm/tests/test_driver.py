@@ -46,6 +46,17 @@ class ClusterAPIDriverTest(base.DbTestCase):
             if ng.role != "master":
                 ng.flavor_id = "flavor_medium"
                 ng.save()
+        self._reset_oidc_config()
+
+    def _reset_oidc_config(self):
+        CONF.capi_helm.oidc_enabled = False
+        CONF.capi_helm.oidc_issuer_url = ""
+        CONF.capi_helm.oidc_client_id = ""
+        CONF.capi_helm.oidc_username_claim = "sub"
+        CONF.capi_helm.oidc_username_prefix = "oidc:"
+        CONF.capi_helm.oidc_groups_claim = "groups"
+        CONF.capi_helm.oidc_groups_prefix = "oidc:"
+        CONF.capi_helm.oidc_signing_algs = "RS256"
 
     def test_provides(self):
         self.assertEqual(
@@ -1200,6 +1211,61 @@ class ClusterAPIDriverTest(base.DbTestCase):
 
         self.assertEqual("1.42.0", version)
 
+    def test_get_oidc_config_disabled(self):
+        self.assertEqual({}, self.driver._get_oidc_config())
+
+    def test_get_oidc_config_enabled(self):
+        CONF.capi_helm.oidc_enabled = True
+        CONF.capi_helm.oidc_issuer_url = (
+            "https://authentik.example.com/application/o/kubernetes/"
+        )
+        CONF.capi_helm.oidc_client_id = "kubernetes"
+        CONF.capi_helm.oidc_username_claim = "email"
+        CONF.capi_helm.oidc_username_prefix = "authentik:"
+        CONF.capi_helm.oidc_groups_claim = "groups"
+        CONF.capi_helm.oidc_groups_prefix = "authentik:"
+        CONF.capi_helm.oidc_signing_algs = "RS256"
+
+        self.assertEqual(
+            {
+                "oidc": {
+                    "issuerUrl": (
+                        "https://authentik.example.com/application/o/"
+                        "kubernetes/"
+                    ),
+                    "clientId": "kubernetes",
+                    "usernameClaim": "email",
+                    "usernamePrefix": "authentik:",
+                    "groupsClaim": "groups",
+                    "groupsPrefix": "authentik:",
+                    "signingAlgs": "RS256",
+                }
+            },
+            self.driver._get_oidc_config(),
+        )
+
+    def test_get_oidc_config_enabled_missing_issuer_url(self):
+        CONF.capi_helm.oidc_enabled = True
+        CONF.capi_helm.oidc_client_id = "kubernetes"
+
+        self.assertRaisesRegex(
+            exception.MagnumException,
+            r"oidc_issuer_url",
+            self.driver._get_oidc_config,
+        )
+
+    def test_get_oidc_config_enabled_missing_client_id(self):
+        CONF.capi_helm.oidc_enabled = True
+        CONF.capi_helm.oidc_issuer_url = (
+            "https://authentik.example.com/application/o/kubernetes/"
+        )
+
+        self.assertRaisesRegex(
+            exception.MagnumException,
+            r"oidc_client_id",
+            self.driver._get_oidc_config,
+        )
+
     def _get_cluster_helm_standard_values(self):
         """Return standard helm values which can be modified for tests.
 
@@ -1321,6 +1387,7 @@ class ClusterAPIDriverTest(base.DbTestCase):
 
         helm_install_values = mock_install.call_args[0][3]
         self.assertDictEqual(helm_install_values, expected_values)
+        self.assertNotIn("oidc", helm_install_values)
 
         mock_client.ensure_namespace.assert_called_once_with(
             "magnum-fakeproject"
@@ -1332,6 +1399,86 @@ class ClusterAPIDriverTest(base.DbTestCase):
             self.driver, self.context, self.cluster_obj
         )
         self.assertEqual([], mock_get_net.call_args_list)
+
+    @mock.patch.object(driver.Driver, "_get_allowed_cidrs")
+    @mock.patch.object(
+        driver.Driver, "_get_k8s_keystone_auth_enabled", return_value=False
+    )
+    @mock.patch.object(
+        driver.Driver,
+        "_storageclass_definitions",
+        return_value=mock.ANY,
+    )
+    @mock.patch.object(driver.Driver, "_validate_allowed_flavor")
+    @mock.patch.object(neutron, "get_network", autospec=True)
+    @mock.patch.object(
+        driver.Driver, "_ensure_certificate_secrets", autospec=True
+    )
+    @mock.patch.object(driver.Driver, "_create_appcred_secret", autospec=True)
+    @mock.patch.object(kubernetes.Client, "load", autospec=True)
+    @mock.patch.object(driver.Driver, "_get_image_details", autospec=True)
+    @mock.patch.object(helm.Client, "install_or_upgrade", autospec=True)
+    def test_create_cluster_with_oidc_config(
+        self,
+        mock_install,
+        mock_image,
+        mock_load,
+        mock_appcred,
+        mock_certs,
+        mock_get_net,
+        mock_validate_allowed_flavor,
+        mock_storageclasses,
+        mock_get_keystone_auth_enabled,
+        mock_get_allowed_cidrs,
+    ):
+        mock_image.return_value = (
+            "imageid1",
+            "1.27.4",
+            "ubuntu",
+        )
+        mock_client = mock.MagicMock(spec=kubernetes.Client)
+        mock_load.return_value = mock_client
+        mock_get_net.side_effect = (
+            lambda c, net, source, target, external: f"{net}-{external}"
+        )
+        CONF.capi_helm.oidc_enabled = True
+        CONF.capi_helm.oidc_issuer_url = (
+            "https://authentik.example.com/application/o/kubernetes/"
+        )
+        CONF.capi_helm.oidc_client_id = "kubernetes"
+        CONF.capi_helm.oidc_username_claim = "email"
+        CONF.capi_helm.oidc_username_prefix = "authentik:"
+        CONF.capi_helm.oidc_groups_claim = "groups"
+        CONF.capi_helm.oidc_groups_prefix = "authentik:"
+        CONF.capi_helm.oidc_signing_algs = "RS256"
+
+        self.driver.create_cluster(self.context, self.cluster_obj, 10)
+
+        expected_values = self._get_cluster_helm_standard_values()
+        expected_values["oidc"] = {
+            "issuerUrl": (
+                "https://authentik.example.com/application/o/kubernetes/"
+            ),
+            "clientId": "kubernetes",
+            "usernameClaim": "email",
+            "usernamePrefix": "authentik:",
+            "groupsClaim": "groups",
+            "groupsPrefix": "authentik:",
+            "signingAlgs": "RS256",
+        }
+
+        mock_install.assert_called_once_with(
+            self.driver._helm_client,
+            "cluster-example-a-111111111111",
+            "openstack-cluster",
+            mock.ANY,
+            repo=CONF.capi_helm.helm_chart_repo,
+            version=CONF.capi_helm.default_helm_chart_version,
+            namespace="magnum-fakeproject",
+        )
+
+        helm_install_values = mock_install.call_args[0][3]
+        self.assertDictEqual(helm_install_values, expected_values)
 
     @mock.patch.object(driver.Driver, "_get_allowed_cidrs")
     @mock.patch.object(

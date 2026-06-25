@@ -555,6 +555,35 @@ class Driver(driver.Driver):
         # NOTE(johngarbutt): filtering untrusted user input
         return re.sub(r"[^a-z0-9\.\-\+]+", "", version)
 
+    def _get_oidc_config(self):
+        if not CONF.capi_helm.oidc_enabled:
+            return {}
+        if not CONF.capi_helm.oidc_issuer_url:
+            raise exception.MagnumException(
+                message=(
+                    "OIDC is enabled, but [capi_helm]/oidc_issuer_url "
+                    "is not configured."
+                )
+            )
+        if not CONF.capi_helm.oidc_client_id:
+            raise exception.MagnumException(
+                message=(
+                    "OIDC is enabled, but [capi_helm]/oidc_client_id "
+                    "is not configured."
+                )
+            )
+        return {
+            "oidc": {
+                "issuerUrl": CONF.capi_helm.oidc_issuer_url,
+                "clientId": CONF.capi_helm.oidc_client_id,
+                "usernameClaim": CONF.capi_helm.oidc_username_claim,
+                "usernamePrefix": CONF.capi_helm.oidc_username_prefix,
+                "groupsClaim": CONF.capi_helm.oidc_groups_claim,
+                "groupsPrefix": CONF.capi_helm.oidc_groups_prefix,
+                "signingAlgs": CONF.capi_helm.oidc_signing_algs,
+            }
+        }
+
     def _get_kube_version(self, image):
         # The image should have a property containing the Kubernetes version.
         # image.get() uses dict.get() which bypasses the overridden __getitem__
@@ -1003,6 +1032,8 @@ class Driver(driver.Driver):
         if nodegroups is None:
             nodegroups = cluster.nodegroups
 
+        oidc_config = self._get_oidc_config()
+
         image_id, kube_version, os_distro = self._get_image_details(
             context, cluster.cluster_template.image_id
         )
@@ -1089,6 +1120,7 @@ class Driver(driver.Driver):
                 "ingress": {"enabled": False},
             },
         }
+        values = helm.mergeconcat(values, oidc_config)
 
         # Add boot disk details, if defined in config file.
         # Helm chart defaults to ephemeral disks, if unset.

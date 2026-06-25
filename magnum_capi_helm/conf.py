@@ -66,6 +66,49 @@ capi_helm_opts = [
             "A cluster label can override this."
         ),
     ),
+    cfg.BoolOpt(
+        "oidc_enabled",
+        default=False,
+        help="Enable Kubernetes API server OpenID Connect authentication.",
+    ),
+    cfg.StrOpt(
+        "oidc_issuer_url",
+        default="",
+        help="OpenID Connect issuer URL for Kubernetes API authentication.",
+    ),
+    cfg.StrOpt(
+        "oidc_client_id",
+        default="",
+        help="OpenID Connect client ID for Kubernetes API authentication.",
+    ),
+    cfg.StrOpt(
+        "oidc_username_claim",
+        default="sub",
+        help="OpenID Connect claim to use as the Kubernetes username.",
+    ),
+    cfg.StrOpt(
+        "oidc_username_prefix",
+        default="oidc:",
+        help="Prefix to add to usernames authenticated with OpenID Connect.",
+    ),
+    cfg.StrOpt(
+        "oidc_groups_claim",
+        default="groups",
+        help="OpenID Connect claim to use as Kubernetes groups.",
+    ),
+    cfg.StrOpt(
+        "oidc_groups_prefix",
+        default="oidc:",
+        help="Prefix to add to groups authenticated with OpenID Connect.",
+    ),
+    cfg.StrOpt(
+        "oidc_signing_algs",
+        default="RS256",
+        help=(
+            "Comma-separated OpenID Connect signing algorithms accepted "
+            "by the Kubernetes API server."
+        ),
+    ),
     cfg.IntOpt(
         "minimum_flavor_ram",
         default=2048,
